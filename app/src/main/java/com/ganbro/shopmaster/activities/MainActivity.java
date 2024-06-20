@@ -59,16 +59,4 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Handle menu button click
-                // For example, open a drawer or another activity
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }
