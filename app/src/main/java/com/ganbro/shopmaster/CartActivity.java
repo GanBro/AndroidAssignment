@@ -1,58 +1,48 @@
 package com.ganbro.shopmaster;
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.ganbro.shopmaster.adapters.CartAdapter;
-import com.ganbro.shopmaster.data.AppDatabase;
 import com.ganbro.shopmaster.data.Product;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
 
-    private RecyclerView rvCartItems;
-    private TextView tvTotalPrice;
-    private Button btnCheckout;
-
-    private AppDatabase db;
-    private List<Product> cartProductList;
+    private RecyclerView recyclerViewCart;
+    private TextView textViewTotalPrice;
+    private Button buttonCheckout;
     private CartAdapter cartAdapter;
+    private List<Product> cartProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        rvCartItems = findViewById(R.id.rv_cart_items);
-        tvTotalPrice = findViewById(R.id.tv_total_price);
-        btnCheckout = findViewById(R.id.btn_checkout);
+        recyclerViewCart = findViewById(R.id.recycler_view_cart);
+        textViewTotalPrice = findViewById(R.id.text_view_total_price);
+        buttonCheckout = findViewById(R.id.button_checkout);
 
-        db = AppDatabase.getInstance(this);
+        cartProducts = new ArrayList<>(); // 这里应该从数据库或缓存中获取购物车商品
+        cartAdapter = new CartAdapter(cartProducts);
+        recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCart.setAdapter(cartAdapter);
 
-        cartProductList = db.productDao().getAll(); // 获取购物车商品列表
-        cartAdapter = new CartAdapter(this, cartProductList);
-        rvCartItems.setLayoutManager(new LinearLayoutManager(this));
-        rvCartItems.setAdapter(cartAdapter);
-
-        double totalPrice = calculateTotalPrice(cartProductList);
-        tvTotalPrice.setText("总价: " + totalPrice);
-
-        btnCheckout.setOnClickListener(v -> {
-            // 处理结算逻辑
+        buttonCheckout.setOnClickListener(v -> {
+            // 结算逻辑
         });
+
+        calculateTotalPrice();
     }
 
-    private double calculateTotalPrice(List<Product> products) {
-        double total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+    private void calculateTotalPrice() {
+        double totalPrice = 0;
+        for (Product product : cartProducts) {
+            totalPrice += product.getPrice();
         }
-        return total;
+        textViewTotalPrice.setText("总价: " + totalPrice);
     }
 }

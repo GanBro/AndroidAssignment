@@ -1,58 +1,35 @@
-package com.ganbro.shopmaster.adapters;
+package com.ganbro.shopmaster;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.data.Product;
 
 import java.util.List;
 
-public class ProductAdapter extends BaseAdapter {
-    private Context context;
-    private List<Product> productList;
+public class ProductAdapter extends ArrayAdapter<Product> {
 
-    public ProductAdapter(Context context, List<Product> productList) {
-        this.context = context;
-        this.productList = productList;
-    }
-
-    @Override
-    public int getCount() {
-        return productList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return productList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    public ProductAdapter(Context context, List<Product> products) {
+        super(context, 0, products);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item, parent, false);
         }
 
-        ImageView productImage = convertView.findViewById(R.id.product_image);
-        TextView productName = convertView.findViewById(R.id.product_name);
-        TextView productPrice = convertView.findViewById(R.id.product_price);
+        Product product = getItem(position);
 
-        Product product = productList.get(position);
+        TextView textViewName = convertView.findViewById(R.id.text_view_name);
+        TextView textViewPrice = convertView.findViewById(R.id.text_view_price);
 
-        // 设置视图内容
-        productName.setText(product.getName());
-        productPrice.setText(String.format("$%.2f", product.getPrice()));
-        // 设置图片可以使用库如Glide或Picasso，这里省略
+        textViewName.setText(product.getName());
+        textViewPrice.setText(String.valueOf(product.getPrice()));
 
         return convertView;
     }

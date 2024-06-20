@@ -1,50 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/iv_product_image"
+        android:id="@+id/image_view_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher_background" />
+        android:layout_marginBottom="16dp" />
 
     <TextView
-        android:id="@+id/tv_product_name"
+        android:id="@+id/text_view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_product_image"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
-        android:text="商品名称"
+        android:layout_below="@id/image_view_product"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tv_product_price"
+        android:id="@+id/text_view_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_product_name"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:text="价格"
-        android:textSize="18sp" />
+        android:layout_below="@id/text_view_name"
+        android:textSize="16sp" />
 
     <CheckBox
-        android:id="@+id/cb_add_to_cart"
+        android:id="@+id/check_box_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_product_price"
+        android:layout_below="@id/text_view_price"
         android:layout_marginTop="16dp"
         android:text="添加到购物车" />
 
     <Button
-        android:id="@+id/btn_add_to_cart"
-        android:layout_width="wrap_content"
+        android:id="@+id/button_add_to_cart"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cb_add_to_cart"
+        android:layout_below="@id/check_box_cart"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
         android:text="添加到购物车" />
 </RelativeLayout>

@@ -1,30 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_cart_items"
+    <RecyclerView
+        android:id="@+id/recycler_view_cart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/tv_total_price"
+        android:id="@+id/text_view_total_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="总价: "
         android:textSize="18sp"
-        android:layout_gravity="end"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
     <Button
-        android:id="@+id/btn_checkout"
-        android:layout_width="wrap_content"
+        android:id="@+id/button_checkout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="结算"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 </LinearLayout>

@@ -12,9 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.ganbro.shopmaster.ProductAdapter;
 import com.ganbro.shopmaster.ProductDetailActivity;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.adapters.ProductAdapter;
 import com.ganbro.shopmaster.data.AppDatabase;
 import com.ganbro.shopmaster.data.Product;
 
