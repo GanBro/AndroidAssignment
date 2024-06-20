@@ -9,12 +9,12 @@ public class Product implements Serializable {
     private String imageUrl;
     private int quantity;
 
-    public Product(int id, String name, double price, String imageUrl) {
+    public Product(int id, String name, double price, String imageUrl, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = 1; // 默认数量为1
+        this.quantity = quantity;
     }
 
     // getters and setters for id, name, price, imageUrl, and quantity
