@@ -14,7 +14,7 @@ public class CartActivity extends AppCompatActivity {
     private RecyclerView recyclerViewCart;
     private TextView textViewTotalPrice;
     private Button buttonCheckout;
-    private CartAdapter cartAdapter;
+    private com.ganbro.shopmaster.CartAdapter cartAdapter;
     private List<Product> cartProducts;
 
     @Override
@@ -27,7 +27,7 @@ public class CartActivity extends AppCompatActivity {
         buttonCheckout = findViewById(R.id.button_checkout);
 
         cartProducts = new ArrayList<>(); // 这里应该从数据库或缓存中获取购物车商品
-        cartAdapter = new CartAdapter(cartProducts);
+        cartAdapter = new com.ganbro.shopmaster.CartAdapter(cartProducts);
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewCart.setAdapter(cartAdapter);
 

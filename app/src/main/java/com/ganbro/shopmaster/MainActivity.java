@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listViewProducts;
     private Button buttonAddProduct;
     private ProductDao productDao;
-    private ProductAdapter productAdapter;
+    private com.ganbro.shopmaster.ProductAdapter productAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Product> products = productDao.getAll();
             runOnUiThread(() -> {
-                productAdapter = new ProductAdapter(MainActivity.this, products);
+                productAdapter = new com.ganbro.shopmaster.ProductAdapter(MainActivity.this, products);
                 listViewProducts.setAdapter(productAdapter);
             });
         });
