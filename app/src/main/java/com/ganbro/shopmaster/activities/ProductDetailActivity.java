@@ -2,6 +2,7 @@ package com.ganbro.shopmaster.activities;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 
 public class ProductDetailActivity extends AppCompatActivity {
+
+    private static final String TAG = "ProductDetailActivity";
 
     private ImageView productImage;
     private TextView productName;
@@ -54,6 +57,20 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         addToCartButton.setOnClickListener(v -> {
             // Add to cart logic
+            try {
+                Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+                selectedProduct.setQuantity(quantity);
+
+                Log.d(TAG, "Adding product to cart: " + selectedProduct.getName());
+
+                CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
+                cartDbHelper.addProductToCart(selectedProduct);
+                Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Product added to cart successfully");
+            } catch (Exception e) {
+                Log.e(TAG, "Error adding product to cart", e);
+                Toast.makeText(this, "添加到购物车失败", Toast.LENGTH_SHORT).show();
+            }
         });
 
         contactCustomerService.setOnClickListener(v -> {
@@ -109,13 +126,21 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         buttonConfirm.setOnClickListener(v -> {
             // Add the selected product to the cart
-            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-            selectedProduct.setQuantity(quantity);
+            try {
+                Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+                selectedProduct.setQuantity(quantity);
 
-            CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
-            cartDbHelper.addProductToCart(selectedProduct);
-            dialog.dismiss();
-            Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Confirming product addition to cart: " + selectedProduct.getName());
+
+                CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
+                cartDbHelper.addProductToCart(selectedProduct);
+                dialog.dismiss();
+                Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Product confirmed and added to cart successfully");
+            } catch (Exception e) {
+                Log.e(TAG, "Error confirming product addition to cart", e);
+                Toast.makeText(this, "添加到购物车失败", Toast.LENGTH_SHORT).show();
+            }
         });
 
         dialog.show();
