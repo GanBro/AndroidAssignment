@@ -13,26 +13,17 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
         app:title="ShopMaster"
-        app:navigationIcon="@drawable/ic_baseline_menu_24" />
-
-    <Button
-        android:id="@+id/button_add_product"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add New Product"
-        android:textSize="18sp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-    <ListView
-        android:id="@+id/listview_products"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        app:navigationIcon="@drawable/ic_menu" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
