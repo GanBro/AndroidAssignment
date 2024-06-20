@@ -1,47 +1,53 @@
-package com.ganbro.shopmaster;
+package com.ganbro.shopmaster.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.ganbro.shopmaster.data.Product;
+import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
-    private List<Product> cartProducts;
+    private Context context;
+    private List<Product> cartProductList;
 
-    public CartAdapter(List<Product> cartProducts) {
-        this.cartProducts = cartProducts;
+    public CartAdapter(Context context, List<Product> cartProductList) {
+        this.context = context;
+        this.cartProductList = cartProductList;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_list_item, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Product product = cartProducts.get(position);
-        holder.textViewName.setText(product.getName());
-        holder.textViewPrice.setText(String.valueOf(product.getPrice()));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Product product = cartProductList.get(position);
+        holder.productName.setText(product.getName());
+        holder.productPrice.setText(String.format("$%.2f", product.getPrice()));
     }
 
     @Override
     public int getItemCount() {
-        return cartProducts.size();
+        return cartProductList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewName;
-        public TextView textViewPrice;
+        TextView productName;
+        TextView productPrice;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewName = itemView.findViewById(R.id.text_view_name);
-            textViewPrice = itemView.findViewById(R.id.text_view_price);
+            productName = itemView.findViewById(R.id.textView_product_name);
+            productPrice = itemView.findViewById(R.id.textView_product_price);
         }
     }
 }

@@ -8,60 +8,66 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.data.AppDatabase;
-import com.ganbro.shopmaster.data.Product;
+import com.ganbro.shopmaster.database.CartDatabaseHelper;
+import com.ganbro.shopmaster.models.Product;
 
 public class ProductDetailFragment extends Fragment {
 
-    private ImageView ivProductImageDetail;
-    private TextView tvProductNameDetail;
-    private TextView tvProductPriceDetail;
-    private CheckBox cbAddToCartDetail;
-    private Button btnAddToCartDetail;
+    private static final String ARG_PRODUCT = "product";
 
-    private AppDatabase db;
     private Product product;
 
     public ProductDetailFragment() {
+        // Required empty public constructor
+    }
+
+    public static ProductDetailFragment newInstance(Product product) {
+        ProductDetailFragment fragment = new ProductDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_PRODUCT, product);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
-
-        ivProductImageDetail = view.findViewById(R.id.iv_product_image_detail);
-        tvProductNameDetail = view.findViewById(R.id.tv_product_name_detail);
-        tvProductPriceDetail = view.findViewById(R.id.tv_product_price_detail);
-        cbAddToCartDetail = view.findViewById(R.id.cb_add_to_cart_detail);
-        btnAddToCartDetail = view.findViewById(R.id.btn_add_to_cart_detail);
-
-        db = AppDatabase.getInstance(getActivity());
-
-        int productId = getArguments().getInt("product_id", -1);
-        product = db.productDao().findById(productId);
-
-        if (product != null) {
-            tvProductNameDetail.setText(product.getName());
-            tvProductPriceDetail.setText(String.valueOf(product.getPrice()));
-            // 加载图片的逻辑
+        if (getArguments() != null) {
+            product = (Product) getArguments().getSerializable(ARG_PRODUCT);
         }
 
-        btnAddToCartDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cbAddToCartDetail.isChecked()) {
-                    // 处理添加到购物车的逻辑
-                }
+        ImageView imageViewProduct = view.findViewById(R.id.imageView_product);
+        TextView textViewProductName = view.findViewById(R.id.textView_product_name);
+        TextView textViewProductPrice = view.findViewById(R.id.textView_product_price);
+        CheckBox checkBoxAddToCart = view.findViewById(R.id.checkBox_add_to_cart);
+        Button buttonAddToCart = view.findViewById(R.id.button_add_to_cart);
+
+        textViewProductName.setText(product.getName());
+        textViewProductPrice.setText(String.format("$%.2f", product.getPrice()));
+        // Assume a method loadImage() to load image from URL into ImageView
+        loadImage(product.getImageUrl(), imageViewProduct);
+
+        buttonAddToCart.setOnClickListener(v -> {
+            if (checkBoxAddToCart.isChecked()) {
+                CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(getActivity());
+                cartDbHelper.addProductToCart(product);
+                Toast.makeText(getActivity(), "Product added to cart", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Please check the checkbox to add to cart", Toast.LENGTH_SHORT).show();
             }
         });
 
         return view;
+    }
+
+    private void loadImage(String imageUrl, ImageView imageView) {
+        // Placeholder method to load image from URL into ImageView
     }
 }

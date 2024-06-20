@@ -1,17 +1,20 @@
-package com.ganbro.shopmaster.data;
+package com.ganbro.shopmaster.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import java.io.Serializable;
 
-@Entity(tableName = "products")
-public class Product {
-    @PrimaryKey(autoGenerate = true)
+public class Product implements Serializable {
     private int id;
     private String name;
     private double price;
     private String imageUrl;
 
-    // Getter and Setter for id
+    public Product(int id, String name, double price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public int getId() {
         return id;
     }
@@ -20,7 +23,6 @@ public class Product {
         this.id = id;
     }
 
-    // Getter and Setter for name
     public String getName() {
         return name;
     }
@@ -29,7 +31,6 @@ public class Product {
         this.name = name;
     }
 
-    // Getter and Setter for price
     public double getPrice() {
         return price;
     }
@@ -38,7 +39,6 @@ public class Product {
         this.price = price;
     }
 
-    // Getter and Setter for imageUrl
     public String getImageUrl() {
         return imageUrl;
     }
