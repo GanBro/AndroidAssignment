@@ -49,4 +49,10 @@ public class ProductListFragment extends Fragment {
 
         return view;
     }
+
+    public void refreshProductList() {
+        productList.clear();
+        productList.addAll(dbHelper.getAllProducts());
+        productAdapter.notifyDataSetChanged();
+    }
 }

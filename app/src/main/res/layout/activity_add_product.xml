@@ -10,27 +10,30 @@
         android:id="@+id/editText_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Product Name" />
+        android:hint="Product Name"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/editText_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Product Price"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/editText_image_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Image URL" />
+        android:hint="Image URL"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_add_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Product"
+        android:textSize="18sp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
         style="@style/Widget.MaterialComponents.Button" />
 </LinearLayout>

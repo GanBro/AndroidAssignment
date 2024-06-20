@@ -1,6 +1,5 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
@@ -51,8 +52,7 @@ public class ProductDetailFragment extends Fragment {
 
         textViewProductName.setText(product.getName());
         textViewProductPrice.setText(String.format("$%.2f", product.getPrice()));
-        // Assume a method loadImage() to load image from URL into ImageView
-        loadImage(product.getImageUrl(), imageViewProduct);
+        Glide.with(this).load(product.getImageUrl()).into(imageViewProduct);
 
         buttonAddToCart.setOnClickListener(v -> {
             if (checkBoxAddToCart.isChecked()) {
@@ -65,9 +65,5 @@ public class ProductDetailFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void loadImage(String imageUrl, ImageView imageView) {
-        // Placeholder method to load image from URL into ImageView
     }
 }
