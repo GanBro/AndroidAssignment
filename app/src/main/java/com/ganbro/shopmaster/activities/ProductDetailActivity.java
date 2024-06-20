@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
@@ -37,8 +38,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         product = (Product) getIntent().getSerializableExtra("product");
         textViewProductName.setText(product.getName());
         textViewProductPrice.setText(String.format("$%.2f", product.getPrice()));
-        // Assume a method loadImage() to load image from URL into ImageView
-        loadImage(product.getImageUrl(), imageViewProduct);
+        Glide.with(this).load(product.getImageUrl()).into(imageViewProduct);
 
         buttonAddToCart.setOnClickListener(v -> {
             if (checkBoxAddToCart.isChecked()) {
@@ -48,9 +48,5 @@ public class ProductDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please check the checkbox to add to cart", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void loadImage(String imageUrl, ImageView imageView) {
-        // Placeholder method to load image from URL into ImageView
     }
 }

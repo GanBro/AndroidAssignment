@@ -6,32 +6,38 @@
 
     <ImageView
         android:id="@+id/imageView_product"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/textView_product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView_product"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView_product_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView_product_name"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent" />
 
     <CheckBox
         android:id="@+id/checkBox_add_to_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView_product_price"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Add to Cart" />
 
@@ -40,6 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/checkBox_add_to_cart"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Add to Cart" />
+        android:text="Add to Cart"
+        style="@style/Widget.MaterialComponents.Button" />
 </RelativeLayout>

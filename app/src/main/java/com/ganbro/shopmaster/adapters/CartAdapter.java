@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
@@ -33,6 +35,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         Product product = cartProductList.get(position);
         holder.productName.setText(product.getName());
         holder.productPrice.setText(String.format("$%.2f", product.getPrice()));
+        Glide.with(context).load(product.getImageUrl()).into(holder.productImage);
     }
 
     @Override
@@ -43,11 +46,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView productName;
         TextView productPrice;
+        ImageView productImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.textView_product_name);
             productPrice = itemView.findViewById(R.id.textView_product_price);
+            productImage = itemView.findViewById(R.id.imageView_product);
         }
     }
 }
