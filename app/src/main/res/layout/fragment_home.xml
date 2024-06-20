@@ -1,48 +1,174 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:background="@android:color/white"
+    tools:context=".fragments.HomeFragment">
 
-    <!-- 添加搜索栏和消息图标 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/white">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_search"
-            android:contentDescription="@string/search_icon" />
-
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="0dp"
+        <!-- 搜索栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:hint="搜索"
-            android:background="@null"
-            android:padding="8dp" />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical"
+            android:background="#FF5722">
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="@string/search_icon"
+                android:tint="@android:color/white" />
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:hint="输入搜索信息"
+                android:background="@drawable/search_bar_background"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_message"
+                android:contentDescription="@string/message_icon"
+                android:tint="@android:color/white" />
+        </LinearLayout>
+
+        <!-- 广告图片 -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_message"
-            android:contentDescription="@string/message_icon" />
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/advert_image"
+            android:scaleType="centerCrop" />
+
+        <!-- 功能图标 -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="5"
+            android:rowCount="2"
+            android:padding="8dp">
+
+            <!-- 示例功能图标 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_category_1"
+                    android:contentDescription="分类1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分类1"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:paddingTop="4dp" />
+            </LinearLayout>
+
+            <!-- 添加更多功能图标类似上面的方式 -->
+        </GridLayout>
+
+        <!-- 商品信息卡片 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- 示例商品卡片 -->
+            <LinearLayout
+                android:id="@+id/product_card_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:id="@+id/product_card_1_left"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@drawable/card_background">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:src="@drawable/product_image"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="商品名称"
+                        android:textSize="14sp"
+                        android:paddingTop="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥49.00"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:paddingTop="4dp" />
+                </LinearLayout>
+
+                <!-- 另一个商品卡片，类似上面的方式 -->
+                <LinearLayout
+                    android:id="@+id/product_card_1_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@drawable/card_background">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:src="@drawable/product_image"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="商品名称"
+                        android:textSize="14sp"
+                        android:paddingTop="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥49.00"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:paddingTop="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 添加更多商品卡片类似上面的方式 -->
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- 其他内容可以放在这里 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="首页内容"
-        android:layout_gravity="center"
-        android:paddingTop="16dp"/>
-
-</LinearLayout>
+</ScrollView>
