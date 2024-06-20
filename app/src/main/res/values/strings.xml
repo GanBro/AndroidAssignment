@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShopMaster</string>
+    <string name="add_product">添加新商品</string>
+    <string name="product_name">商品名称</string>
+    <string name="product_price">价格</string>
+    <string name="add_to_cart">添加到购物车</string>
+    <string name="total_price">总价</string>
+    <string name="checkout">结算</string>
+</resources>
