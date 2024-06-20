@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.ganbro.shopmaster.models.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +16,12 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "shopmaster.db";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_CART = "cart";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_IMAGE_URL = "image_url";
-
-    private static final String TABLE_CREATE =
-            "CREATE TABLE " + TABLE_CART + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT);";
+    private static final String TABLE_CART = "cart";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_PRICE = "price";
+    private static final String COLUMN_IMAGE_URL = "image_url";
+    private static final String COLUMN_QUANTITY = "quantity";
 
     public CartDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +29,13 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+        String CREATE_CART_TABLE = "CREATE TABLE " + TABLE_CART + "("
+                + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_NAME + " TEXT,"
+                + COLUMN_PRICE + " REAL,"
+                + COLUMN_IMAGE_URL + " TEXT,"
+                + COLUMN_QUANTITY + " INTEGER" + ")";
+        db.execSQL(CREATE_CART_TABLE);
     }
 
     @Override
@@ -48,26 +50,34 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, product.getName());
         values.put(COLUMN_PRICE, product.getPrice());
         values.put(COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(COLUMN_QUANTITY, product.getQuantity());
+
         db.insert(TABLE_CART, null, values);
         db.close();
     }
 
     public List<Product> getAllCartProducts() {
-        List<Product> productList = new ArrayList<>();
+        List<Product> cartProductList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_CART;
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CART, null, null, null, null, null, null);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)));
-                productList.add(product);
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL))
+                );
+                product.setQuantity(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)));
+                cartProductList.add(product);
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return productList;
+
+        return cartProductList;
     }
 }

@@ -38,15 +38,23 @@ public class CartActivity extends AppCompatActivity {
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewCart.setAdapter(cartAdapter);
 
-        double totalPrice = 0.0;
-        for (Product product : cartProductList) {
-            totalPrice += product.getPrice();
-        }
-        textViewTotalPrice.setText(String.format("Total: $%.2f", totalPrice));
+        updateTotalPrice(calculateTotalPrice());
 
         buttonCheckout.setOnClickListener(v -> {
             // Handle checkout logic
             Toast.makeText(this, "Checkout successful!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    public void updateTotalPrice(double totalPrice) {
+        textViewTotalPrice.setText(String.format("合计：￥%.2f", totalPrice));
+    }
+
+    private double calculateTotalPrice() {
+        double totalPrice = 0.0;
+        for (Product product : cartProductList) {
+            totalPrice += product.getPrice() * product.getQuantity();
+        }
+        return totalPrice;
     }
 }

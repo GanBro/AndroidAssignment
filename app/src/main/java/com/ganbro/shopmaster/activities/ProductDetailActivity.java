@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -23,6 +25,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private int quantity = 1;
     private String selectedStyle = "M";
+    private Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         selectStyleButton = findViewById(R.id.select_style_button);
 
         // Simulate getting product data
-        Product product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image");
+        product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image");
 
         // Set product details
         productName.setText(product.getName());
@@ -105,8 +108,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         buttonConfirm.setOnClickListener(v -> {
-            // Confirm selection logic
+            // Add the selected product to the cart
+            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+            selectedProduct.setQuantity(quantity);
+
+            CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
+            cartDbHelper.addProductToCart(selectedProduct);
             dialog.dismiss();
+            Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
         });
 
         dialog.show();

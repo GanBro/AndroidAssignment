@@ -4,16 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.CartActivity;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     private Context context;
     private List<Product> cartProductList;
@@ -25,17 +26,41 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
-        return new ViewHolder(view);
+        return new CartViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Product product = cartProductList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.format("$%.2f", product.getPrice()));
-        Glide.with(context).load(product.getImageUrl()).into(holder.productImage);
+        holder.productPrice.setText(String.format("￥%.2f", product.getPrice()));
+        // Load product image using a library like Picasso or Glide
+        // Picasso.get().load(product.getImageUrl()).into(holder.productImage);
+
+        holder.buttonDecrease.setOnClickListener(v -> {
+            if (product.getQuantity() > 1) {
+                product.setQuantity(product.getQuantity() - 1);
+                holder.quantityText.setText(String.valueOf(product.getQuantity()));
+                updateTotalPrice();
+            }
+        });
+
+        holder.buttonIncrease.setOnClickListener(v -> {
+            product.setQuantity(product.getQuantity() + 1);
+            holder.quantityText.setText(String.valueOf(product.getQuantity()));
+            updateTotalPrice();
+        });
+
+        holder.buttonRemove.setOnClickListener(v -> {
+            cartProductList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, cartProductList.size());
+            updateTotalPrice();
+        });
+
+        holder.quantityText.setText(String.valueOf(product.getQuantity()));
     }
 
     @Override
@@ -43,16 +68,35 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return cartProductList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class CartViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
         TextView productName;
         TextView productPrice;
-        ImageView productImage;
+        TextView quantityText;
+        Button buttonDecrease;
+        Button buttonIncrease;
+        Button buttonRemove;
 
-        public ViewHolder(@NonNull View itemView) {
+        public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            productName = itemView.findViewById(R.id.textView_product_name);
-            productPrice = itemView.findViewById(R.id.textView_product_price);
-            productImage = itemView.findViewById(R.id.imageView_product);
+            productImage = itemView.findViewById(R.id.product_image);
+            productName = itemView.findViewById(R.id.product_name);
+            productPrice = itemView.findViewById(R.id.product_price);
+            quantityText = itemView.findViewById(R.id.quantity_text);
+            buttonDecrease = itemView.findViewById(R.id.button_decrease);
+            buttonIncrease = itemView.findViewById(R.id.button_increase);
+            buttonRemove = itemView.findViewById(R.id.button_remove);
+        }
+    }
+
+    private void updateTotalPrice() {
+        double totalPrice = 0.0;
+        for (Product product : cartProductList) {
+            totalPrice += product.getPrice() * product.getQuantity();
+        }
+        // Assuming you have a method in CartActivity to update the total price TextView
+        if (context instanceof CartActivity) {
+            ((CartActivity) context).updateTotalPrice(totalPrice);
         }
     }
 }
