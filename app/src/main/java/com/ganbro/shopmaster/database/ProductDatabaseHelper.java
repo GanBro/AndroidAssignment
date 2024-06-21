@@ -12,7 +12,7 @@ import java.util.List;
 public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_PRODUCT = "product";
     public static final String COLUMN_ID = "id";
@@ -20,6 +20,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_CATEGORY = "category"; // 新增的列
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -27,7 +28,8 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_NAME + " TEXT, " +
                     COLUMN_PRICE + " REAL, " +
                     COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER);";
+                    COLUMN_QUANTITY + " INTEGER, " +
+                    COLUMN_CATEGORY + " TEXT);"; // 添加 category 列
 
     public ProductDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,8 +42,9 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
-        onCreate(db);
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_CATEGORY + " TEXT;");
+        }
     }
 
     public void addProduct(Product product) {
@@ -51,6 +54,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRICE, product.getPrice());
         values.put(COLUMN_IMAGE_URL, product.getImageUrl());
         values.put(COLUMN_QUANTITY, product.getQuantity());
+        values.put(COLUMN_CATEGORY, product.getCategory()); // 添加 category 列的值
         db.insert(TABLE_PRODUCT, null, values);
         db.close();
     }
@@ -62,11 +66,34 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)) // 获取 category 列的值
+                );
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return productList;
+    }
+
+    public List<Product> getProductsByCategory(String category) {
+        List<Product> productList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PRODUCT, null, COLUMN_CATEGORY + "=?", new String[]{category}, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)) // 获取 category 列的值
                 );
                 productList.add(product);
             } while (cursor.moveToNext());

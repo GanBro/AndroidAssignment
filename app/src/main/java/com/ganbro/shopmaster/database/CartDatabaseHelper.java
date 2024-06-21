@@ -12,7 +12,7 @@ import java.util.List;
 public class CartDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_CART = "cart";
     public static final String COLUMN_ID = "id";
@@ -20,6 +20,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_CATEGORY = "category"; // 新增的列
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_CART + " (" +
@@ -27,7 +28,8 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_NAME + " TEXT, " +
                     COLUMN_PRICE + " REAL, " +
                     COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER);";
+                    COLUMN_QUANTITY + " INTEGER, " +
+                    COLUMN_CATEGORY + " TEXT);"; // 添加 category 列
 
     public CartDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,6 +53,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRICE, product.getPrice());
         values.put(COLUMN_IMAGE_URL, product.getImageUrl());
         values.put(COLUMN_QUANTITY, product.getQuantity());
+        values.put(COLUMN_CATEGORY, product.getCategory()); // 添加 category 列的值
         db.insert(TABLE_CART, null, values);
         db.close();
     }
@@ -62,11 +65,13 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY)));
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)) // 获取 category 列的值
+                );
                 productList.add(product);
             } while (cursor.moveToNext());
         }
@@ -75,10 +80,9 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         return productList;
     }
 
-    // 新增删除商品的方法
-    public void deleteCartProduct(int productId) {
+    public void deleteCartProduct(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CART, COLUMN_ID + " = ?", new String[]{String.valueOf(productId)});
+        db.delete(TABLE_CART, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
     }
 }

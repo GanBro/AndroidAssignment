@@ -31,12 +31,11 @@ public class ProductListFragment extends Fragment {
 
         // 初始化产品列表
         productList = new ArrayList<>();
-        productList.add(new Product(1, "商品1", 300.00, "url_to_image", 1));
-        productList.add(new Product(2, "商品2", 287.00, "url_to_image", 1));
-        productList.add(new Product(3, "商品3", 403.04, "url_to_image", 1));
+        productList.add(new Product(1, "商品1", 300.00, "url_to_image", 1, "类别1"));
+        productList.add(new Product(2, "商品2", 287.00, "url_to_image", 1, "类别2"));
+        productList.add(new Product(3, "商品3", 403.04, "url_to_image", 1, "类别3"));
 
-        // 设置 ProductAdapter 并传递 isRecommend 参数
-        productAdapter = new ProductAdapter(getContext(), productList, false); // 根据实际情况设置 true 或 false
+        productAdapter = new ProductAdapter(getContext(), productList, false);
         recyclerViewProducts.setAdapter(productAdapter);
 
         return view;

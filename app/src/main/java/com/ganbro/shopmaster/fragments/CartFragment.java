@@ -84,6 +84,8 @@ public class CartFragment extends Fragment {
         return view;
     }
 
+// CartFragment.java
+
     private void confirmDeleteSelectedItems() {
         new AlertDialog.Builder(getActivity())
                 .setTitle("确认删除")
@@ -103,6 +105,7 @@ public class CartFragment extends Fragment {
             }
         }
     }
+
 
     private void selectAllItems(boolean isChecked) {
         for (Product product : cartProducts) {

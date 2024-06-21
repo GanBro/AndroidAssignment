@@ -1,25 +1,25 @@
 package com.ganbro.shopmaster.models;
 
-import java.io.Serializable;
-
-public class Product implements Serializable {
+public class Product {
     private int id;
     private String name;
     private double price;
     private String imageUrl;
     private int quantity;
-    private boolean isSelected;
+    private String category;
+    private boolean isSelected; // 选择状态属性
 
-    public Product(int id, String name, double price, String imageUrl, int quantity) {
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        this.isSelected = false;
+        this.category = category;
+        this.isSelected = false; // 默认值为 false
     }
 
-    // getters and setters for id, name, price, imageUrl, quantity, and isSelected
+    // Getter and Setter methods
 
     public int getId() {
         return id;
@@ -59,6 +59,14 @@ public class Product implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public boolean isSelected() {

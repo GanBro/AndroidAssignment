@@ -43,7 +43,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         selectStyleButton = findViewById(R.id.select_style_button);
 
         // Simulate getting product data
-        product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image", 1);
+        product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image", 1, "上衣"); // 添加类别参数
 
         // Set product details
         productName.setText(product.getName());
@@ -53,7 +53,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Picasso.get().load(product.getImageUrl()).into(productImage);
 
         addToCartButton.setOnClickListener(v -> {
-            // Add to cart logic
+            CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
+            cartDbHelper.addProductToCart(product); // 确保使用正确的方法名
+            Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
         });
 
         contactCustomerService.setOnClickListener(v -> {
@@ -108,11 +110,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         buttonConfirm.setOnClickListener(v -> {
-            // Add the selected product to the cart
-            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-
+            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory());
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
-            cartDbHelper.addProductToCart(selectedProduct);
+            cartDbHelper.addProductToCart(selectedProduct); // 确保使用正确的方法名
             dialog.dismiss();
             Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
         });
