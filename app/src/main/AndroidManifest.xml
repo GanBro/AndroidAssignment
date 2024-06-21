@@ -7,7 +7,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ShopMaster.NoActionBar"> <!-- 使用NoActionBar主题 -->
+        android:theme="@style/Theme.ShopMaster.NoActionBar">
 
         <activity
             android:name=".activities.MainActivity"
@@ -16,6 +16,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- 添加 ProductDetailActivity -->
+        <activity
+            android:name=".activities.ProductDetailActivity"
+            android:exported="true">
         </activity>
 
     </application>

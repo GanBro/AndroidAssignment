@@ -109,5 +109,4 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public interface OnProductSelectedListener {
         void onProductSelected();
     }
-
 }

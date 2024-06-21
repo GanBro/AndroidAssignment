@@ -12,7 +12,7 @@ import java.util.List;
 public class CartDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6; // 更新版本到 6
 
     public static final String TABLE_CART = "cart";
     public static final String COLUMN_ID = "id";
@@ -20,7 +20,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
-    public static final String COLUMN_CATEGORY = "category"; // 新增的列
+    public static final String COLUMN_CATEGORY = "category";
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_CART + " (" +
@@ -29,7 +29,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_PRICE + " REAL, " +
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);"; // 添加 category 列
+                    COLUMN_CATEGORY + " TEXT);";
 
     public CartDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,6 +42,14 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
+            onCreate(db);
+        }
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
         onCreate(db);
     }
@@ -53,7 +61,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRICE, product.getPrice());
         values.put(COLUMN_IMAGE_URL, product.getImageUrl());
         values.put(COLUMN_QUANTITY, product.getQuantity());
-        values.put(COLUMN_CATEGORY, product.getCategory()); // 添加 category 列的值
+        values.put(COLUMN_CATEGORY, product.getCategory());
         db.insert(TABLE_CART, null, values);
         db.close();
     }
@@ -78,7 +86,7 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)) // 获取 category 列的值
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY))
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
