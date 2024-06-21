@@ -74,4 +74,11 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return productList;
     }
+
+    // 新增删除商品的方法
+    public void deleteCartProduct(int productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CART, COLUMN_ID + " = ?", new String[]{String.valueOf(productId)});
+        db.close();
+    }
 }

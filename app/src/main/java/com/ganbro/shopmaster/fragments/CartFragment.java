@@ -1,10 +1,12 @@
 package com.ganbro.shopmaster.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +24,7 @@ public class CartFragment extends Fragment {
     private TextView buttonEdit;
     private Button buttonCollect;
     private Button buttonDelete;
+    private CheckBox checkboxSelectAll;
     private View editModeButtons;
     private boolean isEditing = false;
     private RecyclerView recyclerViewCart;
@@ -36,6 +39,7 @@ public class CartFragment extends Fragment {
         buttonEdit = view.findViewById(R.id.cart_edit);
         buttonCollect = view.findViewById(R.id.button_collect);
         buttonDelete = view.findViewById(R.id.button_delete);
+        checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
         editModeButtons = view.findViewById(R.id.edit_mode_buttons);
         recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
 
@@ -46,7 +50,6 @@ public class CartFragment extends Fragment {
         CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
         cartProducts = cartDatabaseHelper.getAllCartProducts();
 
-        // Pass context and product list to CartAdapter
         cartAdapter = new CartAdapter(getActivity(), cartProducts);
         recyclerViewCart.setAdapter(cartAdapter);
 
@@ -64,6 +67,47 @@ public class CartFragment extends Fragment {
             }
         });
 
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDeleteSelectedItems();
+            }
+        });
+
+        checkboxSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAllItems(checkboxSelectAll.isChecked());
+            }
+        });
+
         return view;
+    }
+
+    private void confirmDeleteSelectedItems() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("确认删除")
+                .setMessage("你确定要删除选中的商品吗？")
+                .setPositiveButton("确认", (dialog, which) -> deleteSelectedItems())
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void deleteSelectedItems() {
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        for (int i = cartProducts.size() - 1; i >= 0; i--) {
+            Product product = cartProducts.get(i);
+            if (product.isSelected()) {
+                cartAdapter.removeItem(i);
+                cartDatabaseHelper.deleteCartProduct(product.getId());
+            }
+        }
+    }
+
+    private void selectAllItems(boolean isChecked) {
+        for (Product product : cartProducts) {
+            product.setSelected(isChecked);
+        }
+        cartAdapter.notifyDataSetChanged();
     }
 }

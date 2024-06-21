@@ -8,6 +8,7 @@ public class Product implements Serializable {
     private double price;
     private String imageUrl;
     private int quantity;
+    private boolean isSelected;
 
     public Product(int id, String name, double price, String imageUrl, int quantity) {
         this.id = id;
@@ -15,9 +16,10 @@ public class Product implements Serializable {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+        this.isSelected = false;
     }
 
-    // getters and setters for id, name, price, imageUrl, and quantity
+    // getters and setters for id, name, price, imageUrl, quantity, and isSelected
 
     public int getId() {
         return id;
@@ -57,5 +59,13 @@ public class Product implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
