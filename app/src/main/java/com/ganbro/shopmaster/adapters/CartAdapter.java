@@ -17,10 +17,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     private List<Product> productList;
     private Context context;
+    private OnProductSelectedListener onProductSelectedListener;
 
-    public CartAdapter(Context context, List<Product> productList) {
+    public CartAdapter(Context context, List<Product> productList, OnProductSelectedListener onProductSelectedListener) {
         this.context = context;
         this.productList = productList;
+        this.onProductSelectedListener = onProductSelectedListener;
     }
 
     @NonNull
@@ -40,7 +42,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         holder.checkBox.setChecked(product.isSelected());
 
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> product.setSelected(isChecked));
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            product.setSelected(isChecked);
+            if (onProductSelectedListener != null) {
+                onProductSelectedListener.onProductSelected();
+            }
+        });
     }
 
     @Override
@@ -66,5 +73,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             productImage = itemView.findViewById(R.id.imageView_product);
             checkBox = itemView.findViewById(R.id.checkbox_select);
         }
+    }
+
+    public interface OnProductSelectedListener {
+        void onProductSelected();
     }
 }
