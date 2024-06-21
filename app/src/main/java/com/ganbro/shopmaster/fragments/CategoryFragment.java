@@ -1,34 +1,42 @@
 package com.ganbro.shopmaster.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.HorizontalScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.adapters.CartAdapter;
+import com.ganbro.shopmaster.database.CartDatabaseHelper;
+import com.ganbro.shopmaster.models.Product;
+import java.util.List;
 
 public class CategoryFragment extends Fragment {
 
+    private TextView buttonEdit;
+    private Button buttonCollect;
+    private Button buttonDelete;
+    private CheckBox checkboxSelectAll;
+    private View editModeButtons;
+    private boolean isEditing = false;
+    private RecyclerView recyclerViewCart;
+    private CartAdapter cartAdapter;
+    private List<Product> cartProducts;
+    private Button buttonTags;
     private ListView listViewCategories;
-    private LinearLayout layoutContent;
-    private TextView tvRecommendTitle;
-    private HorizontalScrollView scrollViewRecommend;
-    private LinearLayout layoutRecommendProducts;
-    private TextView tvCommonCategories;
-    private GridLayout gridCommonCategories;
-
     private ArrayAdapter<String> categoriesAdapter;
 
     @Nullable
@@ -36,80 +44,133 @@ public class CategoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
 
-        listViewCategories = view.findViewById(R.id.listView_categories);
-        layoutContent = view.findViewById(R.id.layout_content);
-        tvRecommendTitle = view.findViewById(R.id.tv_recommend_title);
-        scrollViewRecommend = view.findViewById(R.id.scrollView_recommend);
-        layoutRecommendProducts = view.findViewById(R.id.layout_recommend_products);
-        tvCommonCategories = view.findViewById(R.id.tv_common_categories);
-        gridCommonCategories = view.findViewById(R.id.grid_common_categories);
+        buttonTags = view.findViewById(R.id.button_tags);
+        buttonTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment tagsFragment = new TagsFragment();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, tagsFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
-        // 示例分类数据
-        String[] categories = {"小裙子", "上衣", "下装", "外套", "配件", "包包", "妆扮", "居家好物", "办公文具", "数码周边", "游戏专区"};
-        categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, categories);
+        buttonEdit = view.findViewById(R.id.cart_edit);
+        buttonCollect = view.findViewById(R.id.button_collect);
+        buttonDelete = view.findViewById(R.id.button_delete);
+        checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
+        editModeButtons = view.findViewById(R.id.edit_mode_buttons);
+        recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
+        listViewCategories = view.findViewById(R.id.listView_categories);
+
+        // Set up RecyclerView
+        if (recyclerViewCart != null) {
+            recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+
+        // Initialize the cart products list from the database
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        cartProducts = cartDatabaseHelper.getAllCartProducts();
+
+        cartAdapter = new CartAdapter(getActivity(), cartProducts);
+        if (recyclerViewCart != null) {
+            recyclerViewCart.setAdapter(cartAdapter);
+        }
+
+        // Initialize the categories list
+        String[] categories = {"上衣", "下装", "外套", "配件", "包包", "装扮", "居家宅品", "办公文具", "数码周边", "游戏专区"};
+        categoriesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, categories);
         listViewCategories.setAdapter(categoriesAdapter);
 
         listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String category = categories[position];
-                updateContentForCategory(category);
+                // 根据点击的分类加载相应的内容
+                loadCategoryContent(position);
+            }
+        });
+
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isEditing) {
+                    editModeButtons.setVisibility(View.GONE);
+                    buttonEdit.setText("编辑");
+                } else {
+                    editModeButtons.setVisibility(View.VISIBLE);
+                    buttonEdit.setText("完成");
+                }
+                isEditing = !isEditing;
+            }
+        });
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDeleteSelectedItems();
+            }
+        });
+
+        checkboxSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAllItems(checkboxSelectAll.isChecked());
             }
         });
 
         return view;
     }
 
-    private void updateContentForCategory(String category) {
-        // 清空当前内容
-        layoutRecommendProducts.removeAllViews();
-        gridCommonCategories.removeAllViews();
-
-        // 更新标题
-        tvRecommendTitle.setText(category + " 推荐");
-
-        // 根据分类更新推荐商品
-        for (int i = 0; i < 3; i++) {  // 示例商品数量
-            LinearLayout productLayout = new LinearLayout(getContext());
-            productLayout.setOrientation(LinearLayout.VERTICAL);
-            productLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            productLayout.setPadding(8, 0, 8, 0);
-
-            ImageView imageView = new ImageView(getContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
-            imageView.setImageResource(R.drawable.placeholder_category);  // 示例图片
-            productLayout.addView(imageView);
-
-            TextView textView = new TextView(getContext());
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText("￥300.00");
-            textView.setTextColor(getResources().getColor(R.color.red));
-            textView.setGravity(Gravity.CENTER);
-            productLayout.addView(textView);
-
-            layoutRecommendProducts.addView(productLayout);
+    private void loadCategoryContent(int position) {
+        // 根据分类位置加载不同的内容
+        Fragment fragment = null;
+        switch (position) {
+            case 0:
+                fragment = new UpperClothesFragment();
+                break;
+            case 1:
+                fragment = new LowerClothesFragment();
+                break;
+            case 2:
+                fragment = new OuterwearFragment();
+                break;
+            // 添加更多分类片段
         }
 
-        // 根据分类更新常用分类
-        for (int i = 0; i < 4; i++) {  // 示例分类数量
-            LinearLayout categoryLayout = new LinearLayout(getContext());
-            categoryLayout.setOrientation(LinearLayout.VERTICAL);
-            categoryLayout.setLayoutParams(new GridLayout.LayoutParams());
-            categoryLayout.setGravity(Gravity.CENTER);
-            categoryLayout.setPadding(8, 0, 8, 0);
-
-            ImageView imageView = new ImageView(getContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(48, 48));
-            imageView.setImageResource(R.drawable.placeholder_category);  // 示例图片
-            categoryLayout.addView(imageView);
-
-            TextView textView = new TextView(getContext());
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setText("常用分类 " + (i + 1));
-            textView.setGravity(Gravity.CENTER);
-            categoryLayout.addView(textView);
-
-            gridCommonCategories.addView(categoryLayout);
+        if (fragment != null) {
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.layout_content, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         }
+    }
+
+    private void confirmDeleteSelectedItems() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("确认删除")
+                .setMessage("你确定要删除选中的商品吗？")
+                .setPositiveButton("确认", (dialog, which) -> deleteSelectedItems())
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void deleteSelectedItems() {
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        for (int i = cartProducts.size() - 1; i >= 0; i--) {
+            Product product = cartProducts.get(i);
+            if (product.isSelected()) {
+                cartAdapter.removeItem(i);
+                cartDatabaseHelper.deleteCartProduct(product.getId());
+            }
+        }
+    }
+
+    private void selectAllItems(boolean isChecked) {
+        for (Product product : cartProducts) {
+            product.setSelected(isChecked);
+        }
+        cartAdapter.notifyDataSetChanged();
     }
 }
