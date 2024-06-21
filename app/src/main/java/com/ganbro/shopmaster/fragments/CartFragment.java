@@ -25,14 +25,13 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
     private Button buttonCollect;
     private Button buttonDelete;
     private CheckBox checkboxSelectAll;
+    private TextView totalPriceTextView;
     private View editModeButtons;
     private boolean isEditing = false;
     private RecyclerView recyclerViewCart;
     private CartAdapter cartAdapter;
     private List<Product> cartProducts;
-    private TextView totalPriceTextView;
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
@@ -41,14 +40,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         buttonCollect = view.findViewById(R.id.button_collect);
         buttonDelete = view.findViewById(R.id.button_delete);
         checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
+        totalPriceTextView = view.findViewById(R.id.total_price);
         editModeButtons = view.findViewById(R.id.edit_mode_buttons);
         recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
-        totalPriceTextView = view.findViewById(R.id.total_price);
 
-        // Set up RecyclerView
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize the cart products list from the database
         CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
         cartProducts = cartDatabaseHelper.getAllCartProducts();
 
@@ -83,15 +80,19 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
             }
         });
 
-        // 初始时更新总价
-        updateTotalPrice(cartProducts);
+        updateTotalPrice();
 
         return view;
     }
 
-    @Override
-    public void onProductSelected() {
-        updateTotalPrice(cartProducts);
+    private void updateTotalPrice() {
+        double totalPrice = 0;
+        for (Product product : cartProducts) {
+            if (product.isSelected()) {
+                totalPrice += product.getPrice() * product.getQuantity();
+            }
+        }
+        totalPriceTextView.setText(String.format("合计: ¥%.2f", totalPrice));
     }
 
     private void confirmDeleteSelectedItems() {
@@ -112,7 +113,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
                 cartDatabaseHelper.deleteCartProduct(product.getId());
             }
         }
-        updateTotalPrice(cartProducts);
+        updateTotalPrice();
     }
 
     private void selectAllItems(boolean isChecked) {
@@ -120,16 +121,11 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
             product.setSelected(isChecked);
         }
         cartAdapter.notifyDataSetChanged();
-        updateTotalPrice(cartProducts);
+        updateTotalPrice();
     }
 
-    private void updateTotalPrice(List<Product> cartProductList) {
-        double totalPrice = 0.0;
-        for (Product product : cartProductList) {
-            if (product.isSelected()) {
-                totalPrice += product.getPrice() * product.getQuantity();
-            }
-        }
-        totalPriceTextView.setText(String.format("合计: ¥%.2f", totalPrice));
+    @Override
+    public void onProductSelected() {
+        updateTotalPrice();
     }
 }

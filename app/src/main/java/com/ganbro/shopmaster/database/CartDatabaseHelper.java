@@ -58,6 +58,14 @@ public class CartDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateProductQuantity(int productId, int quantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_QUANTITY, quantity);
+        db.update(TABLE_CART, values, COLUMN_ID + "=?", new String[]{String.valueOf(productId)});
+        db.close();
+    }
+
     public List<Product> getAllCartProducts() {
         List<Product> productList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
