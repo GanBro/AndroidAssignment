@@ -58,14 +58,16 @@
 
         <!-- 右侧内容 -->
         <LinearLayout
+            android:id="@+id/layout_content"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- 热门推荐 -->
+            <!-- 默认热门推荐 -->
             <TextView
+                android:id="@+id/tv_recommend_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="热门推荐"
@@ -74,11 +76,13 @@
                 android:layout_marginBottom="8dp"/>
 
             <HorizontalScrollView
+                android:id="@+id/scrollView_recommend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp">
 
                 <LinearLayout
+                    android:id="@+id/layout_recommend_products"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -111,6 +115,7 @@
 
             <!-- 常用分类 -->
             <TextView
+                android:id="@+id/tv_common_categories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="常用分类"
@@ -119,6 +124,7 @@
                 android:layout_marginBottom="8dp"/>
 
             <GridLayout
+                android:id="@+id/grid_common_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="3"
