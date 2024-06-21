@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- NoActionBar theme -->
+    <style name="Theme.ShopMaster.NoActionBar" parent="Theme.ShopMaster">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="ProfileTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#000000</item>
