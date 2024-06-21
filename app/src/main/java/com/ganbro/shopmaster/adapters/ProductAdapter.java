@@ -12,28 +12,42 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Product> productList;
+    private boolean isRecommend;
 
-    public ProductAdapter(Context context, List<Product> productList) {
+    public ProductAdapter(Context context, List<Product> productList, boolean isRecommend) {
         this.context = context;
         this.productList = productList;
+        this.isRecommend = isRecommend;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return isRecommend ? R.layout.item_recommend_product : R.layout.item_common_product;
     }
 
     @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
-        return new ProductViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(viewType, parent, false);
+        return isRecommend ? new RecommendProductViewHolder(view) : new CommonProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.format("￥%.2f", product.getPrice()));
+        if (isRecommend) {
+            RecommendProductViewHolder recommendHolder = (RecommendProductViewHolder) holder;
+            recommendHolder.productPrice.setText(String.format("￥%.2f", product.getPrice()));
+            recommendHolder.productImage.setImageResource(R.drawable.product_image); // 统一使用 product_image.png
+        } else {
+            CommonProductViewHolder commonHolder = (CommonProductViewHolder) holder;
+            commonHolder.productName.setText(product.getName());
+            commonHolder.productImage.setImageResource(R.drawable.product_image); // 统一使用 product_image.png
+        }
     }
 
     @Override
@@ -41,14 +55,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView productName;
+    public static class RecommendProductViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
         TextView productPrice;
 
-        public ProductViewHolder(@NonNull View itemView) {
+        public RecommendProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            productName = itemView.findViewById(R.id.textView_product_name);
+            productImage = itemView.findViewById(R.id.imageView_product);
             productPrice = itemView.findViewById(R.id.textView_product_price);
+        }
+    }
+
+    public static class CommonProductViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
+        TextView productName;
+
+        public CommonProductViewHolder(@NonNull View itemView) {
+            super(itemView);
+            productImage = itemView.findViewById(R.id.imageView_product);
+            productName = itemView.findViewById(R.id.textView_product_name);
         }
     }
 }

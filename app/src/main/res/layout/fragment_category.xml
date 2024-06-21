@@ -63,9 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:padding="8dp">
-            <!-- 默认情况下，这里应该是空的，内容将通过代码动态加载 -->
-        </FrameLayout>
+            android:padding="8dp"/>
     </LinearLayout>
 
 </LinearLayout>
