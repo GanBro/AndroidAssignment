@@ -8,4 +8,7 @@
     <string name="checkout">结算</string>
     <string name="search_icon">搜索图标</string>
     <string name="message_icon">消息图标</string>
+    <string name="login_register">登录/注册</string>
+    <string name="waiting_payment">待付款</string>
+    <string name="address">收货地址</string>
 </resources>
