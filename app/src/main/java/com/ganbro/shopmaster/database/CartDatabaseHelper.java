@@ -12,7 +12,7 @@ import java.util.List;
 public class CartDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_CART = "cart";
     public static final String COLUMN_ID = "id";
