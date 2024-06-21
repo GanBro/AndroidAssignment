@@ -16,7 +16,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private Context context;
     private List<Product> productList;
-    private boolean isHorizontalScroll; // 是否是横向滚动
+    private boolean isHorizontalScroll;
 
     public ProductAdapter(Context context, List<Product> productList, boolean isHorizontalScroll) {
         this.context = context;

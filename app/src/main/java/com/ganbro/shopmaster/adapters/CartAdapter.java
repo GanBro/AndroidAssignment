@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
-// CartAdapter.java
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
@@ -69,4 +68,3 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         }
     }
 }
-
