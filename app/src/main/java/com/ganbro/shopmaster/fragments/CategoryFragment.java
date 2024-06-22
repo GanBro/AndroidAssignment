@@ -16,6 +16,7 @@ import java.util.List;
 public class CategoryFragment extends Fragment {
 
     private ListView listViewCategories;
+    private List<String> categories;
 
     @Nullable
     @Override
@@ -24,7 +25,7 @@ public class CategoryFragment extends Fragment {
 
         listViewCategories = view.findViewById(R.id.listView_categories);
         // 初始化分类列表数据
-        List<String> categories = new ArrayList<>();
+        categories = new ArrayList<>();
         categories.add("上衣");
         categories.add("下装");
         categories.add("外套");
@@ -44,6 +45,19 @@ public class CategoryFragment extends Fragment {
                     .commit();
         });
 
+        // 自动加载第一个类别内容
+        if (!categories.isEmpty()) {
+            loadCategoryContent(0);
+        }
+
         return view;
+    }
+
+    private void loadCategoryContent(int position) {
+        String category = categories.get(position);
+        Fragment fragment = CommonCategoryFragment.newInstance(category);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.layout_content, fragment)
+                .commit();
     }
 }

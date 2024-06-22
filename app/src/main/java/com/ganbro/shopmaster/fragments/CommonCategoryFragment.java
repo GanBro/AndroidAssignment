@@ -8,19 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.ProductAdapter;
 import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
+
 import java.util.List;
 
 public class CommonCategoryFragment extends Fragment {
 
     private static final String ARG_CATEGORY_NAME = "category_name";
     private String categoryName;
-
     private RecyclerView recyclerViewRecommend;
     private RecyclerView recyclerViewCommon;
     private ProductAdapter recommendAdapter;
@@ -58,7 +59,7 @@ public class CommonCategoryFragment extends Fragment {
         recyclerViewCommon = view.findViewById(R.id.recycler_view_common);
 
         recyclerViewRecommend.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewCommon.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewCommon.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 设置为GridLayoutManager，每行2列
 
         // 从数据库中获取产品数据
         loadProductsFromDatabase();
@@ -74,9 +75,9 @@ public class CommonCategoryFragment extends Fragment {
 
     private void loadProductsFromDatabase() {
         ProductDao productDao = new ProductDao(getContext());
-        // 根据分类名称获取产品数据
+        // 获取推荐产品
+        recommendProducts = productDao.getRecommendedProductsByCategory(categoryName);
+        // 获取常用分类产品
         commonProducts = productDao.getProductsByCategory(categoryName);
-        // 假设热门推荐就是前两个产品
-        recommendProducts = commonProducts.subList(0, Math.min(2, commonProducts.size()));
     }
 }

@@ -24,6 +24,7 @@ public class ProductDao {
         values.put(ProductDatabaseHelper.COLUMN_IMAGE_URL, product.getImageUrl());
         values.put(ProductDatabaseHelper.COLUMN_QUANTITY, product.getQuantity());
         values.put(ProductDatabaseHelper.COLUMN_CATEGORY, product.getCategory());
+        values.put(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
         db.insert(ProductDatabaseHelper.TABLE_PRODUCT, null, values);
     }
 
@@ -38,12 +39,46 @@ public class ProductDao {
                         cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY))
+                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return productList;
+    }
+
+    public List<Product> getRecommendedProductsByCategory(String category) {
+        List<Product> productList = new ArrayList<>();
+        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, ProductDatabaseHelper.COLUMN_CATEGORY + "=? AND " + ProductDatabaseHelper.COLUMN_IS_RECOMMENDED + "=?", new String[]{category, "1"}, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+                );
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return productList;
+    }
+
+    public void initializeProducts() {
+        addProduct(new Product(0, "上衣1", 100.00, "product_image", 1, "上衣", true));
+        addProduct(new Product(0, "上衣2", 120.00, "product_image", 1, "上衣", false));
+        addProduct(new Product(0, "上衣3", 120.00, "product_image", 1, "上衣", true));
+        addProduct(new Product(0, "上衣4", 120.00, "product_image", 1, "上衣", true));
+        addProduct(new Product(0, "下装1", 150.00, "product_image", 1, "下装", true));
+        addProduct(new Product(0, "外套1", 200.00, "product_image", 1, "外套", false));
+        addProduct(new Product(0, "配件1", 50.00, "product_image", 1, "配件", true));
+        addProduct(new Product(0, "包包1", 300.00, "product_image", 1, "包包", false));
+        // 继续添加更多的商品
     }
 }

@@ -1,13 +1,8 @@
 package com.ganbro.shopmaster.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.ganbro.shopmaster.models.Product;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
@@ -21,6 +16,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
     public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_IS_RECOMMENDED = "is_recommended";  // 新增字段
 
     public static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -29,7 +25,8 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_PRICE + " REAL, " +
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);";
+                    COLUMN_CATEGORY + " TEXT, " +
+                    COLUMN_IS_RECOMMENDED + " INTEGER);";  // 在创建表语句中包含该字段
 
     public ProductDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

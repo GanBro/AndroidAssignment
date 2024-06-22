@@ -8,6 +8,7 @@ public class Product {
     private int quantity;
     private String category;
     private boolean isSelected; // 选择状态属性
+    private boolean isRecommended; // 热门推荐属性
 
     public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
         this.id = id;
@@ -17,6 +18,18 @@ public class Product {
         this.quantity = quantity;
         this.category = category;
         this.isSelected = false; // 默认值为 false
+        this.isRecommended = false; // 默认值为 false
+    }
+
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, boolean isRecommended) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.category = category;
+        this.isSelected = false; // 默认值为 false
+        this.isRecommended = isRecommended;
     }
 
     // Getter and Setter methods
@@ -75,5 +88,13 @@ public class Product {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public boolean isRecommended() {
+        return isRecommended;
+    }
+
+    public void setRecommended(boolean recommended) {
+        isRecommended = recommended;
     }
 }
