@@ -89,6 +89,7 @@ public class ProductDao {
     }
 
 
+
     public List<Product> getAllProducts() {
         List<Product> productList = new ArrayList<>();
         Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, null, null, null, null, null);

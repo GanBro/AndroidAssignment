@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- 顶部的导航栏 -->
+    <!-- 顶部导航栏 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,15 +39,6 @@
             android:drawableStart="@drawable/ic_search"/>
     </LinearLayout>
 
-    <!-- 分类名称 -->
-    <TextView
-        android:id="@+id/text_view_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="分类名称"
-        android:textSize="18sp"
-        android:padding="8dp" />
-
     <!-- 主体内容 -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,17 +46,15 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <!-- 左侧分类列表 -->
-        <ListView
-            android:id="@+id/listView_categories"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_categories"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp"
-            android:background="@color/colorWhite"/>
+            android:background="@color/colorWhite" />
 
-        <!-- 右侧内容 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -73,21 +62,32 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- 推荐产品RecyclerView -->
             <TextView
+                android:id="@+id/text_view_recommend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="热卖推荐"
                 android:textSize="16sp"
-                android:paddingTop="8dp" />
+                android:paddingTop="8dp"
+                android:visibility="gone" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_recommend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal"
+                android:visibility="gone" />
 
-            <!-- 常用分类产品RecyclerView -->
+            <TextView
+                android:id="@+id/text_view_empty_products"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="该分类下没有商品"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingTop="16dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                 android:id="@+id/recycler_view_common"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
