@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -16,70 +15,36 @@ import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
-    private List<Product> productList;
     private Context context;
-    private OnProductSelectedListener onProductSelectedListener;
+    private List<Product> productList;
+    private OnProductSelectedListener listener;
+    private CartDatabaseHelper db;
 
-    public CartAdapter(Context context, List<Product> productList, OnProductSelectedListener onProductSelectedListener) {
+    public CartAdapter(Context context, List<Product> productList, OnProductSelectedListener listener) {
         this.context = context;
         this.productList = productList;
-        this.onProductSelectedListener = onProductSelectedListener;
+        this.listener = listener;
+        this.db = new CartDatabaseHelper(context);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart_product, parent, false);
-        return new ViewHolder(view);
+    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
+        return new CartViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.format("￥%.2f", product.getPrice()));
-        holder.quantityTextView.setText(String.valueOf(product.getQuantity()));
-
-        holder.checkBox.setChecked(product.isSelected());
-
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            product.setSelected(isChecked);
-            if (onProductSelectedListener != null) {
-                onProductSelectedListener.onProductSelected();
-            }
-        });
-
-        holder.increaseButton.setOnClickListener(v -> {
-            product.setQuantity(product.getQuantity() + 1);
-            holder.quantityTextView.setText(String.valueOf(product.getQuantity()));
-            updateProductInDatabase(product);
-            if (onProductSelectedListener != null) {
-                onProductSelectedListener.onProductSelected();
-            }
-        });
-
-        holder.decreaseButton.setOnClickListener(v -> {
-            if (product.getQuantity() > 1) {
-                product.setQuantity(product.getQuantity() - 1);
-                holder.quantityTextView.setText(String.valueOf(product.getQuantity()));
-                updateProductInDatabase(product);
-                if (onProductSelectedListener != null) {
-                    onProductSelectedListener.onProductSelected();
-                }
-            }
-        });
+        holder.bind(product);
     }
 
     @Override
     public int getItemCount() {
         return productList.size();
-    }
-
-    private void updateProductInDatabase(Product product) {
-        CartDatabaseHelper db = new CartDatabaseHelper(context);
-        db.updateProductQuantity(product.getId(), product.getQuantity());
     }
 
     public void removeItem(int position) {
@@ -88,21 +53,70 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         notifyItemRangeChanged(position, productList.size());
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView productName, productPrice, quantityTextView;
-        public ImageView productImage;
-        public CheckBox checkBox;
-        public ImageButton increaseButton, decreaseButton;
+    class CartViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        private TextView nameTextView;
+        private TextView priceTextView;
+        private TextView quantityTextView;
+        private CheckBox selectCheckBox;
+        private ImageView imageView;
+        private Button increaseButton;
+        private Button decreaseButton;
+        private Button removeButton;
+
+        public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            productName = itemView.findViewById(R.id.textView_product_name);
-            productPrice = itemView.findViewById(R.id.textView_product_price);
-            productImage = itemView.findViewById(R.id.imageView_product);
-            checkBox = itemView.findViewById(R.id.checkbox_select);
-            quantityTextView = itemView.findViewById(R.id.textView_quantity);
+            nameTextView = itemView.findViewById(R.id.product_name);
+            priceTextView = itemView.findViewById(R.id.product_price);
+            quantityTextView = itemView.findViewById(R.id.quantity_text);
+            selectCheckBox = itemView.findViewById(R.id.checkbox_select);
+            imageView = itemView.findViewById(R.id.product_image);
             increaseButton = itemView.findViewById(R.id.button_increase);
             decreaseButton = itemView.findViewById(R.id.button_decrease);
+            removeButton = itemView.findViewById(R.id.button_remove);
+        }
+
+        public void bind(Product product) {
+            nameTextView.setText(product.getName());
+            priceTextView.setText(String.format("¥%.2f", product.getPrice()));
+            quantityTextView.setText(String.valueOf(product.getQuantity()));
+            selectCheckBox.setChecked(product.isSelected());
+
+            // 在这里加载产品图片（如果需要的话）
+
+            increaseButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Product updatedProduct = productList.get(position);
+                updatedProduct.setQuantity(updatedProduct.getQuantity() + 1);
+                quantityTextView.setText(String.valueOf(updatedProduct.getQuantity()));
+                db.updateProductQuantity(updatedProduct.getId(), updatedProduct.getQuantity());
+                listener.onProductSelected();
+            });
+
+            decreaseButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Product updatedProduct = productList.get(position);
+                if (updatedProduct.getQuantity() > 1) {
+                    updatedProduct.setQuantity(updatedProduct.getQuantity() - 1);
+                    quantityTextView.setText(String.valueOf(updatedProduct.getQuantity()));
+                    db.updateProductQuantity(updatedProduct.getId(), updatedProduct.getQuantity());
+                    listener.onProductSelected();
+                }
+            });
+
+            removeButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                db.deleteCartProduct(product.getId());
+                removeItem(position);
+                listener.onProductSelected();
+            });
+
+            selectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                int position = getAdapterPosition();
+                Product updatedProduct = productList.get(position);
+                updatedProduct.setSelected(isChecked);
+                listener.onProductSelected();
+            });
         }
     }
 

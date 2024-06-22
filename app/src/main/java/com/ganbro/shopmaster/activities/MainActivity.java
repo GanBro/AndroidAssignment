@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.DatabaseManager;
 import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.fragments.CartFragment;
 import com.ganbro.shopmaster.fragments.CategoryFragment;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 删除并重新创建数据库
+        resetDatabase();
 
         // 插入示例数据
         insertSampleData();
@@ -64,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
+    }
+
+    private void resetDatabase() {
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.deleteDatabase();
+        // 重新创建数据库
+        databaseManager.getWritableDatabase();
     }
 
     private void insertSampleData() {
