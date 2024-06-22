@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -32,7 +32,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_cart_product, parent, false);
         return new CartViewHolder(view);
     }
 
@@ -55,25 +55,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     class CartViewHolder extends RecyclerView.ViewHolder {
 
+        private CheckBox selectCheckBox;
+        private ImageView productImageView;
         private TextView nameTextView;
         private TextView priceTextView;
         private TextView quantityTextView;
-        private CheckBox selectCheckBox;
-        private ImageView imageView;
-        private Button increaseButton;
-        private Button decreaseButton;
-        private Button removeButton;
+        private ImageButton increaseButton;
+        private ImageButton decreaseButton;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.product_name);
-            priceTextView = itemView.findViewById(R.id.product_price);
-            quantityTextView = itemView.findViewById(R.id.quantity_text);
             selectCheckBox = itemView.findViewById(R.id.checkbox_select);
-            imageView = itemView.findViewById(R.id.product_image);
+            productImageView = itemView.findViewById(R.id.imageView_product);
+            nameTextView = itemView.findViewById(R.id.textView_product_name);
+            priceTextView = itemView.findViewById(R.id.textView_product_price);
+            quantityTextView = itemView.findViewById(R.id.textView_quantity);
             increaseButton = itemView.findViewById(R.id.button_increase);
             decreaseButton = itemView.findViewById(R.id.button_decrease);
-            removeButton = itemView.findViewById(R.id.button_remove);
         }
 
         public void bind(Product product) {
@@ -102,13 +100,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     db.updateProductQuantity(updatedProduct.getId(), updatedProduct.getQuantity());
                     listener.onProductSelected();
                 }
-            });
-
-            removeButton.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                db.deleteCartProduct(product.getId());
-                removeItem(position);
-                listener.onProductSelected();
             });
 
             selectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
