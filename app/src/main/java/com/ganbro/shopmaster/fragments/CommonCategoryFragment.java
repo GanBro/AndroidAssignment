@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -57,14 +56,10 @@ public class CommonCategoryFragment extends Fragment {
         Log.d("CommonCategoryFragment", "onCreateView called");
         View view = inflater.inflate(R.layout.fragment_common_category, container, false);
 
-        // 设置分类名称
-        TextView categoryNameTextView = view.findViewById(R.id.text_view_category);
-        categoryNameTextView.setText(categoryName);
-
         // 设置RecyclerView
         recyclerViewRecommend = view.findViewById(R.id.recycler_view_recommend);
         recyclerViewCommon = view.findViewById(R.id.recycler_view_common);
-        listViewCategories = view.findViewById(R.id.listView_categories);
+        listViewCategories = view.findViewById(R.id.recycler_view_categories);
 
         recyclerViewRecommend.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCommon.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 设置为GridLayoutManager，每行2列
@@ -87,7 +82,6 @@ public class CommonCategoryFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCategory = (String) parent.getItemAtPosition(position);
                 Log.d("CommonCategoryFragment", "Selected category: " + selectedCategory);
-                categoryNameTextView.setText(selectedCategory);
                 loadProductsFromDatabaseForCategory(selectedCategory);
             }
         });
