@@ -20,7 +20,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
-    public static final String COLUMN_CATEGORY = "category"; // 新增的列
+    public static final String COLUMN_CATEGORY = "category";
 
     public static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -29,7 +29,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_PRICE + " REAL, " +
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);"; // 添加 category 列
+                    COLUMN_CATEGORY + " TEXT);";
 
     public ProductDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,8 +42,15 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 3) {
-            db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_CATEGORY + " TEXT;");
+        if (newVersion > oldVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
+            onCreate(db);
         }
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
+        onCreate(db);
     }
 }

@@ -23,7 +23,7 @@ public class ProductDao {
         values.put(ProductDatabaseHelper.COLUMN_PRICE, product.getPrice());
         values.put(ProductDatabaseHelper.COLUMN_IMAGE_URL, product.getImageUrl());
         values.put(ProductDatabaseHelper.COLUMN_QUANTITY, product.getQuantity());
-        values.put(ProductDatabaseHelper.COLUMN_CATEGORY, product.getCategory()); // 添加 category 列的值
+        values.put(ProductDatabaseHelper.COLUMN_CATEGORY, product.getCategory());
         db.insert(ProductDatabaseHelper.TABLE_PRODUCT, null, values);
     }
 
@@ -38,7 +38,7 @@ public class ProductDao {
                         cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)) // 获取 category 列的值
+                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY))
                 );
                 productList.add(product);
             } while (cursor.moveToNext());

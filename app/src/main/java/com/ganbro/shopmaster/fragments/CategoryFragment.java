@@ -4,21 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import com.ganbro.shopmaster.R;
-import java.util.Arrays;
+import com.ganbro.shopmaster.adapters.CategoryAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
 
     private ListView listViewCategories;
-    private List<String> categories = Arrays.asList("上衣", "下装", "外套", "配件", "包包", "鞋子", "饰品", "内衣", "运动服");
 
     @Nullable
     @Override
@@ -26,28 +23,27 @@ public class CategoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
 
         listViewCategories = view.findViewById(R.id.listView_categories);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, categories);
+        // 初始化分类列表数据
+        List<String> categories = new ArrayList<>();
+        categories.add("上衣");
+        categories.add("下装");
+        categories.add("外套");
+        categories.add("配件");
+        categories.add("包包");
+
+        // 设置分类列表的适配器
+        CategoryAdapter adapter = new CategoryAdapter(getContext(), categories);
         listViewCategories.setAdapter(adapter);
 
-        // 设置默认选择第一个类别
-        if (savedInstanceState == null) {
-            displayCategory(0);
-        }
-
-        listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                displayCategory(position);
-            }
+        listViewCategories.setOnItemClickListener((parent, view1, position, id) -> {
+            String category = categories.get(position);
+            // 处理点击事件，显示对应的分类内容
+            Fragment fragment = CommonCategoryFragment.newInstance(category);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.layout_content, fragment)
+                    .commit();
         });
 
         return view;
-    }
-
-    private void displayCategory(int position) {
-        String selectedCategory = categories.get(position);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.layout_content, CommonCategoryFragment.newInstance(selectedCategory));
-        transaction.commit();
     }
 }
