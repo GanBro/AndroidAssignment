@@ -4,60 +4,56 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.adapters.CategoryAdapter;
-import java.util.ArrayList;
+import com.ganbro.shopmaster.models.Product;
+import com.ganbro.shopmaster.viewmodels.CategoryViewModel;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
 
-    private ListView listViewCategories;
-    private List<String> categories;
+    private CategoryViewModel categoryViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
+        final LinearLayout productContainer = view.findViewById(R.id.product_container);
 
-        listViewCategories = view.findViewById(R.id.listView_categories);
-        // 初始化分类列表数据
-        categories = new ArrayList<>();
-        categories.add("上衣");
-        categories.add("下装");
-        categories.add("外套");
-        categories.add("配件");
-        categories.add("包包");
-
-        // 设置分类列表的适配器
-        CategoryAdapter adapter = new CategoryAdapter(getContext(), categories);
-        listViewCategories.setAdapter(adapter);
-
-        listViewCategories.setOnItemClickListener((parent, view1, position, id) -> {
-            String category = categories.get(position);
-            // 处理点击事件，显示对应的分类内容
-            Fragment fragment = CommonCategoryFragment.newInstance(category);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.layout_content, fragment)
-                    .commit();
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        categoryViewModel.getProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> products) {
+                productContainer.removeAllViews();
+                for (Product product : products) {
+                    addProductCard(productContainer, product);
+                }
+            }
         });
-
-        // 自动加载第一个类别内容
-        if (!categories.isEmpty()) {
-            loadCategoryContent(0);
-        }
 
         return view;
     }
 
-    private void loadCategoryContent(int position) {
-        String category = categories.get(position);
-        Fragment fragment = CommonCategoryFragment.newInstance(category);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.layout_content, fragment)
-                .commit();
+    private void addProductCard(LinearLayout container, Product product) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View productCard = inflater.inflate(R.layout.item_product, container, false);
+
+        ImageView productImage = productCard.findViewById(R.id.imageView_product);
+        TextView productName = productCard.findViewById(R.id.textView_product_name);
+        TextView productPrice = productCard.findViewById(R.id.textView_product_price);
+
+        productName.setText(product.getName());
+        productPrice.setText(String.format("￥%.2f", product.getPrice()));
+        Glide.with(this).load(product.getImageUrl()).into(productImage);
+
+        container.addView(productCard);
     }
 }

@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d("MainActivity", "onCreate: started");
 
         // 删除并重新创建数据库
         resetDatabase();
@@ -70,14 +73,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetDatabase() {
+        Log.d("MainActivity", "resetDatabase: started");
         DatabaseManager databaseManager = new DatabaseManager(this);
         databaseManager.deleteDatabase();
         // 重新创建数据库
         databaseManager.getWritableDatabase();
+        Log.d("MainActivity", "resetDatabase: completed");
     }
 
     private void initializeProducts() {
+        Log.d("MainActivity", "initializeProducts: started");
         ProductDao productDao = new ProductDao(this);
         productDao.initializeProducts();
+        Log.d("MainActivity", "initializeProducts: completed");
     }
 }

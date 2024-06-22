@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
@@ -37,12 +39,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
         holder.productPrice.setText(String.format("¥%.2f", product.getPrice()));
-        // 加载图片和其他必要的数据设置...
+        Glide.with(context).load(product.getImageUrl()).into(holder.productImage);
     }
 
     @Override
     public int getItemCount() {
         return productList.size();
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+        Log.d("ProductAdapter", "Product list updated. New size: " + productList.size());
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
