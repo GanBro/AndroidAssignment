@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -100,7 +102,14 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void showSelectStyleDialog() {
         Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_select_style);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
 
         ImageView styleImage = dialog.findViewById(R.id.style_image);
         TextView styleName = dialog.findViewById(R.id.style_name);
@@ -115,7 +124,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         styleName.setText(productName.getText());
         stylePrice.setText(productPrice.getText());
-        Glide.with(this).load(product.getImageUrl()).into(styleImage);
+        // Load style image using a library like Picasso or Glide
+        // Picasso.get().load(product.getImageUrl()).into(styleImage);
 
         styleM.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "M"));
         styleL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "L"));
@@ -143,6 +153,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+
 
     private void selectStyle(Button styleM, Button styleL, Button styleXL, String style) {
         selectedStyle = style;

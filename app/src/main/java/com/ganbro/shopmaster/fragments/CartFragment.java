@@ -52,33 +52,20 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         cartAdapter = new CartAdapter(getActivity(), cartProducts, this);
         recyclerViewCart.setAdapter(cartAdapter);
 
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isEditing) {
-                    editModeButtons.setVisibility(View.GONE);
-                    buttonEdit.setText("编辑");
-                } else {
-                    editModeButtons.setVisibility(View.VISIBLE);
-                    buttonEdit.setText("完成");
-                }
-                isEditing = !isEditing;
+        buttonEdit.setOnClickListener(v -> {
+            if (isEditing) {
+                editModeButtons.setVisibility(View.GONE);
+                buttonEdit.setText("编辑");
+            } else {
+                editModeButtons.setVisibility(View.VISIBLE);
+                buttonEdit.setText("完成");
             }
+            isEditing = !isEditing;
         });
 
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDeleteSelectedItems();
-            }
-        });
+        buttonDelete.setOnClickListener(v -> confirmDeleteSelectedItems());
 
-        checkboxSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectAllItems(checkboxSelectAll.isChecked());
-            }
-        });
+        checkboxSelectAll.setOnClickListener(v -> selectAllItems(checkboxSelectAll.isChecked()));
 
         updateTotalPrice();
 
