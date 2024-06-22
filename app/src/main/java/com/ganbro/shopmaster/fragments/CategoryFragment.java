@@ -1,5 +1,6 @@
 package com.ganbro.shopmaster.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.ProductDetailActivity;
 import com.ganbro.shopmaster.adapters.CategoryAdapter;
 import com.ganbro.shopmaster.adapters.ProductAdapter;
 import com.ganbro.shopmaster.models.Product;
@@ -24,8 +26,8 @@ import java.util.List;
 public class CategoryFragment extends Fragment {
     private RecyclerView recyclerViewCategories;
     private RecyclerView recyclerViewProducts;
-    private RecyclerView recyclerViewRecommended;
-    private TextView textViewRecommended;
+    private RecyclerView recyclerViewRecommendProducts;
+    private TextView textViewRecommend;
     private TextView textViewEmptyProducts;
     private CategoryViewModel categoryViewModel;
     private CategoryAdapter categoryAdapter;
@@ -38,13 +40,13 @@ public class CategoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_common_category, container, false);
         recyclerViewCategories = view.findViewById(R.id.recycler_view_categories);
         recyclerViewProducts = view.findViewById(R.id.recycler_view_common);
-        recyclerViewRecommended = view.findViewById(R.id.recycler_view_recommend);
-        textViewRecommended = view.findViewById(R.id.text_view_recommend);
+        recyclerViewRecommendProducts = view.findViewById(R.id.recycler_view_recommend_products);
+        textViewRecommend = view.findViewById(R.id.text_view_recommend);
         textViewEmptyProducts = view.findViewById(R.id.text_view_empty_products);
 
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewProducts.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerViewRecommended.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewRecommendProducts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
@@ -77,6 +79,13 @@ public class CategoryFragment extends Fragment {
                         recyclerViewProducts.setAdapter(productAdapter);
                         recyclerViewProducts.setVisibility(View.VISIBLE);
                         textViewEmptyProducts.setVisibility(View.GONE);
+
+                        productAdapter.setOnItemClickListener(product -> {
+                            Log.d("CategoryFragment", "Product clicked: " + product.getId());
+                            Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                            intent.putExtra("product_id", product.getId());
+                            startActivity(intent);
+                        });
                     } else {
                         recyclerViewProducts.setVisibility(View.GONE);
                         textViewEmptyProducts.setVisibility(View.VISIBLE);
@@ -92,12 +101,19 @@ public class CategoryFragment extends Fragment {
             public void onChanged(List<Product> recommendedProducts) {
                 if (recommendedProducts != null && !recommendedProducts.isEmpty()) {
                     recommendedProductAdapter = new ProductAdapter(getContext(), recommendedProducts, true);
-                    recyclerViewRecommended.setAdapter(recommendedProductAdapter);
-                    recyclerViewRecommended.setVisibility(View.VISIBLE);
-                    textViewRecommended.setVisibility(View.VISIBLE);
+                    recyclerViewRecommendProducts.setAdapter(recommendedProductAdapter);
+                    recyclerViewRecommendProducts.setVisibility(View.VISIBLE);
+                    textViewRecommend.setVisibility(View.VISIBLE);
+
+                    recommendedProductAdapter.setOnItemClickListener(product -> {
+                        Log.d("CategoryFragment", "Recommended Product clicked: " + product.getId());
+                        Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                        intent.putExtra("product_id", product.getId());
+                        startActivity(intent);
+                    });
                 } else {
-                    recyclerViewRecommended.setVisibility(View.GONE);
-                    textViewRecommended.setVisibility(View.GONE);
+                    recyclerViewRecommendProducts.setVisibility(View.GONE);
+                    textViewRecommend.setVisibility(View.GONE);
                     Log.d("CategoryFragment", "No recommended products to display.");
                 }
             }
@@ -108,8 +124,8 @@ public class CategoryFragment extends Fragment {
 
     private void loadCategoryData(String category) {
         // 清空之前的推荐数据
-        recyclerViewRecommended.setAdapter(null);
-        textViewRecommended.setVisibility(View.GONE);
+        recyclerViewRecommendProducts.setAdapter(null);
+        textViewRecommend.setVisibility(View.GONE);
 
         categoryViewModel.loadProductsByCategory(category);
         categoryViewModel.loadRecommendedProductsByCategory(category);

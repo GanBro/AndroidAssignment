@@ -1,6 +1,8 @@
 package com.ganbro.shopmaster.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.ProductDetailActivity;
 import com.ganbro.shopmaster.models.Product;
 import com.ganbro.shopmaster.viewmodels.HomeViewModel;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private static final String TAG = "HomeFragment";
 
     @Nullable
     @Override
@@ -74,6 +78,13 @@ public class HomeFragment extends Fragment {
         productName.setText(product.getName());
         productPrice.setText(String.format("￥%.2f", product.getPrice()));
         Glide.with(this).load(product.getImageUrl()).into(productImage);
+
+        productCard.setOnClickListener(v -> {
+            Log.d(TAG, "Product clicked: " + product.getId());
+            Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+            intent.putExtra("product_id", product.getId());
+            startActivity(intent);
+        });
 
         container.addView(productCard);
     }

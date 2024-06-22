@@ -125,5 +125,25 @@ public class ProductDao {
         Log.d("ProductDao", "Products initialized.");
     }
 
+    public Product getProductById(int id) {
+        Product product = null;
+        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, ProductDatabaseHelper.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor.moveToFirst()) {
+            product = new Product(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+            );
+        }
+        cursor.close();
+        return product;
+    }
+
+
+
 
 }

@@ -2,13 +2,18 @@ package com.ganbro.shopmaster.activities;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
+import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -26,11 +31,16 @@ public class ProductDetailActivity extends AppCompatActivity {
     private int quantity = 1;
     private String selectedStyle = "M";
     private Product product;
+    private static final String TAG = "ProductDetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productImage = findViewById(R.id.product_image);
         productName = findViewById(R.id.product_name);
@@ -42,19 +52,18 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.buy_now);
         selectStyleButton = findViewById(R.id.select_style_button);
 
-        // Simulate getting product data
-        product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image", 1, "上衣"); // 添加类别参数
-
-        // Set product details
-        productName.setText(product.getName());
-        productDescription.setText("预售截止10月15日，预售期为限量礼品版，包括特别礼盒x1，面巾x1，邮票x1套，书签x1，明信片x1，信封x1，礼盒袋");
-        productPrice.setText(String.format("￥%.2f", product.getPrice()));
-        // Load product image using a library like Picasso or Glide
-        // Picasso.get().load(product.getImageUrl()).into(productImage);
+        int productId = getIntent().getIntExtra("product_id", -1);
+        Log.d(TAG, "Received Product ID: " + productId);
+        if (productId != -1) {
+            loadProductDetails(productId);
+        } else {
+            Toast.makeText(this, "无法加载商品详情", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         addToCartButton.setOnClickListener(v -> {
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
-            cartDbHelper.addProductToCart(product); // 确保使用正确的方法名
+            cartDbHelper.addProductToCart(product);
             Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
         });
 
@@ -71,6 +80,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
+    }
+
+    private void loadProductDetails(int productId) {
+        ProductDao productDao = new ProductDao(this);
+        product = productDao.getProductById(productId);
+        if (product != null) {
+            Log.d(TAG, "Loaded Product: " + product.getName());
+            productName.setText(product.getName());
+            productDescription.setText("预售截止10月15日，预售期为限量礼品版，包括特别礼盒x1，面巾x1，邮票x1套，书签x1，明信片x1，信封x1，礼盒袋");
+            productPrice.setText(String.format("￥%.2f", product.getPrice()));
+            Glide.with(this).load(product.getImageUrl()).into(productImage);
+        } else {
+            Log.d(TAG, "Failed to load product details");
+            Toast.makeText(this, "商品详情加载失败", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void showSelectStyleDialog() {
@@ -90,8 +115,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         styleName.setText(productName.getText());
         stylePrice.setText(productPrice.getText());
-        // Load style image using a library like Picasso or Glide
-        // Picasso.get().load(product.getImageUrl()).into(styleImage);
+        Glide.with(this).load(product.getImageUrl()).into(styleImage);
 
         styleM.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "M"));
         styleL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "L"));
@@ -112,7 +136,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         buttonConfirm.setOnClickListener(v -> {
             Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory());
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
-            cartDbHelper.addProductToCart(selectedProduct); // 确保使用正确的方法名
+            cartDbHelper.addProductToCart(selectedProduct);
             dialog.dismiss();
             Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
         });
@@ -126,4 +150,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         styleL.setBackgroundResource(style.equals("L") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
         styleXL.setBackgroundResource(style.equals("XL") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
+

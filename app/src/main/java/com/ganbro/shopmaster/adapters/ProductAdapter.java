@@ -19,6 +19,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private Context context;
     private List<Product> productList;
     private boolean isHorizontalScroll;
+    private OnItemClickListener onItemClickListener;
+
+    private static final String TAG = "ProductAdapter";
+
+    public interface OnItemClickListener {
+        void onItemClick(Product product);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public ProductAdapter(Context context, List<Product> productList, boolean isHorizontalScroll) {
         this.context = context;
@@ -40,6 +51,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productName.setText(product.getName());
         holder.productPrice.setText(String.format("¥%.2f", product.getPrice()));
         Glide.with(context).load(product.getImageUrl()).into(holder.productImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            Log.d(TAG, "Product clicked: " + product.getName());
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(product);
+            }
+        });
     }
 
     @Override
@@ -49,7 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
-        Log.d("ProductAdapter", "Product list updated. New size: " + productList.size());
+        notifyDataSetChanged();
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
