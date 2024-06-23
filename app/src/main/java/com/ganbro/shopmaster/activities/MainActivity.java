@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetDatabase() {
         Log.d("MainActivity", "resetDatabase: started");
         DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.deleteDatabase();
+        databaseManager.deleteDatabase(this);
         // 重新创建数据库
         databaseManager.getWritableDatabase();
         Log.d("MainActivity", "resetDatabase: completed");

@@ -20,6 +20,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private Context context;
     private List<Product> cartProducts;
     private OnProductSelectedListener onProductSelectedListener;
+    private boolean isEditing = false;
 
     public interface OnProductSelectedListener {
         void onProductSelected();
@@ -29,6 +30,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.context = context;
         this.cartProducts = cartProducts;
         this.onProductSelectedListener = onProductSelectedListener;
+    }
+
+    public void setEditing(boolean editing) {
+        isEditing = editing;
     }
 
     @NonNull
@@ -70,6 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
 
+        holder.buttonRemove.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         holder.buttonRemove.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             cartProducts.remove(pos);

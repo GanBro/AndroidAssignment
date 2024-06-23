@@ -74,7 +74,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         addToFavorites.setOnClickListener(v -> {
-            // Add to favorites logic
+            ProductDao productDao = new ProductDao(this);
+            if (!productDao.isProductInFavorites(product.getId())) {
+                productDao.addProductToFavorites(product);
+                Toast.makeText(this, "商品已添加到收藏", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "商品已经在收藏列表中", Toast.LENGTH_SHORT).show();
+            }
         });
 
         buyNow.setOnClickListener(v -> {
@@ -82,6 +88,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
+
     }
 
     private void loadProductDetails(int productId) {
@@ -122,10 +129,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         Button buttonIncrease = dialog.findViewById(R.id.button_increase);
         Button buttonConfirm = dialog.findViewById(R.id.button_confirm);
 
-        styleName.setText(productName.getText());
-        stylePrice.setText(productPrice.getText());
-        // Load style image using a library like Picasso or Glide
-        // Picasso.get().load(product.getImageUrl()).into(styleImage);
+        styleName.setText(product.getName());
+        stylePrice.setText(String.format("￥%.2f", product.getPrice()));
+        Glide.with(this).load(product.getImageUrl()).into(styleImage);
 
         styleM.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "M"));
         styleL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "L"));
@@ -154,8 +160,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-
     private void selectStyle(Button styleM, Button styleL, Button styleXL, String style) {
         selectedStyle = style;
         styleM.setBackgroundResource(style.equals("M") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
@@ -172,4 +176,3 @@ public class ProductDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
-

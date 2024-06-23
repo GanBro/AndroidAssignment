@@ -61,9 +61,13 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
                 buttonEdit.setText("完成");
             }
             isEditing = !isEditing;
+            cartAdapter.setEditing(isEditing);
+            cartAdapter.notifyDataSetChanged();
         });
 
         buttonDelete.setOnClickListener(v -> confirmDeleteSelectedItems());
+
+        buttonCollect.setOnClickListener(v -> collectSelectedItems());
 
         checkboxSelectAll.setOnClickListener(v -> selectAllItems(checkboxSelectAll.isChecked()));
 
@@ -101,6 +105,21 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
             }
         }
         updateTotalPrice();
+    }
+
+    private void collectSelectedItems() {
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        for (Product product : cartProducts) {
+            if (product.isSelected()) {
+                cartDatabaseHelper.addProductToFavorites(product);
+            }
+        }
+        // 可以在这里显示一个提示，告知用户商品已被收藏
+        new AlertDialog.Builder(getActivity())
+                .setTitle("收藏成功")
+                .setMessage("选中的商品已被添加到我的收藏")
+                .setPositiveButton("确定", null)
+                .show();
     }
 
     private void selectAllItems(boolean isChecked) {

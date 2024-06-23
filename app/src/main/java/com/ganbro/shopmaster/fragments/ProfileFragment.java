@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.ganbro.shopmaster.R;
 
@@ -27,10 +29,18 @@ public class ProfileFragment extends Fragment {
 
         CircleImageView profileImage = view.findViewById(R.id.profile_image);
         View loginRegisterButton = view.findViewById(R.id.login_register_button);
+        LinearLayout myFavoritesButton = view.findViewById(R.id.my_favorites_button);
 
         // 设置点击事件
         loginRegisterButton.setOnClickListener(v -> {
             // 处理登录/注册按钮点击事件
+        });
+
+        myFavoritesButton.setOnClickListener(v -> {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new FavoritesFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
         // 根据实际需要进行更多设置

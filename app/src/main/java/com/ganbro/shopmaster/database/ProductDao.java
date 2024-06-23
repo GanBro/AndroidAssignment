@@ -5,46 +5,88 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.ganbro.shopmaster.models.Product;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ProductDao {
 
     private SQLiteDatabase db;
 
     public ProductDao(Context context) {
-        ProductDatabaseHelper dbHelper = new ProductDatabaseHelper(context);
+        DatabaseManager dbHelper = new DatabaseManager(context);
         db = dbHelper.getWritableDatabase();
     }
 
     public void addProduct(Product product) {
         ContentValues values = new ContentValues();
-        values.put(ProductDatabaseHelper.COLUMN_NAME, product.getName());
-        values.put(ProductDatabaseHelper.COLUMN_PRICE, product.getPrice());
-        values.put(ProductDatabaseHelper.COLUMN_IMAGE_URL, product.getImageUrl());
-        values.put(ProductDatabaseHelper.COLUMN_QUANTITY, product.getQuantity());
-        values.put(ProductDatabaseHelper.COLUMN_CATEGORY, product.getCategory());
-        values.put(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
-        db.insert(ProductDatabaseHelper.TABLE_PRODUCT, null, values);
+        values.put(DatabaseManager.COLUMN_NAME, product.getName());
+        values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
+        values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
+        values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
+        values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
+        db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
+    }
+
+    public void addProductToFavorites(Product product) {
+        if (!isProductInFavorites(product.getId())) {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseManager.COLUMN_ID, product.getId());
+            values.put(DatabaseManager.COLUMN_NAME, product.getName());
+            values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
+            values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+            values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
+            values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
+            values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
+            db.insert(DatabaseManager.TABLE_FAVORITES, null, values);
+        } else {
+            Log.d("ProductDao", "Product already in favorites: " + product.getName());
+        }
+    }
+
+    public boolean isProductInFavorites(int productId) {
+        String query = "SELECT 1 FROM " + DatabaseManager.TABLE_FAVORITES + " WHERE " + DatabaseManager.COLUMN_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(productId)});
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
+
+    public List<Product> getAllFavorites() {
+        List<Product> productList = new ArrayList<>();
+        Cursor cursor = db.query(DatabaseManager.TABLE_FAVORITES, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1
+                );
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return productList;
     }
 
     public List<Product> getProductsByCategory(String category) {
         List<Product> productList = new ArrayList<>();
-        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, ProductDatabaseHelper.COLUMN_CATEGORY + "=?", new String[]{category}, null, null, null);
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, DatabaseManager.COLUMN_CATEGORY + "=?", new String[]{category}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -55,17 +97,17 @@ public class ProductDao {
 
     public List<Product> getRecommendedProductsByCategory(String category) {
         List<Product> productList = new ArrayList<>();
-        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, ProductDatabaseHelper.COLUMN_CATEGORY + "=? AND " + ProductDatabaseHelper.COLUMN_IS_RECOMMENDED + "=?", new String[]{category, "1"}, null, null, null);
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, DatabaseManager.COLUMN_CATEGORY + "=? AND " + DatabaseManager.COLUMN_IS_RECOMMENDED + "=?", new String[]{category, "1"}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -75,34 +117,31 @@ public class ProductDao {
     }
 
     public List<String> getAllCategories() {
-        Set<String> categories = new HashSet<>();
-        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, new String[]{ProductDatabaseHelper.COLUMN_CATEGORY}, null, null, ProductDatabaseHelper.COLUMN_CATEGORY, null, null);
+        List<String> categoryList = new ArrayList<>();
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, new String[]{DatabaseManager.COLUMN_CATEGORY}, null, null, DatabaseManager.COLUMN_CATEGORY, null, null);
         if (cursor.moveToFirst()) {
             do {
-                categories.add(cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)));
+                categoryList.add(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        List<String> categoryList = new ArrayList<>(categories);
         Log.d("ProductDao", "Loaded categories: " + categoryList.toString());
         return categoryList;
     }
 
-
-
     public List<Product> getAllProducts() {
         List<Product> productList = new ArrayList<>();
-        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, null, null, null, null, null);
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -127,23 +166,19 @@ public class ProductDao {
 
     public Product getProductById(int id) {
         Product product = null;
-        Cursor cursor = db.query(ProductDatabaseHelper.TABLE_PRODUCT, null, ProductDatabaseHelper.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, DatabaseManager.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
         if (cursor.moveToFirst()) {
             product = new Product(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_NAME)),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IMAGE_URL)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_QUANTITY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_CATEGORY)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_IS_RECOMMENDED)) == 1
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1
             );
         }
         cursor.close();
         return product;
     }
-
-
-
-
 }
