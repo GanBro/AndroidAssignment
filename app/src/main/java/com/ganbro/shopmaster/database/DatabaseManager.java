@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 7; // 更新版本号
+    private static final int DATABASE_VERSION = 8; // 更新版本号
 
     public static final String TABLE_CART = "cart";
     public static final String TABLE_FAVORITES = "favorites";
@@ -19,8 +19,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
     public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_DESCRIPTION = "description"; // 新增描述字段
     public static final String COLUMN_IS_RECOMMENDED = "is_recommended";
-    public static final String COLUMN_DESCRIPTION = "description"; // 新增字段
 
     public static final String TABLE_CART_CREATE =
             "CREATE TABLE " + TABLE_CART + " (" +
@@ -39,8 +39,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
                     COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_IS_RECOMMENDED + " INTEGER, " +
-                    COLUMN_DESCRIPTION + " TEXT);"; // 包含 description 字段
+                    COLUMN_DESCRIPTION + " TEXT, " + // 包含描述字段
+                    COLUMN_IS_RECOMMENDED + " INTEGER);";
 
     public static final String TABLE_PRODUCT_CREATE =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -50,8 +50,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
                     COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_IS_RECOMMENDED + " INTEGER, " +
-                    COLUMN_DESCRIPTION + " TEXT);"; // 包含 description 字段
+                    COLUMN_DESCRIPTION + " TEXT, " + // 包含描述字段
+                    COLUMN_IS_RECOMMENDED + " INTEGER);";
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

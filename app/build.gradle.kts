@@ -1,7 +1,8 @@
 plugins {
-    id("com.android.application") version "8.3.1"
-    id("org.jetbrains.kotlin.android") version "1.8.0"
-    id("org.jetbrains.kotlin.kapt") version "1.8.0"
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("io.freefair.lombok")
 }
 
 android {
@@ -45,6 +46,10 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     kapt("com.github.bumptech.glide:compiler:4.12.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Lombok 依赖
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    kapt("org.projectlombok:lombok:1.18.24")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

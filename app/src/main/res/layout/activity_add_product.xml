@@ -36,6 +36,14 @@
         android:inputType="text"
         android:layout_marginTop="8dp" />
 
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="商品描述"
+        android:inputType="text"
+        android:layout_marginTop="8dp" />
+
     <Button
         android:id="@+id/buttonAddProduct"
         android:layout_width="match_parent"

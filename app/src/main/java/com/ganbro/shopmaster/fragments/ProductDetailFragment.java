@@ -12,8 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
+import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
 
 public class ProductDetailFragment extends Fragment {
@@ -47,15 +49,14 @@ public class ProductDetailFragment extends Fragment {
         buyNow = view.findViewById(R.id.buy_now);
         selectStyleButton = view.findViewById(R.id.select_style_button);
 
-        // Simulate getting product data
-        product = new Product(1, "现货【TUMO】雨库洛牌元素 软妹茶安系短袖连衣裙", 179.00, "url_to_image", 1, "上衣"); // 添加类别参数
-
-        // Set product details
-        productName.setText(product.getName());
-        productDescription.setText("预售截止10月15日，预售期为限量礼品版，包括特别礼盒x1，面巾x1，邮票x1套，书签x1，明信片x1，信封x1，礼盒袋");
-        productPrice.setText(String.format("￥%.2f", product.getPrice()));
-        // Load product image using a library like Picasso or Glide
-        // Picasso.get().load(product.getImageUrl()).into(productImage);
+        // 获取传递的商品 ID
+        int productId = getArguments().getInt("product_id", -1);
+        if (productId != -1) {
+            loadProductDetails(productId);
+        } else {
+            Toast.makeText(getContext(), "无法加载商品详情", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
 
         addToCartButton.setOnClickListener(v -> {
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(getContext());
@@ -64,20 +65,40 @@ public class ProductDetailFragment extends Fragment {
         });
 
         contactCustomerService.setOnClickListener(v -> {
-            // Contact customer service logic
+            // 联系客服逻辑
         });
 
         addToFavorites.setOnClickListener(v -> {
-            // Add to favorites logic
+            ProductDao productDao = new ProductDao(getContext());
+            if (!productDao.isProductInFavorites(product.getId())) {
+                productDao.addProductToFavorites(product);
+                Toast.makeText(getContext(), "商品已添加到收藏", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "商品已经在收藏列表中", Toast.LENGTH_SHORT).show();
+            }
         });
 
         buyNow.setOnClickListener(v -> {
-            // Buy now logic
+            // 立即购买逻辑
         });
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
 
         return view;
+    }
+
+    private void loadProductDetails(int productId) {
+        ProductDao productDao = new ProductDao(getContext());
+        product = productDao.getProductById(productId);
+        if (product != null) {
+            productName.setText(product.getName());
+            productDescription.setText(product.getDescription()); // 从数据库加载描述
+            productPrice.setText(String.format("￥%.2f", product.getPrice()));
+            Glide.with(this).load(product.getImageUrl()).into(productImage);
+        } else {
+            Toast.makeText(getContext(), "商品详情加载失败", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
     }
 
     private void showSelectStyleDialog() {
@@ -95,10 +116,9 @@ public class ProductDetailFragment extends Fragment {
         Button buttonIncrease = dialog.findViewById(R.id.button_increase);
         Button buttonConfirm = dialog.findViewById(R.id.button_confirm);
 
-        styleName.setText(productName.getText());
-        stylePrice.setText(productPrice.getText());
-        // Load style image using a library like Picasso or Glide
-        // Picasso.get().load(product.getImageUrl()).into(styleImage);
+        styleName.setText(product.getName());
+        stylePrice.setText(String.format("￥%.2f", product.getPrice()));
+        Glide.with(this).load(product.getImageUrl()).into(styleImage);
 
         styleM.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "M"));
         styleL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "L"));
@@ -117,7 +137,7 @@ public class ProductDetailFragment extends Fragment {
         });
 
         buttonConfirm.setOnClickListener(v -> {
-            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory());
+            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory(), product.getDescription(), product.isRecommended());
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(getContext());
             cartDbHelper.addProductToCart(selectedProduct);
             dialog.dismiss();

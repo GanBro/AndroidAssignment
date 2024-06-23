@@ -97,7 +97,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (product != null) {
             Log.d(TAG, "Loaded Product: " + product.getName());
             productName.setText(product.getName());
-            productDescription.setText("预售截止10月15日，预售期为限量礼品版，包括特别礼盒x1，面巾x1，邮票x1套，书签x1，明信片x1，信封x1，礼盒袋");
+            productDescription.setText(product.getDescription()); // 从数据库加载描述
             productPrice.setText(String.format("￥%.2f", product.getPrice()));
             Glide.with(this).load(product.getImageUrl()).into(productImage);
         } else {
@@ -150,7 +150,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         buttonConfirm.setOnClickListener(v -> {
-            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory());
+            Product selectedProduct = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity, product.getCategory(), product.getDescription(), product.isRecommended());
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
             cartDbHelper.addProductToCart(selectedProduct);
             dialog.dismiss();

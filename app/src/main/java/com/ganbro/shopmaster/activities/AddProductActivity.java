@@ -15,7 +15,8 @@ public class AddProductActivity extends AppCompatActivity {
     private EditText editTextName;
     private EditText editTextPrice;
     private EditText editTextImageUrl;
-    private EditText editTextCategory; // 新增类别输入框
+    private EditText editTextCategory;
+    private EditText editTextDescription; // 新增描述输入框
     private Button buttonAddProduct;
 
     @Override
@@ -26,7 +27,8 @@ public class AddProductActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.editTextName);
         editTextPrice = findViewById(R.id.editTextPrice);
         editTextImageUrl = findViewById(R.id.editTextImageUrl);
-        editTextCategory = findViewById(R.id.editTextCategory); // 初始化类别输入框
+        editTextCategory = findViewById(R.id.editTextCategory);
+        editTextDescription = findViewById(R.id.editTextDescription); // 初始化描述输入框
         buttonAddProduct = findViewById(R.id.buttonAddProduct);
 
         buttonAddProduct.setOnClickListener(new View.OnClickListener() {
@@ -35,14 +37,15 @@ public class AddProductActivity extends AppCompatActivity {
                 String name = editTextName.getText().toString().trim();
                 double price = Double.parseDouble(editTextPrice.getText().toString().trim());
                 String imageUrl = editTextImageUrl.getText().toString().trim();
-                String category = editTextCategory.getText().toString().trim(); // 获取类别
+                String category = editTextCategory.getText().toString().trim();
+                String description = editTextDescription.getText().toString().trim(); // 获取描述
 
-                if (name.isEmpty() || price <= 0 || imageUrl.isEmpty() || category.isEmpty()) {
+                if (name.isEmpty() || price <= 0 || imageUrl.isEmpty() || category.isEmpty() || description.isEmpty()) {
                     Toast.makeText(AddProductActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Product product = new Product(0, name, price, imageUrl, 1, category); // 传递类别
+                Product product = new Product(0, name, price, imageUrl, 1, category, description, false); // 传递描述
                 ProductDao productDao = new ProductDao(AddProductActivity.this);
                 productDao.addProduct(product);
 

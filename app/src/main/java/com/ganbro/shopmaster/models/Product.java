@@ -1,5 +1,10 @@
 package com.ganbro.shopmaster.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class Product {
     private int id;
     private String name;
@@ -7,94 +12,19 @@ public class Product {
     private String imageUrl;
     private int quantity;
     private String category;
-    private boolean isSelected; // 选择状态属性
-    private boolean isRecommended; // 热门推荐属性
+    private String description;
+    private boolean isRecommended;
+    private boolean isSelected;
 
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.category = category;
-        this.isSelected = false; // 默认值为 false
-        this.isRecommended = false; // 默认值为 false
-    }
-
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category, boolean isRecommended) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-        this.category = category;
-        this.isSelected = false; // 默认值为 false
+        this.description = description;
         this.isRecommended = isRecommended;
-    }
-
-    // Getter and Setter methods
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-    public boolean isRecommended() {
-        return isRecommended;
-    }
-
-    public void setRecommended(boolean recommended) {
-        isRecommended = recommended;
+        this.isSelected = false;
     }
 }

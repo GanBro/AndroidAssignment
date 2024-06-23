@@ -112,10 +112,4 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             buttonRemove = itemView.findViewById(R.id.button_remove);
         }
     }
-
-    // Method to remove item from cart
-    public void removeItem(int position) {
-        cartProducts.remove(position);
-        notifyItemRemoved(position);
-    }
 }
