@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="由尚硅谷发货"
+                android:text="由21计科吴波发货"
                 android:textSize="14sp" />
 
             <TextView
