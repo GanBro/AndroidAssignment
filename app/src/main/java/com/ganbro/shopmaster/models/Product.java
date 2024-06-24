@@ -10,11 +10,12 @@ public class Product {
     private String description;
     private boolean isRecommended;
     private boolean isSelected;
+    private boolean isInCart;
 
     public Product() {
     }
 
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -24,12 +25,18 @@ public class Product {
         this.description = description;
         this.isRecommended = isRecommended;
         this.isSelected = false;
+        this.isInCart = isInCart;
+    }
+
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
+        this(id, name, price, imageUrl, quantity, category, description, isRecommended, false);
     }
 
     public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
-        this(id, name, price, imageUrl, quantity, category, "", false);
+        this(id, name, price, imageUrl, quantity, category, "", false, false);
     }
 
+    // Getters and setters for all fields
     public int getId() {
         return id;
     }
@@ -102,6 +109,14 @@ public class Product {
         isSelected = selected;
     }
 
+    public boolean isInCart() {
+        return isInCart;
+    }
+
+    public void setInCart(boolean inCart) {
+        isInCart = inCart;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -114,6 +129,7 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", isRecommended=" + isRecommended +
                 ", isSelected=" + isSelected +
+                ", isInCart=" + isInCart +
                 '}';
     }
 
@@ -129,6 +145,7 @@ public class Product {
         if (quantity != product.quantity) return false;
         if (isRecommended != product.isRecommended) return false;
         if (isSelected != product.isSelected) return false;
+        if (isInCart != product.isInCart) return false;
         if (!name.equals(product.name)) return false;
         if (!imageUrl.equals(product.imageUrl)) return false;
         if (!category.equals(product.category)) return false;
@@ -149,6 +166,7 @@ public class Product {
         result = 31 * result + description.hashCode();
         result = 31 * result + (isRecommended ? 1 : 0);
         result = 31 * result + (isSelected ? 1 : 0);
+        result = 31 * result + (isInCart ? 1 : 0);
         return result;
     }
 }

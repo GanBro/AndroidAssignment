@@ -45,7 +45,7 @@ public class AddProductActivity extends AppCompatActivity {
                     return;
                 }
 
-                Product product = new Product(0, name, price, imageUrl, 1, category, description, false); // 传递描述
+                Product product = new Product(0, name, price, imageUrl, 1, category, description, false, false); // 传递描述
                 ProductDao productDao = new ProductDao(AddProductActivity.this);
                 productDao.addProduct(product);
 

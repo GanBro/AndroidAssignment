@@ -78,6 +78,7 @@ public class ProductDetailFragment extends Fragment {
             }
         });
 
+
         buyNow.setOnClickListener(v -> {
             // 立即购买逻辑
         });

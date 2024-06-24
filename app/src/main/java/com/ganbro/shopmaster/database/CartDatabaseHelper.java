@@ -10,37 +10,8 @@ import java.util.List;
 
 public class CartDatabaseHelper {
 
-    // 表和列的定义
-    public static final String TABLE_CART = "cart";
-    public static final String TABLE_FAVORITES = "favorites";  // 添加收藏表
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_IMAGE_URL = "image_url";
-    public static final String COLUMN_QUANTITY = "quantity";
-    public static final String COLUMN_CATEGORY = "category";
-
-    public static final String TABLE_CART_CREATE =
-            "CREATE TABLE " + TABLE_CART + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);";
-
-    public static final String TABLE_FAVORITES_CREATE =
-            "CREATE TABLE " + TABLE_FAVORITES + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);";
-
     private SQLiteDatabase db;
 
-    // 构造函数，初始化数据库
     public CartDatabaseHelper(Context context) {
         DatabaseManager dbHelper = new DatabaseManager(context);
         db = dbHelper.getWritableDatabase();
@@ -49,16 +20,21 @@ public class CartDatabaseHelper {
     // 获取所有购物车中的商品
     public List<Product> getAllCartProducts() {
         List<Product> productList = new ArrayList<>();
-        Cursor cursor = db.query(TABLE_CART, null, null, null, null, null, null);
+        String selection = DatabaseManager.COLUMN_IS_IN_CART + " = ?";
+        String[] selectionArgs = { "1" };
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
+                        true
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -70,34 +46,40 @@ public class CartDatabaseHelper {
     // 将商品添加到购物车
     public void addProductToCart(Product product) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, product.getName());
-        values.put(COLUMN_PRICE, product.getPrice());
-        values.put(COLUMN_IMAGE_URL, product.getImageUrl());
-        values.put(COLUMN_QUANTITY, product.getQuantity());
-        values.put(COLUMN_CATEGORY, product.getCategory());
-        db.insert(TABLE_CART, null, values);
+        values.put(DatabaseManager.COLUMN_NAME, product.getName());
+        values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
+        values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
+        values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
+        values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
+        values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
+        values.put(DatabaseManager.COLUMN_IS_IN_CART, 1);
+        db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
     }
 
     // 删除购物车中的商品
     public void deleteCartProduct(int id) {
-        db.delete(TABLE_CART, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        db.delete(DatabaseManager.TABLE_PRODUCT, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_IS_IN_CART + "=?", new String[]{String.valueOf(id), "1"});
     }
 
     // 更新购物车中的商品数量
     public void updateProductQuantity(int id, int quantity) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_QUANTITY, quantity);
-        db.update(TABLE_CART, values, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        values.put(DatabaseManager.COLUMN_QUANTITY, quantity);
+        db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_IS_IN_CART + "=?", new String[]{String.valueOf(id), "1"});
     }
 
     // 将商品添加到收藏表
     public void addProductToFavorites(Product product) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, product.getName());
-        values.put(COLUMN_PRICE, product.getPrice());
-        values.put(COLUMN_IMAGE_URL, product.getImageUrl());
-        values.put(COLUMN_QUANTITY, product.getQuantity());
-        values.put(COLUMN_CATEGORY, product.getCategory());
-        db.insert(TABLE_FAVORITES, null, values);
+        values.put(DatabaseManager.COLUMN_NAME, product.getName());
+        values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
+        values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
+        values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
+        values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
+        values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
+        values.put(DatabaseManager.COLUMN_IS_IN_CART, 0);
+        db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
     }
 }

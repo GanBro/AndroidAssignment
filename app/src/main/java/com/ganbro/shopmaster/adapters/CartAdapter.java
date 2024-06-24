@@ -44,7 +44,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return new CartViewHolder(view);
     }
 
-    // 确保在每次增加或减少商品数量时，调用数据库更新方法。
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Product product = cartProducts.get(position);
@@ -97,7 +96,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartProducts.size();
     }
 
-    // 新增 removeItem 方法
     public void removeItem(int position) {
         cartProducts.remove(position);
         notifyItemRemoved(position);

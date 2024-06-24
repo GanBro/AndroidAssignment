@@ -7,22 +7,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_PRODUCT = "product";
-    public static final String TABLE_FAVORITES = "favorites";  // 添加收藏表
-    public static final String TABLE_CART = "cart";  // 添加购物车表
-
+    public static final String TABLE_PRODUCT = "products";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_QUANTITY = "quantity";
     public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_IS_RECOMMENDED = "is_recommended";
-    public static final String COLUMN_DESCRIPTION = "description";  // 新增描述字段
+    public static final String COLUMN_IS_IN_CART = "is_in_cart"; // 表示是否在购物车中
+    public static final String COLUMN_IS_FAVORITE = "is_favorite"; // 表示是否在收藏夹中
 
-    private static final String TABLE_CREATE_PRODUCT =
+    private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_NAME + " TEXT, " +
@@ -30,28 +29,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IMAGE_URL + " TEXT, " +
                     COLUMN_QUANTITY + " INTEGER, " +
                     COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_DESCRIPTION + " TEXT, " +  // 新增描述字段
-                    COLUMN_IS_RECOMMENDED + " INTEGER);";
-
-    private static final String TABLE_CREATE_FAVORITES =
-            "CREATE TABLE " + TABLE_FAVORITES + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_DESCRIPTION + " TEXT, " +  // 新增描述字段
-                    COLUMN_IS_RECOMMENDED + " INTEGER);";
-
-    private static final String TABLE_CREATE_CART =
-            "CREATE TABLE " + TABLE_CART + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT);";
+                    COLUMN_DESCRIPTION + " TEXT, " +
+                    COLUMN_IS_RECOMMENDED + " INTEGER, " +
+                    COLUMN_IS_IN_CART + " INTEGER, " + // 新增字段
+                    COLUMN_IS_FAVORITE + " INTEGER" + // 新增字段
+                    ");";
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,31 +41,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE_PRODUCT);
-        db.execSQL(TABLE_CREATE_FAVORITES);
-        db.execSQL(TABLE_CREATE_CART);
+        db.execSQL(TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
-            onCreate(db);
-        }
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
         onCreate(db);
-    }
-
-    // 删除数据库（重置数据库时使用）
-    public void deleteDatabase(Context context) {
-        context.deleteDatabase(DATABASE_NAME);
     }
 }
