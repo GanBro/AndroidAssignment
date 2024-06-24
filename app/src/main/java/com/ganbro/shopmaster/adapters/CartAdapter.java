@@ -89,6 +89,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartProducts.size();
     }
 
+    // 新增 removeItem 方法
+    public void removeItem(int position) {
+        cartProducts.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public static class CartViewHolder extends RecyclerView.ViewHolder {
 
         CheckBox checkboxSelect;

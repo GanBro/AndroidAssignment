@@ -114,7 +114,6 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
                 cartDatabaseHelper.addProductToFavorites(product);
             }
         }
-        // 可以在这里显示一个提示，告知用户商品已被收藏
         new AlertDialog.Builder(getActivity())
                 .setTitle("收藏成功")
                 .setMessage("选中的商品已被添加到我的收藏")
