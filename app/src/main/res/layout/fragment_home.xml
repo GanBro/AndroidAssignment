@@ -23,8 +23,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search"
-                android:contentDescription="@string/search_icon"
-                android:tint="@android:color/white" />
+                android:contentDescription="@string/search_icon" />
 
             <EditText
                 android:id="@+id/search_bar"
@@ -43,8 +42,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
                 android:src="@drawable/ic_message"
-                android:contentDescription="@string/message_icon"
-                android:tint="@android:color/white" />
+                android:contentDescription="@string/message_icon" />
         </LinearLayout>
 
         <!-- 广告图片 -->
