@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return new CartViewHolder(view);
     }
 
+    // 确保在每次增加或减少商品数量时，调用数据库更新方法。
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Product product = cartProducts.get(position);
@@ -64,6 +66,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             product.setQuantity(++quantity);
             holder.quantityText.setText(String.valueOf(quantity));
             onProductSelectedListener.onProductSelected();
+            CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
+            dbHelper.updateProductQuantity(product.getId(), quantity);
         });
 
         holder.buttonDecrease.setOnClickListener(v -> {
@@ -72,6 +76,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 product.setQuantity(--quantity);
                 holder.quantityText.setText(String.valueOf(quantity));
                 onProductSelectedListener.onProductSelected();
+                CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
+                dbHelper.updateProductQuantity(product.getId(), quantity);
             }
         });
 
@@ -81,6 +87,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             cartProducts.remove(pos);
             notifyItemRemoved(pos);
             onProductSelectedListener.onProductSelected();
+            CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
+            dbHelper.deleteCartProduct(product.getId());
         });
     }
 

@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- 选择商品的复选框 -->
     <CheckBox
         android:id="@+id/checkbox_select"
         android:layout_width="wrap_content"
@@ -12,6 +13,7 @@
         android:layout_gravity="center_vertical"
         android:buttonTint="@color/colorPrimary" />
 
+    <!-- 商品图片 -->
     <ImageView
         android:id="@+id/product_image"
         android:layout_width="100dp"
@@ -19,12 +21,14 @@
         android:layout_marginEnd="8dp"
         android:scaleType="centerCrop" />
 
+    <!-- 商品信息布局 -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
+        <!-- 商品名称 -->
         <TextView
             android:id="@+id/product_name"
             android:layout_width="wrap_content"
@@ -32,6 +36,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- 商品价格 -->
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
@@ -40,12 +45,14 @@
             android:textColor="@android:color/holo_red_dark"
             android:layout_marginTop="8dp" />
 
+        <!-- 数量调整按钮 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="8dp">
 
+            <!-- 减少数量按钮 -->
             <Button
                 android:id="@+id/button_decrease"
                 android:layout_width="wrap_content"
@@ -53,6 +60,7 @@
                 android:text="-"
                 android:background="?android:attr/selectableItemBackground" />
 
+            <!-- 显示数量的文本 -->
             <TextView
                 android:id="@+id/quantity_text"
                 android:layout_width="wrap_content"
@@ -61,6 +69,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" />
 
+            <!-- 增加数量按钮 -->
             <Button
                 android:id="@+id/button_increase"
                 android:layout_width="wrap_content"
@@ -70,6 +79,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- 删除商品按钮 -->
     <Button
         android:id="@+id/button_remove"
         android:layout_width="wrap_content"

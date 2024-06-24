@@ -34,13 +34,11 @@ public class CartActivity extends AppCompatActivity {
         cartAdapter = new CartAdapter(this, cartProductList, new CartAdapter.OnProductSelectedListener() {
             @Override
             public void onProductSelected() {
-                // 当选中状态更改时，可以更新总价
                 updateTotalPrice(cartProductList);
             }
         });
         recyclerViewCart.setAdapter(cartAdapter);
 
-        // 初始时更新总价
         updateTotalPrice(cartProductList);
     }
 
@@ -51,7 +49,6 @@ public class CartActivity extends AppCompatActivity {
                 totalPrice += product.getPrice() * product.getQuantity();
             }
         }
-        // 更新合计金额显示，假设总价TextView的ID是total_price
         TextView totalPriceTextView = findViewById(R.id.total_price);
         totalPriceTextView.setText(String.format("合计: ¥%.2f", totalPrice));
     }

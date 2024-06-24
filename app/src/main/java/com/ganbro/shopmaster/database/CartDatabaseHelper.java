@@ -12,7 +12,7 @@ public class CartDatabaseHelper {
 
     // 表和列的定义
     public static final String TABLE_CART = "cart";
-    public static final String TABLE_FAVORITES = "favorites";
+    public static final String TABLE_FAVORITES = "favorites";  // 添加收藏表
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_PRICE = "price";
@@ -40,41 +40,10 @@ public class CartDatabaseHelper {
 
     private SQLiteDatabase db;
 
+    // 构造函数，初始化数据库
     public CartDatabaseHelper(Context context) {
         DatabaseManager dbHelper = new DatabaseManager(context);
         db = dbHelper.getWritableDatabase();
-    }
-
-    // 收藏商品
-    public void addProductToFavorites(Product product) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, product.getName());
-        values.put(COLUMN_PRICE, product.getPrice());
-        values.put(COLUMN_IMAGE_URL, product.getImageUrl());
-        values.put(COLUMN_QUANTITY, product.getQuantity());
-        values.put(COLUMN_CATEGORY, product.getCategory());
-        db.insert(TABLE_FAVORITES, null, values);
-    }
-
-    // 获取所有收藏的商品
-    public List<Product> getAllFavorites() {
-        List<Product> productList = new ArrayList<>();
-        Cursor cursor = db.query(TABLE_FAVORITES, null, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY))
-                );
-                productList.add(product);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return productList;
     }
 
     // 获取所有购物车中的商品
@@ -112,5 +81,23 @@ public class CartDatabaseHelper {
     // 删除购物车中的商品
     public void deleteCartProduct(int id) {
         db.delete(TABLE_CART, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    // 更新购物车中的商品数量
+    public void updateProductQuantity(int id, int quantity) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_QUANTITY, quantity);
+        db.update(TABLE_CART, values, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    // 将商品添加到收藏表
+    public void addProductToFavorites(Product product) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, product.getName());
+        values.put(COLUMN_PRICE, product.getPrice());
+        values.put(COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(COLUMN_QUANTITY, product.getQuantity());
+        values.put(COLUMN_CATEGORY, product.getCategory());
+        db.insert(TABLE_FAVORITES, null, values);
     }
 }

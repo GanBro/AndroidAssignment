@@ -32,6 +32,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
     private CartAdapter cartAdapter;
     private List<Product> cartProducts;
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
@@ -100,7 +101,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         for (int i = cartProducts.size() - 1; i >= 0; i--) {
             Product product = cartProducts.get(i);
             if (product.isSelected()) {
-                cartAdapter.removeItem(i);
+                cartAdapter.removeItem(i);  // 确保调用 removeItem 方法
                 cartDatabaseHelper.deleteCartProduct(product.getId());
             }
         }
@@ -111,7 +112,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
         for (Product product : cartProducts) {
             if (product.isSelected()) {
-                cartDatabaseHelper.addProductToFavorites(product);
+                cartDatabaseHelper.addProductToFavorites(product);  // 调用 addProductToFavorites 方法
             }
         }
         new AlertDialog.Builder(getActivity())
