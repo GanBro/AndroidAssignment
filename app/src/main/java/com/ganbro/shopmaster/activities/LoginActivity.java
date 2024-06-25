@@ -1,5 +1,7 @@
 package com.ganbro.shopmaster.activities;
 
+import android.content.Intent;  // 确保导入 Intent 类
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -99,7 +101,16 @@ public class LoginActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                    // 这里可以添加跳转到主界面的逻辑
+                    // 保存邮箱地址到 SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("email", email);
+                    editor.apply();
+
+                    // 登录成功后跳转到首页
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish(); // 结束当前活动，防止用户返回登录界面
                 },
                 error -> {
                     String errorMessage = "验证验证码时出错";
@@ -125,4 +136,6 @@ public class LoginActivity extends AppCompatActivity {
 
         queue.add(stringRequest);
     }
+
+
 }
