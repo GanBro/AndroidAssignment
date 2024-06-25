@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput;
     private EditText codeInput;
+    private CheckBox rememberPass;
     private Button sendCodeButton;
     private Button loginButton;
     private static final String TAG = "LoginActivity";
@@ -32,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
         emailInput = findViewById(R.id.email_input);
         codeInput = findViewById(R.id.code_input);
+        rememberPass = findViewById(R.id.remember_pass);
         sendCodeButton = findViewById(R.id.send_code_button);
         loginButton = findViewById(R.id.login_button);
 
@@ -52,8 +55,9 @@ public class LoginActivity extends AppCompatActivity {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    // 验证码发送成功的反馈
                     Toast.makeText(this, "验证码已发送", Toast.LENGTH_SHORT).show();
-                    codeInput.setVisibility(View.VISIBLE);
+                    // 可以根据需要更改UI元素的状态
                     loginButton.setVisibility(View.VISIBLE);
                 },
                 error -> {
