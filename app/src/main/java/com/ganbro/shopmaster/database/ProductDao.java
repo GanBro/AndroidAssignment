@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import com.ganbro.shopmaster.models.Product;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +26,15 @@ public class ProductDao {
         values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
         values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
         values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
-        values.put(DatabaseManager.COLUMN_IS_FAVORITE, 0); // 默认商品不被收藏
-        values.put(DatabaseManager.COLUMN_USER_ID, userId); // 添加 userId
+        values.put(DatabaseManager.COLUMN_IS_FAVORITE, 0);
+        values.put(DatabaseManager.COLUMN_IS_IN_CART, 0);
+        values.put(DatabaseManager.COLUMN_USER_ID, userId);
         db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
     }
 
     public void addProductToFavorites(int productId, int userId) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseManager.COLUMN_IS_FAVORITE, 1);  // 1 表示收藏夹中的商品
+        values.put(DatabaseManager.COLUMN_IS_FAVORITE, 1);
         db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_USER_ID + "=?", new String[]{String.valueOf(productId), String.valueOf(userId)});
     }
 
@@ -63,6 +63,45 @@ public class ProductDao {
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
                         true
+                );
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return productList;
+    }
+
+    public void addProductToCart(int productId, int userId) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseManager.COLUMN_IS_IN_CART, 1);
+        db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_USER_ID + "=?", new String[]{String.valueOf(productId), String.valueOf(userId)});
+    }
+
+    public boolean isProductInCart(int productId, int userId) {
+        String query = "SELECT 1 FROM " + DatabaseManager.TABLE_PRODUCT + " WHERE " + DatabaseManager.COLUMN_ID + " = ? AND " + DatabaseManager.COLUMN_USER_ID + " = ? AND " + DatabaseManager.COLUMN_IS_IN_CART + " = 1";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(productId), String.valueOf(userId)});
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
+
+    public List<Product> getAllCartItems(int userId) {
+        List<Product> productList = new ArrayList<>();
+        String selection = DatabaseManager.COLUMN_IS_IN_CART + " = ? AND " + DatabaseManager.COLUMN_USER_ID + " = ?";
+        String[] selectionArgs = {"1", String.valueOf(userId)};
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_FAVORITE)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -130,7 +169,6 @@ public class ProductDao {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        Log.d("ProductDao", "Loaded categories: " + categoryList.toString());
         return categoryList;
     }
 
@@ -158,7 +196,6 @@ public class ProductDao {
     }
 
     public void initializeProducts(int userId) {
-        Log.d("ProductDao", "Initializing products...");
         addProduct(new Product(0, "上衣1", 100.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述1", true, false), userId);
         addProduct(new Product(0, "上衣2", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述2", false, false), userId);
         addProduct(new Product(0, "上衣3", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述3", true, false), userId);
@@ -167,7 +204,6 @@ public class ProductDao {
         addProduct(new Product(0, "外套1", 200.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "外套", "描述6", false, false), userId);
         addProduct(new Product(0, "配件1", 50.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "配件", "描述7", true, false), userId);
         addProduct(new Product(0, "包包1", 300.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "包包", "描述8", false, false), userId);
-        Log.d("ProductDao", "Products initialized.");
     }
 
     public Product getProductById(int id, int userId) {

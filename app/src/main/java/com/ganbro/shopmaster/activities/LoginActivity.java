@@ -152,7 +152,6 @@ public class LoginActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-
     private int insertOrGetUser(String email) {
         SQLiteDatabase db = new DatabaseManager(this).getWritableDatabase();
         Cursor cursor = db.query("users", new String[]{"id"}, "email = ?", new String[]{email}, null, null, null);

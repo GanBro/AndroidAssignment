@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.database.DatabaseManager;
-import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.fragments.CartFragment;
 import com.ganbro.shopmaster.fragments.CategoryFragment;
 import com.ganbro.shopmaster.fragments.DiscoverFragment;
@@ -29,16 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d("MainActivity", "onCreate: started");
-
-        // 获取 SharedPreferences 中保存的用户ID
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
-
-        // 删除并重新创建数据库
-        resetDatabase();
-
-        // 插入示例数据
-        initializeProducts(userId);
 
         // Initialize bottom navigation view and set listener
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -82,21 +70,4 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
     }
-
-    private void resetDatabase() {
-        Log.d("MainActivity", "resetDatabase: started");
-        this.deleteDatabase("shopmaster.db");
-        // 重新创建数据库
-        DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.getWritableDatabase();
-        Log.d("MainActivity", "resetDatabase: completed");
-    }
-
-    private void initializeProducts(int userId) {
-        Log.d("MainActivity", "initializeProducts: started");
-        ProductDao productDao = new ProductDao(this);
-        productDao.initializeProducts(userId);
-        Log.d("MainActivity", "initializeProducts: completed");
-    }
-
 }
