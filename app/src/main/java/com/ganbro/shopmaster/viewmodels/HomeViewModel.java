@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.viewmodels;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,7 +22,9 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void loadProducts() {
-        List<Product> productList = productDao.getAllProducts();
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("UserPrefs", Application.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        List<Product> productList = productDao.getAllProducts(userId);
         products.setValue(productList);
     }
 

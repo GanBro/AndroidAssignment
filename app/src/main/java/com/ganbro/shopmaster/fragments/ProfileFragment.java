@@ -29,12 +29,17 @@ public class ProfileFragment extends Fragment {
 
         loginRegisterButton = view.findViewById(R.id.login_register_button);
 
-        // 获取 SharedPreferences 中保存的邮箱地址
+        // 获取 SharedPreferences 中保存的邮箱地址和用户ID
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
         String email = sharedPreferences.getString("email", "登录/注册");
+        int userId = sharedPreferences.getInt("user_id", -1);
 
         // 设置文本为邮箱地址
-        loginRegisterButton.setText(email);
+        if (userId == -1) {
+            loginRegisterButton.setText("登录/注册");
+        } else {
+            loginRegisterButton.setText(email);
+        }
 
         // 设置点击事件
         loginRegisterButton.setOnClickListener(v -> {

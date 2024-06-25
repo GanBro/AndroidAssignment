@@ -1,7 +1,10 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.Intent;  // 确保导入 Intent 类
+import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.DatabaseManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,8 +111,19 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("email", email);
                     editor.apply();
 
+                    // 检查并插入用户到数据库
+                    int userId = insertOrGetUser(email);
+
+                    // 保存用户ID到 SharedPreferences
+                    editor.putInt("user_id", userId);
+                    editor.apply();
+
+                    // 打印调试信息
+                    Log.d(TAG, "User ID: " + userId + ", Email: " + email);
+
                     // 登录成功后跳转到首页
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("fromLogin", true); // 传递标志
                     startActivity(intent);
                     finish(); // 结束当前活动，防止用户返回登录界面
                 },
@@ -138,4 +153,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    private int insertOrGetUser(String email) {
+        SQLiteDatabase db = new DatabaseManager(this).getWritableDatabase();
+        Cursor cursor = db.query("users", new String[]{"id"}, "email = ?", new String[]{email}, null, null, null);
+        if (cursor.moveToFirst()) {
+            int userId = cursor.getInt(cursor.getColumnIndex("id"));
+            cursor.close();
+            return userId;
+        } else {
+            ContentValues values = new ContentValues();
+            values.put("email", email);
+            long userId = db.insert("users", null, values);
+            cursor.close();
+            return (int) userId;
+        }
+    }
 }

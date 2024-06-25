@@ -7,9 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // 增加数据库版本
 
     public static final String TABLE_PRODUCT = "products";
+    public static final String TABLE_USERS = "users";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_PRICE = "price";
@@ -18,10 +19,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY = "category";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_IS_RECOMMENDED = "is_recommended";
-    public static final String COLUMN_IS_IN_CART = "is_in_cart"; // 表示是否在购物车中
-    public static final String COLUMN_IS_FAVORITE = "is_favorite"; // 表示是否在收藏夹中
+    public static final String COLUMN_IS_IN_CART = "is_in_cart";
+    public static final String COLUMN_IS_FAVORITE = "is_favorite";
+    public static final String COLUMN_USER_ID = "user_id"; // 新增字段
+    public static final String COLUMN_EMAIL = "email"; // 新增字段
 
-    private static final String TABLE_CREATE =
+    private static final String TABLE_CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_NAME + " TEXT, " +
@@ -31,8 +34,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_CATEGORY + " TEXT, " +
                     COLUMN_DESCRIPTION + " TEXT, " +
                     COLUMN_IS_RECOMMENDED + " INTEGER, " +
-                    COLUMN_IS_IN_CART + " INTEGER, " + // 新增字段
-                    COLUMN_IS_FAVORITE + " INTEGER" + // 新增字段
+                    COLUMN_IS_IN_CART + " INTEGER, " +
+                    COLUMN_IS_FAVORITE + " INTEGER, " +
+                    COLUMN_USER_ID + " INTEGER" + // 新增字段
+                    ");";
+
+    private static final String TABLE_CREATE_USERS =
+            "CREATE TABLE " + TABLE_USERS + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_EMAIL + " TEXT NOT NULL UNIQUE" +
                     ");";
 
     public DatabaseManager(Context context) {
@@ -41,12 +51,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+        db.execSQL(TABLE_CREATE_PRODUCTS);
+        db.execSQL(TABLE_CREATE_USERS); // 创建users表
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
 }

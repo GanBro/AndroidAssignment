@@ -1,5 +1,7 @@
 package com.ganbro.shopmaster.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,11 +30,15 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("MainActivity", "onCreate: started");
 
+        // 获取 SharedPreferences 中保存的用户ID
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+
         // 删除并重新创建数据库
         resetDatabase();
 
         // 插入示例数据
-        initializeProducts();
+        initializeProducts(userId);
 
         // Initialize bottom navigation view and set listener
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -66,8 +72,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Load the default fragment
-        if (savedInstanceState == null) {
+        // Check if the activity was started from LoginActivity and select the home fragment
+        Intent intent = getIntent();
+        boolean fromLogin = intent.getBooleanExtra("fromLogin", false);
+        Log.d("MainActivity", "fromLogin: " + fromLogin); // 添加调试信息
+        if (fromLogin) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        } else if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
     }
@@ -81,10 +92,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "resetDatabase: completed");
     }
 
-    private void initializeProducts() {
+    private void initializeProducts(int userId) {
         Log.d("MainActivity", "initializeProducts: started");
         ProductDao productDao = new ProductDao(this);
-        productDao.initializeProducts();
+        productDao.initializeProducts(userId);
         Log.d("MainActivity", "initializeProducts: completed");
     }
+
 }

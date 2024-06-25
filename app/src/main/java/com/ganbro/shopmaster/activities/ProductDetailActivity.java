@@ -1,6 +1,9 @@
+// ProductDetailActivity.java
 package com.ganbro.shopmaster.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -54,10 +57,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.buy_now);
         selectStyleButton = findViewById(R.id.select_style_button);
 
+        // 获取 SharedPreferences 中保存的用户ID
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+
         int productId = getIntent().getIntExtra("product_id", -1);
         Log.d(TAG, "Received Product ID: " + productId);
         if (productId != -1) {
-            loadProductDetails(productId);
+            loadProductDetails(productId, userId);
         } else {
             Toast.makeText(this, "无法加载商品详情", Toast.LENGTH_SHORT).show();
             finish();
@@ -75,8 +82,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         addToFavorites.setOnClickListener(v -> {
             ProductDao productDao = new ProductDao(this);
-            if (!productDao.isProductInFavorites(product.getId())) {
-                productDao.addProductToFavorites(product);
+            if (!productDao.isProductInFavorites(product.getId(), userId)) {
+                productDao.addProductToFavorites(product.getId(), userId);
                 Toast.makeText(this, "商品已添加到收藏", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "商品已经在收藏列表中", Toast.LENGTH_SHORT).show();
@@ -91,9 +98,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     }
 
-    private void loadProductDetails(int productId) {
+    private void loadProductDetails(int productId, int userId) {
         ProductDao productDao = new ProductDao(this);
-        product = productDao.getProductById(productId);
+        product = productDao.getProductById(productId, userId);
         if (product != null) {
             Log.d(TAG, "Loaded Product: " + product.getName());
             productName.setText(product.getName());

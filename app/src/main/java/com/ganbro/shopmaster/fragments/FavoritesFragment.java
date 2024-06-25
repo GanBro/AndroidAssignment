@@ -1,10 +1,12 @@
 package com.ganbro.shopmaster.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,7 @@ public class FavoritesFragment extends Fragment {
     private ProductAdapter productAdapter;
     private ProductDao productDao;
     private TextView categoryAll;
+    private int userId;
 
     @Nullable
     @Override
@@ -32,14 +35,19 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
 
         productDao = new ProductDao(getActivity());
-        List<Product> favoriteProducts = productDao.getAllFavorites();
+
+        // 获取 SharedPreferences 中保存的用户ID
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", -1);
+
+        List<Product> favoriteProducts = productDao.getAllFavorites(userId);
 
         productAdapter = new ProductAdapter(getActivity(), favoriteProducts, false);
         recyclerViewFavorites.setAdapter(productAdapter);
 
         categoryAll = view.findViewById(R.id.category_all);
         categoryAll.setOnClickListener(v -> {
-            List<Product> allFavorites = productDao.getAllFavorites();
+            List<Product> allFavorites = productDao.getAllFavorites(userId);
             productAdapter.setProductList(allFavorites);
         });
 
