@@ -77,17 +77,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 onProductSelectedListener.onProductSelected();
                 CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
                 dbHelper.updateProductQuantity(product.getId(), quantity);
+            } else {
+                // 数量减为0时移除商品项
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    removeItem(pos);
+                    onProductSelectedListener.onProductSelected();
+                    CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
+                    dbHelper.deleteCartProduct(product.getId());
+                }
             }
         });
 
         holder.buttonRemove.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         holder.buttonRemove.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
-            cartProducts.remove(pos);
-            notifyItemRemoved(pos);
-            onProductSelectedListener.onProductSelected();
-            CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
-            dbHelper.deleteCartProduct(product.getId());
+            if (pos != RecyclerView.NO_POSITION) {
+                removeItem(pos);
+                onProductSelectedListener.onProductSelected();
+                CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
+                dbHelper.deleteCartProduct(product.getId());
+            }
         });
     }
 
@@ -97,8 +107,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public void removeItem(int position) {
-        cartProducts.remove(position);
-        notifyItemRemoved(position);
+        if (position >= 0 && position < cartProducts.size()) {
+            cartProducts.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {

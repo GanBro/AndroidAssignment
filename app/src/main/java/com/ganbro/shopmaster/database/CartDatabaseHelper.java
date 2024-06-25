@@ -45,16 +45,30 @@ public class CartDatabaseHelper {
 
     // 将商品添加到购物车
     public void addProductToCart(Product product) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseManager.COLUMN_NAME, product.getName());
-        values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
-        values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
-        values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
-        values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
-        values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
-        values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
-        values.put(DatabaseManager.COLUMN_IS_IN_CART, 1);
-        db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
+        String selection = DatabaseManager.COLUMN_NAME + " = ? AND " + DatabaseManager.COLUMN_IS_IN_CART + " = ?";
+        String[] selectionArgs = { product.getName(), "1" };
+        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            // 如果商品已经在购物车中，更新数量
+            int existingQuantity = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY));
+            int newQuantity = existingQuantity + product.getQuantity();
+            ContentValues values = new ContentValues();
+            values.put(DatabaseManager.COLUMN_QUANTITY, newQuantity);
+            db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=?", new String[]{String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)))});
+        } else {
+            // 如果商品不在购物车中，添加新商品
+            ContentValues values = new ContentValues();
+            values.put(DatabaseManager.COLUMN_NAME, product.getName());
+            values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
+            values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+            values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
+            values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
+            values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
+            values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
+            values.put(DatabaseManager.COLUMN_IS_IN_CART, 1);
+            db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
+        }
+        cursor.close();
     }
 
     // 删除购物车中的商品
