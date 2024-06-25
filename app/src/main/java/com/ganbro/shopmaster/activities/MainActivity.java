@@ -20,15 +20,31 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+    private static final long ONE_HOUR_MILLIS = 3600000; // 1小时的毫秒数
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 检查登录时间戳
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        long lastLoginTimestamp = sharedPreferences.getLong("login_timestamp", 0);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastLoginTimestamp > ONE_HOUR_MILLIS) {
+            // 超过1小时，跳转到登录页面
+            Log.d(TAG, "自动登录失效，跳转到登录页面");
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+            return;
+        }
+
+        Log.d(TAG, "自动登录有效，继续进入主页面");
         setContentView(R.layout.activity_main);
 
-        Log.d("MainActivity", "onCreate: started");
-
-        // Initialize bottom navigation view and set listener
+        // 初始化底部导航视图并设置监听器
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -60,13 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Check if the activity was started from LoginActivity and select the home fragment
-        Intent intent = getIntent();
-        boolean fromLogin = intent.getBooleanExtra("fromLogin", false);
-        Log.d("MainActivity", "fromLogin: " + fromLogin); // 添加调试信息
-        if (fromLogin) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-        } else if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
     }

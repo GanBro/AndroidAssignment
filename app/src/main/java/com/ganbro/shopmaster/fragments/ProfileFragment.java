@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
+import com.ganbro.shopmaster.activities.FavoritesActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -51,7 +51,6 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        // 设置我的收藏点击事件
         myFavoritesButton.setOnClickListener(v -> {
             // 跳转到 FavoritesActivity
             Intent intent = new Intent(getActivity(), FavoritesActivity.class);

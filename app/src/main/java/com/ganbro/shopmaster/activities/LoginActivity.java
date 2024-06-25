@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -28,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput;
     private EditText codeInput;
-    private CheckBox rememberPass;
     private Button sendCodeButton;
     private Button loginButton;
     private static final String TAG = "LoginActivity";
@@ -40,12 +38,35 @@ public class LoginActivity extends AppCompatActivity {
 
         emailInput = findViewById(R.id.email_input);
         codeInput = findViewById(R.id.code_input);
-        rememberPass = findViewById(R.id.remember_pass);
         sendCodeButton = findViewById(R.id.send_code_button);
         loginButton = findViewById(R.id.login_button);
 
+        // 检查是否可以自动登录
+        autoLoginIfPossible();
+
         sendCodeButton.setOnClickListener(v -> sendVerificationCode());
         loginButton.setOnClickListener(v -> verifyCodeAndLogin());
+    }
+
+    // 检查是否可以自动登录
+    private void autoLoginIfPossible() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        long lastLoginTimestamp = sharedPreferences.getLong("login_timestamp", 0);
+        int userId = sharedPreferences.getInt("user_id", -1);
+
+        if (userId != -1 && System.currentTimeMillis() - lastLoginTimestamp <= 3600000) { // 1小时 = 3600000毫秒
+            String email = sharedPreferences.getString("email", null);
+            if (email != null) {
+                // 自动登录用户
+                Log.d(TAG, "自动登录成功，跳转到主页面");
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("fromLogin", true);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            Log.d(TAG, "没有可用的自动登录信息或自动登录已过期");
+        }
     }
 
     private void sendVerificationCode() {
@@ -55,15 +76,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2:3000/send-verification-code"; // 使用10.0.2.2代替localhost
+        String url = "http://10.0.2.2:3000/send-verification-code";
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    // 验证码发送成功的反馈
                     Toast.makeText(this, "验证码已发送", Toast.LENGTH_SHORT).show();
-                    // 可以根据需要更改UI元素的状态
                     loginButton.setVisibility(View.VISIBLE);
                 },
                 error -> {
@@ -98,34 +117,29 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2:3000/verify-code"; // 使用10.0.2.2代替localhost
+        String url = "http://10.0.2.2:3000/verify-code";
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                    // 保存邮箱地址到 SharedPreferences
                     SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("email", email);
+                    editor.putLong("login_timestamp", System.currentTimeMillis()); // 保存当前时间戳
                     editor.apply();
 
-                    // 检查并插入用户到数据库
                     int userId = insertOrGetUser(email);
-
-                    // 保存用户ID到 SharedPreferences
                     editor.putInt("user_id", userId);
                     editor.apply();
 
-                    // 打印调试信息
-                    Log.d(TAG, "User ID: " + userId + ", Email: " + email);
+                    Log.d(TAG, "登录成功，用户ID: " + userId + ", 邮箱: " + email);
 
-                    // 登录成功后跳转到首页
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("fromLogin", true); // 传递标志
+                    intent.putExtra("fromLogin", true);
                     startActivity(intent);
-                    finish(); // 结束当前活动，防止用户返回登录界面
+                    finish();
                 },
                 error -> {
                     String errorMessage = "验证验证码时出错";
