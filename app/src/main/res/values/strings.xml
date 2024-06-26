@@ -13,4 +13,6 @@
     <string name="address">收货地址</string>
     <string name="decrease_quantity">减少数量</string>
     <string name="increase_quantity">增加数量</string>
+    <string name="like">喜欢</string>
+    <string name="collect">收藏\n</string>
 </resources>

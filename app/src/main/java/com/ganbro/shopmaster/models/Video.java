@@ -6,6 +6,8 @@ public class Video {
     private String description;
     private int likesCount;
     private int collectsCount;
+    private boolean liked;
+    private boolean collected;
 
     public Video(int id, String videoUrl, String description, int likesCount, int collectsCount) {
         this.id = id;
@@ -13,6 +15,8 @@ public class Video {
         this.description = description;
         this.likesCount = likesCount;
         this.collectsCount = collectsCount;
+        this.liked = false; // Default value
+        this.collected = false; // Default value
     }
 
     public int getId() {
@@ -53,5 +57,21 @@ public class Video {
 
     public void setCollectsCount(int collectsCount) {
         this.collectsCount = collectsCount;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
     }
 }

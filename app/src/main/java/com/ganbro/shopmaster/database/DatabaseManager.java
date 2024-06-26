@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4; // 更新到最新版本
 
     public static final String TABLE_PRODUCT = "products";
     public static final String TABLE_USERS = "users";
@@ -59,8 +59,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_VIDEO_URL + " TEXT, " +
                     COLUMN_VIDEO_DESCRIPTION + " TEXT, " +
                     COLUMN_LIKES_COUNT + " INTEGER, " +
-                    COLUMN_COMMENTS_COUNT + " INTEGER, " +
-                    COLUMN_COLLECTS_COUNT + " INTEGER" +
+                    COLUMN_COLLECTS_COUNT + " INTEGER" + // 移除了 COLUMN_COMMENTS_COUNT
                     ");";
 
     public DatabaseManager(Context context) {
@@ -76,9 +75,37 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEOS);
-        onCreate(db);
+        if (oldVersion < 4) {
+            // 创建一个临时表来存储视频数据
+            db.execSQL("CREATE TABLE videos_temp (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_VIDEO_URL + " TEXT, " +
+                    COLUMN_VIDEO_DESCRIPTION + " TEXT, " +
+                    COLUMN_LIKES_COUNT + " INTEGER, " +
+                    COLUMN_COLLECTS_COUNT + " INTEGER" +
+                    ");");
+
+            // 将旧表中的数据迁移到临时表
+            db.execSQL("INSERT INTO videos_temp (" +
+                    COLUMN_ID + ", " +
+                    COLUMN_VIDEO_URL + ", " +
+                    COLUMN_VIDEO_DESCRIPTION + ", " +
+                    COLUMN_LIKES_COUNT + ", " +
+                    COLUMN_COLLECTS_COUNT +
+                    ") SELECT " +
+                    COLUMN_ID + ", " +
+                    COLUMN_VIDEO_URL + ", " +
+                    COLUMN_VIDEO_DESCRIPTION + ", " +
+                    COLUMN_LIKES_COUNT + ", " +
+                    COLUMN_COLLECTS_COUNT +
+                    " FROM " + TABLE_VIDEOS + ";");
+
+            // 删除旧表
+            db.execSQL("DROP TABLE " + TABLE_VIDEOS + ";");
+
+            // 将临时表重命名为正式表
+            db.execSQL("ALTER TABLE videos_temp RENAME TO " + TABLE_VIDEOS + ";");
+        }
+        // 如有其他版本升级逻辑，也可以在此处添加
     }
 }

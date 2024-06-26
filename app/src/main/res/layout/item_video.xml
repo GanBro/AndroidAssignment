@@ -29,7 +29,7 @@
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_like"
+            android:src="@drawable/ic_like_disabled"
             android:contentDescription="@string/like" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:id="@+id/btn_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_collect"
+            android:src="@drawable/ic_collect_disabled"
             android:contentDescription="@string/collect"
             android:layout_marginLeft="16dp" />
 
