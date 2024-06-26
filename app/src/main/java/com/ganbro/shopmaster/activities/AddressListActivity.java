@@ -1,8 +1,6 @@
 package com.ganbro.shopmaster.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.AddressDao;
-import com.ganbro.shopmaster.database.DatabaseManager;
 import com.ganbro.shopmaster.models.Address;
 
 import java.util.List;
