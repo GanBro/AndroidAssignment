@@ -14,13 +14,16 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.activities.AddressListActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
+import com.ganbro.shopmaster.activities.OrderStatusActivity; // 新增
 
 public class ProfileFragment extends Fragment {
 
     private TextView loginRegisterButton;
     private View myFavoritesButton;
     private View logoutButton;
-    private View addressButton; // 新增
+    private View addressButton;
+    private View textWaitingPayment; // 新增
+    private View textWaitingReceipt; // 新增
 
     @Nullable
     @Override
@@ -35,7 +38,9 @@ public class ProfileFragment extends Fragment {
         loginRegisterButton = view.findViewById(R.id.login_register_button);
         myFavoritesButton = view.findViewById(R.id.my_favorites_button);
         logoutButton = view.findViewById(R.id.logout_button);
-        addressButton = view.findViewById(R.id.address_button); // 新增
+        addressButton = view.findViewById(R.id.address_button);
+        textWaitingPayment = view.findViewById(R.id.text_waiting_payment); // 新增
+        textWaitingReceipt = view.findViewById(R.id.text_waiting_receipt); // 新增
 
         // 获取 SharedPreferences 中保存的邮箱地址和用户ID
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
@@ -76,6 +81,20 @@ public class ProfileFragment extends Fragment {
         addressButton.setOnClickListener(v -> {
             // 跳转到 AddressListActivity
             Intent intent = new Intent(getActivity(), AddressListActivity.class);
+            startActivity(intent);
+        });
+
+        textWaitingPayment.setOnClickListener(v -> {
+            // 跳转到 OrderStatusActivity，显示待付款订单
+            Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
+            intent.putExtra("order_status", "待付款");
+            startActivity(intent);
+        });
+
+        textWaitingReceipt.setOnClickListener(v -> {
+            // 跳转到 OrderStatusActivity，显示待收货订单
+            Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
+            intent.putExtra("order_status", "待收货");
             startActivity(intent);
         });
     }

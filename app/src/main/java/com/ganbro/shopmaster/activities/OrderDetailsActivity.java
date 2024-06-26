@@ -1,6 +1,5 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -29,6 +28,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private Button buttonSelectAddress;
     private List<Product> orderItems;
     private double totalPrice;
+    private String orderStatus;
     private static final int REQUEST_CODE_SELECT_ADDRESS = 1;
 
     @Override
@@ -47,6 +47,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         // 获取传递的订单商品列表和总价
         orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
         totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
+        orderStatus = getIntent().getStringExtra("order_status");
 
         // 设置RecyclerView
         recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
@@ -57,7 +58,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
         totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
 
         // 提交订单按钮点击事件
-        submitOrderButton.setOnClickListener(v -> showSubmitOrderConfirmationDialog());
+        submitOrderButton.setOnClickListener(v -> {
+            Intent intent = new Intent(OrderDetailsActivity.this, PaymentActivity.class);
+            intent.putExtra("amount", totalPrice);
+            startActivity(intent);
+            finish();
+        });
 
         // 点击订单备注可以编辑备注
         textOrderNotes.setOnClickListener(v -> showEditOrderNotesDialog());
@@ -67,43 +73,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
             Intent intent = new Intent(OrderDetailsActivity.this, SelectAddressActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SELECT_ADDRESS);
         });
-    }
-
-    private void showSubmitOrderConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("确认提交订单")
-                .setMessage("您确定要提交订单吗？")
-                .setPositiveButton("确认", (dialog, which) -> {
-                    // 处理确认提交订单逻辑
-                    showPaymentResult(true);
-                })
-                .setNegativeButton("取消", (dialog, which) -> {
-                    // 处理取消提交订单逻辑
-                    showPaymentResult(false);
-                })
-                .show();
-    }
-
-    private void showPaymentResult(boolean isConfirmed) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (isConfirmed) {
-            builder.setTitle("支付成功");
-            builder.setMessage(String.format("支付金额: ¥%.2f", totalPrice));
-            builder.setPositiveButton("确定", (dialog, which) -> {
-                // 将订单添加到个人中心的待收货界面
-                // 这里你可以添加具体的逻辑代码
-                finish(); // 关闭当前Activity
-            });
-        } else {
-            builder.setTitle("待付款");
-            builder.setMessage("订单已保存，等待付款。");
-            builder.setPositiveButton("确定", (dialog, which) -> {
-                // 将订单保存到待付款界面
-                // 这里你可以添加具体的逻辑代码
-                finish(); // 关闭当前Activity
-            });
-        }
-        builder.show();
     }
 
     private void showEditOrderNotesDialog() {

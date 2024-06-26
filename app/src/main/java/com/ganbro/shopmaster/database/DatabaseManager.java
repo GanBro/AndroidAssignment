@@ -8,7 +8,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 8; // 更新到最新版本
+    private static final int DATABASE_VERSION = 9; // 更新到最新版本
 
     private static DatabaseManager instance;
 
@@ -23,6 +23,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String TABLE_USERS = "users";
     public static final String TABLE_VIDEOS = "videos";
     public static final String TABLE_ADDRESSES = "addresses"; // 新增
+    public static final String TABLE_ORDER = "orders"; // 新增
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -38,6 +39,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address"; // 新增
     public static final String COLUMN_PHONE = "phone"; // 新增
+    public static final String COLUMN_ORDER_STATUS = "order_status"; // 新增
+    public static final String COLUMN_ORDER_TOTAL = "order_total"; // 新增
 
     public static final String COLUMN_VIDEO_URL = "video_url";
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
@@ -83,6 +86,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_PHONE + " TEXT" +
                     ");";
 
+    private static final String TABLE_CREATE_ORDERS =
+            "CREATE TABLE " + TABLE_ORDER + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ORDER_STATUS + " TEXT, " +
+                    COLUMN_ORDER_TOTAL + " REAL" +
+                    ");";
+
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -93,6 +103,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_USERS);
         db.execSQL(TABLE_CREATE_VIDEOS);
         db.execSQL(TABLE_CREATE_ADDRESSES);
+        db.execSQL(TABLE_CREATE_ORDERS);
         Log.d("DatabaseCreation", "数据库表已创建。");
     }
 
@@ -132,6 +143,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 8) {
             db.execSQL(TABLE_CREATE_ADDRESSES); // 创建地址表
             Log.d("DatabaseUpgrade", "地址表已创建。");
+        }
+
+        if (oldVersion < 9) { // 假设增加订单表是第 9 版本
+            db.execSQL(TABLE_CREATE_ORDERS); // 创建订单表
+            Log.d("DatabaseUpgrade", "订单表已创建。");
         }
 
         // 如有其他版本升级逻辑，也可以在此处添加

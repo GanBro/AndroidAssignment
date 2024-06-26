@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -15,12 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.OrderDetailsActivity;
+import com.ganbro.shopmaster.activities.PaymentActivity;
 import com.ganbro.shopmaster.adapters.CartAdapter;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
-
-import java.io.Serializable;
 import java.util.List;
 
 public class CartFragment extends Fragment {
@@ -28,7 +25,6 @@ public class CartFragment extends Fragment {
     private RecyclerView recyclerViewCart;
     private TextView textTotalPrice;
     private Button buttonCheckout;
-    private CheckBox checkboxSelectAll;
     private CartAdapter cartAdapter;
     private CartDatabaseHelper cartDatabaseHelper;
 
@@ -45,7 +41,6 @@ public class CartFragment extends Fragment {
         recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
         textTotalPrice = view.findViewById(R.id.total_price);
         buttonCheckout = view.findViewById(R.id.button_checkout);
-        checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
         cartDatabaseHelper = new CartDatabaseHelper(getContext());
 
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -55,16 +50,12 @@ public class CartFragment extends Fragment {
             if (cartAdapter.getItemCount() == 0) {
                 Toast.makeText(getContext(), "购物车为空，无法结算", Toast.LENGTH_SHORT).show();
             } else {
-                proceedToOrderDetails();
+                // 直接跳转到支付页面
+                double totalPrice = calculateTotalPrice();
+                Intent intent = new Intent(getContext(), PaymentActivity.class);
+                intent.putExtra("amount", totalPrice);
+                startActivity(intent);
             }
-        });
-
-        checkboxSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            for (Product product : cartAdapter.getCartProducts()) {
-                product.setSelected(isChecked);
-            }
-            cartAdapter.notifyDataSetChanged();
-            updateTotalPrice();
         });
     }
 
@@ -76,20 +67,8 @@ public class CartFragment extends Fragment {
     }
 
     private void updateTotalPrice() {
-        double totalPrice = 0.0;
-        for (Product product : cartAdapter.getCartProducts()) {
-            if (product.isSelected()) {
-                totalPrice += product.getPrice() * product.getQuantity();
-            }
-        }
+        double totalPrice = calculateTotalPrice();
         textTotalPrice.setText(String.format("合计: ¥%.2f", totalPrice));
-    }
-
-    private void proceedToOrderDetails() {
-        Intent intent = new Intent(getContext(), OrderDetailsActivity.class);
-        intent.putExtra("orderItems", (Serializable) cartAdapter.getCartProducts());
-        intent.putExtra("totalPrice", calculateTotalPrice());
-        startActivity(intent);
     }
 
     private double calculateTotalPrice() {

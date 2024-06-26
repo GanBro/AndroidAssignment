@@ -87,10 +87,11 @@
                     android:src="@drawable/ic_waiting_payment" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="待付款"
-                    android:textSize="12sp" />
+                    android:id="@+id/text_waiting_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="待付款"
+                android:textSize="12sp" />
             </LinearLayout>
 
             <!-- 待收货 -->
@@ -107,10 +108,11 @@
                     android:src="@drawable/ic_waiting_receipt" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="待收货"
-                    android:textSize="12sp" />
+                    android:id="@+id/text_waiting_receipt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="待收货"
+                android:textSize="12sp" />
             </LinearLayout>
 
             <!-- 已完成 -->

@@ -79,5 +79,20 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
+
+        // 检查是否需要直接显示订单状态页面
+        if (getIntent() != null && "待收货".equals(getIntent().getStringExtra("order_status"))) {
+            showProfileFragmentWithOrderStatus("待收货");
+        }
+    }
+
+    private void showProfileFragmentWithOrderStatus(String orderStatus) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("order_status", orderStatus);
+        profileFragment.setArguments(args);
+        transaction.replace(R.id.fragment_container, profileFragment);
+        transaction.commit();
     }
 }
