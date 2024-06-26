@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.OrderItemAdapter;
+import com.ganbro.shopmaster.models.Address;
 import com.ganbro.shopmaster.models.Product;
 
 import java.util.List;
@@ -23,8 +25,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private TextView totalPriceTextView;
     private Button submitOrderButton;
     private TextView textOrderNotes;
+    private TextView textAddressName, textAddressPhone;
+    private Button buttonSelectAddress;
     private List<Product> orderItems;
     private double totalPrice;
+    private static final int REQUEST_CODE_SELECT_ADDRESS = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +40,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
         totalPriceTextView = findViewById(R.id.text_total_price);
         submitOrderButton = findViewById(R.id.submit_order_button);
         textOrderNotes = findViewById(R.id.text_order_notes);
+        textAddressName = findViewById(R.id.text_address_name);
+        textAddressPhone = findViewById(R.id.text_address_phone);
+        buttonSelectAddress = findViewById(R.id.button_select_address);
 
         // 获取传递的订单商品列表和总价
         orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
@@ -56,6 +64,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         // 点击订单备注可以编辑备注
         textOrderNotes.setOnClickListener(v -> showEditOrderNotesDialog());
+
+        // 选择收货人按钮点击事件
+        buttonSelectAddress.setOnClickListener(v -> {
+            Intent intent = new Intent(OrderDetailsActivity.this, SelectAddressActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_SELECT_ADDRESS);
+        });
     }
 
     private void showEditOrderNotesDialog() {
@@ -83,5 +97,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_ADDRESS && resultCode == RESULT_OK && data != null) {
+            Address selectedAddress = (Address) data.getSerializableExtra("selectedAddress");
+            if (selectedAddress != null) {
+                textAddressName.setText(selectedAddress.getAddress());
+                textAddressPhone.setText(selectedAddress.getName() + " " + selectedAddress.getPhone());
+            }
+        }
     }
 }

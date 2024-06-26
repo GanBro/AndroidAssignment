@@ -3,15 +3,26 @@ package com.ganbro.shopmaster.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 4; // 更新到最新版本
+    private static final int DATABASE_VERSION = 8; // 更新到最新版本
+
+    private static DatabaseManager instance;
+
+    public static synchronized DatabaseManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseManager(context.getApplicationContext());
+        }
+        return instance;
+    }
 
     public static final String TABLE_PRODUCT = "products";
     public static final String TABLE_USERS = "users";
     public static final String TABLE_VIDEOS = "videos";
+    public static final String TABLE_ADDRESSES = "addresses"; // 新增
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -25,6 +36,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_IS_FAVORITE = "is_favorite";
     public static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_ADDRESS = "address"; // 新增
+    public static final String COLUMN_PHONE = "phone"; // 新增
 
     public static final String COLUMN_VIDEO_URL = "video_url";
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
@@ -59,7 +72,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_VIDEO_URL + " TEXT, " +
                     COLUMN_VIDEO_DESCRIPTION + " TEXT, " +
                     COLUMN_LIKES_COUNT + " INTEGER, " +
-                    COLUMN_COLLECTS_COUNT + " INTEGER" + // 移除了 COLUMN_COMMENTS_COUNT
+                    COLUMN_COLLECTS_COUNT + " INTEGER" +
+                    ");";
+
+    private static final String TABLE_CREATE_ADDRESSES =
+            "CREATE TABLE " + TABLE_ADDRESSES + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ADDRESS + " TEXT, " +
+                    COLUMN_NAME + " TEXT, " +
+                    COLUMN_PHONE + " TEXT" +
                     ");";
 
     public DatabaseManager(Context context) {
@@ -71,12 +92,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_PRODUCTS);
         db.execSQL(TABLE_CREATE_USERS);
         db.execSQL(TABLE_CREATE_VIDEOS);
+        db.execSQL(TABLE_CREATE_ADDRESSES);
+        Log.d("DatabaseCreation", "数据库表已创建。");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 4) {
-            // 创建一个临时表来存储视频数据
             db.execSQL("CREATE TABLE videos_temp (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_VIDEO_URL + " TEXT, " +
@@ -106,6 +128,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             // 将临时表重命名为正式表
             db.execSQL("ALTER TABLE videos_temp RENAME TO " + TABLE_VIDEOS + ";");
         }
+
+        if (oldVersion < 8) {
+            db.execSQL(TABLE_CREATE_ADDRESSES); // 创建地址表
+            Log.d("DatabaseUpgrade", "地址表已创建。");
+        }
+
         // 如有其他版本升级逻辑，也可以在此处添加
     }
 }

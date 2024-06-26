@@ -42,6 +42,22 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".activities.SelectAddressActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".activities.AddAddressActivity"
+            android:exported="true">
+        </activity>
+
+        <!-- 确保 AddressListActivity 也在这里声明 -->
+        <activity
+            android:name=".activities.AddressListActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

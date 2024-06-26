@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.AddressListActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
 
@@ -19,6 +20,7 @@ public class ProfileFragment extends Fragment {
     private TextView loginRegisterButton;
     private View myFavoritesButton;
     private View logoutButton;
+    private View addressButton; // 新增
 
     @Nullable
     @Override
@@ -33,6 +35,7 @@ public class ProfileFragment extends Fragment {
         loginRegisterButton = view.findViewById(R.id.login_register_button);
         myFavoritesButton = view.findViewById(R.id.my_favorites_button);
         logoutButton = view.findViewById(R.id.logout_button);
+        addressButton = view.findViewById(R.id.address_button); // 新增
 
         // 获取 SharedPreferences 中保存的邮箱地址和用户ID
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
@@ -67,6 +70,12 @@ public class ProfileFragment extends Fragment {
 
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
+        addressButton.setOnClickListener(v -> {
+            // 跳转到 AddressListActivity
+            Intent intent = new Intent(getActivity(), AddressListActivity.class);
             startActivity(intent);
         });
     }
