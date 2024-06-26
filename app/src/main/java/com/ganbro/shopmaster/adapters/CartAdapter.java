@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -111,8 +111,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView productName;
         TextView productPrice;
         TextView quantityText;
-        Button buttonIncrease;
-        Button buttonDecrease;
+        ImageButton buttonIncrease;  // 修改为 ImageButton
+        ImageButton buttonDecrease;  // 修改为 ImageButton
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,8 +121,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
             quantityText = itemView.findViewById(R.id.quantity_text);
-            buttonIncrease = itemView.findViewById(R.id.button_increase);
-            buttonDecrease = itemView.findViewById(R.id.button_decrease);
+            buttonIncrease = itemView.findViewById(R.id.button_increase);  // 修改为 ImageButton
+            buttonDecrease = itemView.findViewById(R.id.button_decrease);  // 修改为 ImageButton
         }
     }
 }
