@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.LoginActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
+import com.ganbro.shopmaster.activities.LoginActivity;
 
 public class ProfileFragment extends Fragment {
 

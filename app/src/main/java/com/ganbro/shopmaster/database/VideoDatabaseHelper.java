@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import com.ganbro.shopmaster.models.Video;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,9 @@ public class VideoDatabaseHelper {
         db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
     }
 
-    public List<Video> getAllVideos() {
+    public List<Video> getAllFavoriteVideos() {
         List<Video> videoList = new ArrayList<>();
-        Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, null, null, null, null, null);
+        Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, DatabaseManager.COLUMN_COLLECTS_COUNT + " > 0", null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Video video = new Video(
