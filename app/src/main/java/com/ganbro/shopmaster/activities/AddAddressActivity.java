@@ -1,6 +1,5 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -60,7 +59,7 @@ public class AddAddressActivity extends AppCompatActivity {
 
         if (result != -1) {
             Toast.makeText(this, "地址保存成功", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK); // 设置结果
+            setResult(RESULT_OK); // 设置结果为成功
             finish();
         } else {
             Toast.makeText(this, "保存地址失败", Toast.LENGTH_SHORT).show();

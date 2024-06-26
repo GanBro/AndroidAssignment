@@ -43,4 +43,9 @@ public class AddressDao {
         cursor.close();
         return addresses;
     }
+
+    public void deleteAddress(int id) {
+        db.delete("addresses", "id = ?", new String[]{String.valueOf(id)});
+        Log.d("DatabaseDelete", "删除地址：ID=" + id);
+    }
 }
