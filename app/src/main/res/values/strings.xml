@@ -15,4 +15,5 @@
     <string name="increase_quantity">增加数量</string>
     <string name="like">喜欢</string>
     <string name="collect">收藏\n</string>
+    <string name="back">返回\n</string>
 </resources>

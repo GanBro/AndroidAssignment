@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.OrderDetailsActivity;
 import com.ganbro.shopmaster.adapters.CartAdapter;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartFragment extends Fragment implements CartAdapter.OnProductSelectedListener {
@@ -27,6 +30,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
     private CheckBox checkboxSelectAll;
     private TextView totalPriceTextView;
     private View editModeButtons;
+    private Button buttonCheckout;
     private boolean isEditing = false;
     private RecyclerView recyclerViewCart;
     private CartAdapter cartAdapter;
@@ -43,6 +47,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
         totalPriceTextView = view.findViewById(R.id.total_price);
         editModeButtons = view.findViewById(R.id.edit_mode_buttons);
+        buttonCheckout = view.findViewById(R.id.button_checkout);
         recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
 
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -71,6 +76,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         buttonCollect.setOnClickListener(v -> collectSelectedItems());
 
         checkboxSelectAll.setOnClickListener(v -> selectAllItems(checkboxSelectAll.isChecked()));
+
+        buttonCheckout.setOnClickListener(v -> checkout());
 
         updateTotalPrice();
 
@@ -101,7 +108,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         for (int i = cartProducts.size() - 1; i >= 0; i--) {
             Product product = cartProducts.get(i);
             if (product.isSelected()) {
-                cartAdapter.removeItem(i);  // 确保调用 removeItem 方法
+                cartAdapter.removeItem(i);
                 cartDatabaseHelper.deleteCartProduct(product.getId());
             }
         }
@@ -112,7 +119,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
         for (Product product : cartProducts) {
             if (product.isSelected()) {
-                cartDatabaseHelper.addProductToFavorites(product);  // 调用 addProductToFavorites 方法
+                cartDatabaseHelper.addProductToFavorites(product);
             }
         }
         new AlertDialog.Builder(getActivity())
@@ -128,6 +135,24 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
         }
         cartAdapter.notifyDataSetChanged();
         updateTotalPrice();
+    }
+
+    private void checkout() {
+        List<Product> selectedProducts = new ArrayList<>();
+        for (Product product : cartProducts) {
+            if (product.isSelected()) {
+                selectedProducts.add(product);
+            }
+        }
+        double totalPrice = 0;
+        for (Product product : selectedProducts) {
+            totalPrice += product.getPrice() * product.getQuantity();
+        }
+
+        Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
+        intent.putExtra("orderItems", (ArrayList<Product>) selectedProducts);
+        intent.putExtra("totalPrice", totalPrice);
+        startActivity(intent);
     }
 
     @Override
