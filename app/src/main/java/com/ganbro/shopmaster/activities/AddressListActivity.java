@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +16,7 @@ import com.ganbro.shopmaster.database.DatabaseManager;
 
 public class AddressListActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_ADD_ADDRESS = 1; // 新增
     private LinearLayout addressListLayout;
     private DatabaseManager dbManager;
 
@@ -36,24 +36,23 @@ public class AddressListActivity extends AppCompatActivity {
         // 设置添加地址按钮点击事件
         addAddressButton.setOnClickListener(v -> {
             Intent intent = new Intent(AddressListActivity.this, AddAddressActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_ADD_ADDRESS); // 修改此处
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_ADDRESS && resultCode == RESULT_OK) {
+            // 重新加载地址
+            loadAddresses();
+        }
+    }
+
     private void loadAddresses() {
-        // 从数据库加载地址并显示在界面上
+        addressListLayout.removeAllViews(); // 确保重新加载时清空旧的视图
         SQLiteDatabase db = dbManager.getReadableDatabase();
         Cursor cursor = db.query(DatabaseManager.TABLE_ADDRESSES, null, null, null, null, null, null);
-
-        // 打印表结构
-        Cursor tableCursor = db.rawQuery("PRAGMA table_info(addresses);", null);
-        if (tableCursor.moveToFirst()) {
-            do {
-                String columnName = tableCursor.getString(1);
-                Log.d("TableInfo", "列: " + columnName);
-            } while (tableCursor.moveToNext());
-        }
-        tableCursor.close();
 
         while (cursor.moveToNext()) {
             String address = cursor.getString(cursor.getColumnIndex(DatabaseManager.COLUMN_ADDRESS));
