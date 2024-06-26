@@ -57,10 +57,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
 
         // 提交订单按钮点击事件
-        submitOrderButton.setOnClickListener(v -> {
-            // 处理提交订单逻辑
-            // ...
-        });
+        submitOrderButton.setOnClickListener(v -> showSubmitOrderConfirmationDialog());
 
         // 点击订单备注可以编辑备注
         textOrderNotes.setOnClickListener(v -> showEditOrderNotesDialog());
@@ -70,6 +67,43 @@ public class OrderDetailsActivity extends AppCompatActivity {
             Intent intent = new Intent(OrderDetailsActivity.this, SelectAddressActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SELECT_ADDRESS);
         });
+    }
+
+    private void showSubmitOrderConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("确认提交订单")
+                .setMessage("您确定要提交订单吗？")
+                .setPositiveButton("确认", (dialog, which) -> {
+                    // 处理确认提交订单逻辑
+                    showPaymentResult(true);
+                })
+                .setNegativeButton("取消", (dialog, which) -> {
+                    // 处理取消提交订单逻辑
+                    showPaymentResult(false);
+                })
+                .show();
+    }
+
+    private void showPaymentResult(boolean isConfirmed) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (isConfirmed) {
+            builder.setTitle("支付成功");
+            builder.setMessage(String.format("支付金额: ¥%.2f", totalPrice));
+            builder.setPositiveButton("确定", (dialog, which) -> {
+                // 将订单添加到个人中心的待收货界面
+                // 这里你可以添加具体的逻辑代码
+                finish(); // 关闭当前Activity
+            });
+        } else {
+            builder.setTitle("待付款");
+            builder.setMessage("订单已保存，等待付款。");
+            builder.setPositiveButton("确定", (dialog, which) -> {
+                // 将订单保存到待付款界面
+                // 这里你可以添加具体的逻辑代码
+                finish(); // 关闭当前Activity
+            });
+        }
+        builder.show();
     }
 
     private void showEditOrderNotesDialog() {
@@ -83,18 +117,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                textOrderNotes.setText(input.getText().toString());
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setPositiveButton("确定", (dialog, which) -> textOrderNotes.setText(input.getText().toString()));
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }

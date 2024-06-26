@@ -97,6 +97,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartProducts.size();
     }
 
+    public List<Product> getCartProducts() {
+        return cartProducts;
+    }
+
     public void removeItem(int position) {
         if (position >= 0 && position < cartProducts.size()) {
             cartProducts.remove(position);
