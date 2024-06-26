@@ -15,6 +15,7 @@ import com.ganbro.shopmaster.fragments.CategoryFragment;
 import com.ganbro.shopmaster.fragments.DiscoverFragment;
 import com.ganbro.shopmaster.fragments.HomeFragment;
 import com.ganbro.shopmaster.fragments.ProfileFragment;
+import com.ganbro.shopmaster.database.ProductDao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -84,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent() != null && "待收货".equals(getIntent().getStringExtra("order_status"))) {
             showProfileFragmentWithOrderStatus("待收货");
         }
+
+        // 初始化产品数据
+        initializeProductData();
     }
 
     private void showProfileFragmentWithOrderStatus(String orderStatus) {
@@ -94,5 +98,17 @@ public class MainActivity extends AppCompatActivity {
         profileFragment.setArguments(args);
         transaction.replace(R.id.fragment_container, profileFragment);
         transaction.commit();
+    }
+
+    private void initializeProductData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        if (userId != -1) {
+            ProductDao productDao = new ProductDao(this);
+            productDao.initializeProducts(userId);
+            Log.d(TAG, "产品数据已初始化");
+        } else {
+            Log.d(TAG, "用户未登录，跳过产品数据初始化");
+        }
     }
 }
