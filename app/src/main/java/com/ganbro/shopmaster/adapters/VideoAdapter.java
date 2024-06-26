@@ -6,12 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.models.Video;
-
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
@@ -50,6 +51,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             Log.e(TAG, "Error playing video: " + what + ", " + extra);
             return true;
         });
+
+        // Set other video details
+        holder.videoDescription.setText(video.getDescription());
+        holder.tvLikesCount.setText(String.valueOf(video.getLikesCount()));
+        holder.tvCollectsCount.setText(String.valueOf(video.getCollectsCount()));
     }
 
     @Override
@@ -59,10 +65,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
+        TextView videoDescription;
+        TextView tvLikesCount;
+        TextView tvCollectsCount;
+        ImageView btnLike;
+        ImageView btnCollect;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.video_view);
+            videoDescription = itemView.findViewById(R.id.video_description);
+            tvLikesCount = itemView.findViewById(R.id.tv_likes_count);
+            tvCollectsCount = itemView.findViewById(R.id.tv_collects_count);
+            btnLike = itemView.findViewById(R.id.btn_like);
+            btnCollect = itemView.findViewById(R.id.btn_collect);
         }
     }
 }

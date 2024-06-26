@@ -29,7 +29,8 @@
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_like" />
+            android:src="@drawable/ic_like"
+            android:contentDescription="@string/like" />
 
         <TextView
             android:id="@+id/tv_likes_count"
@@ -39,23 +40,12 @@
             android:padding="4dp" />
 
         <ImageView
-            android:id="@+id/btn_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_comment" />
-
-        <TextView
-            android:id="@+id/tv_comments_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:padding="4dp" />
-
-        <ImageView
             android:id="@+id/btn_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_collect" />
+            android:src="@drawable/ic_collect"
+            android:contentDescription="@string/collect"
+            android:layout_marginLeft="16dp" />
 
         <TextView
             android:id="@+id/tv_collects_count"

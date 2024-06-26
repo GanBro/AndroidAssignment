@@ -5,15 +5,13 @@ public class Video {
     private String videoUrl;
     private String description;
     private int likesCount;
-    private int commentsCount;
     private int collectsCount;
 
-    public Video(int id, String videoUrl, String description, int likesCount, int commentsCount, int collectsCount) {
+    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount) {
         this.id = id;
         this.videoUrl = videoUrl;
         this.description = description;
         this.likesCount = likesCount;
-        this.commentsCount = commentsCount;
         this.collectsCount = collectsCount;
     }
 
@@ -47,14 +45,6 @@ public class Video {
 
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
-    }
-
-    public int getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
     }
 
     public int getCollectsCount() {
