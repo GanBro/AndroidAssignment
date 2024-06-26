@@ -70,49 +70,63 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_order_items"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:padding="8dp" />
 
     <!-- 配送服务信息 -->
     <LinearLayout
+        android:id="@+id/extra_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
         android:background="@android:color/white">
 
-        <TextView
-            android:id="@+id/text_delivery_service"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="配送服务: 快递 包邮 承诺24小时内发货"
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
 
-        <TextView
-            android:id="@+id/text_insurance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="运费险: 未选择 退换货可赔付11元"
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配送服务"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
 
-        <TextView
-            android:id="@+id/text_invoice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="开具发票: 本次不开具发票"
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            <TextView
+                android:id="@+id/text_delivery_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快递 包邮 承诺24小时内发货"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/text_order_notes"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="订单备注: 无备注"
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="订单备注"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/text_order_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无备注"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
     </LinearLayout>
 
     <!-- 底部价格和提交按钮 -->
