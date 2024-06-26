@@ -89,16 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
 
-        holder.buttonRemove.setVisibility(isEditing ? View.VISIBLE : View.GONE);
-        holder.buttonRemove.setOnClickListener(v -> {
-            int pos = holder.getAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-                removeItem(pos);
-                onProductSelectedListener.onProductSelected();
-                CartDatabaseHelper dbHelper = new CartDatabaseHelper(context);
-                dbHelper.deleteCartProduct(product.getId());
-            }
-        });
+        // 移除 buttonRemove 的设置逻辑
     }
 
     @Override
@@ -122,7 +113,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView quantityText;
         Button buttonIncrease;
         Button buttonDecrease;
-        Button buttonRemove;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,7 +123,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             quantityText = itemView.findViewById(R.id.quantity_text);
             buttonIncrease = itemView.findViewById(R.id.button_increase);
             buttonDecrease = itemView.findViewById(R.id.button_decrease);
-            buttonRemove = itemView.findViewById(R.id.button_remove);
         }
     }
 }

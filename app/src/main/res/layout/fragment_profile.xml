@@ -322,8 +322,9 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- 客服中心 -->
+            <!-- 退出登录 -->
             <LinearLayout
+                android:id="@+id/logout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -332,13 +333,13 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_customer_service" />
+                    android:src="@drawable/ic_logout" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="客服中心"
+                    android:text="退出登录"
                     android:textSize="14sp" />
             </LinearLayout>
 

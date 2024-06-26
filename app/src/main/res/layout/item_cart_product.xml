@@ -79,12 +79,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 删除商品按钮 -->
-    <Button
-        android:id="@+id/button_remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="删除"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_gravity="center_vertical" />
 </LinearLayout>
