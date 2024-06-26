@@ -6,16 +6,15 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="视频收藏"
         android:textSize="18sp"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/recycler_view_video_favorites"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
