@@ -3,9 +3,11 @@ package com.ganbro.shopmaster.fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +24,8 @@ public class ProfileFragment extends Fragment {
     private View myFavoritesButton;
     private View logoutButton;
     private View addressButton;
-    private View textWaitingPayment;
-    private View textWaitingReceipt;
+    private ImageView waitingPaymentIcon;
+    private ImageView waitingReceiptIcon;
 
     @Nullable
     @Override
@@ -39,8 +41,8 @@ public class ProfileFragment extends Fragment {
         myFavoritesButton = view.findViewById(R.id.my_favorites_button);
         logoutButton = view.findViewById(R.id.logout_button);
         addressButton = view.findViewById(R.id.address_button);
-        textWaitingPayment = view.findViewById(R.id.text_waiting_payment);
-        textWaitingReceipt = view.findViewById(R.id.text_waiting_receipt);
+        waitingPaymentIcon = view.findViewById(R.id.ic_waiting_payment);
+        waitingReceiptIcon = view.findViewById(R.id.ic_waiting_receipt);
 
         // 获取 SharedPreferences 中保存的邮箱地址和用户ID
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
@@ -84,7 +86,8 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        textWaitingPayment.setOnClickListener(v -> {
+        waitingPaymentIcon.setOnClickListener(v -> {
+            Log.d("ProfileFragment", "待付款点击事件触发");
             // 跳转到 OrderStatusActivity，显示待付款订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待付款");
@@ -92,7 +95,8 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        textWaitingReceipt.setOnClickListener(v -> {
+        waitingReceiptIcon.setOnClickListener(v -> {
+            Log.d("ProfileFragment", "待收货点击事件触发");
             // 跳转到 OrderStatusActivity，显示待收货订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待收货");

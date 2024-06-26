@@ -1,3 +1,4 @@
+<!-- fragment_profile.xml -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -75,6 +76,7 @@
 
             <!-- 待付款 -->
             <LinearLayout
+                android:id="@+id/waiting_payment_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -82,20 +84,24 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/ic_waiting_payment"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_waiting_payment" />
+                    android:src="@drawable/ic_waiting_payment"
+                    android:clickable="true"
+                    android:focusable="true" />
 
                 <TextView
                     android:id="@+id/text_waiting_payment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="待付款"
-                android:textSize="12sp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="待付款"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <!-- 待收货 -->
             <LinearLayout
+                android:id="@+id/waiting_receipt_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -103,16 +109,19 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/ic_waiting_receipt"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_waiting_receipt" />
+                    android:src="@drawable/ic_waiting_receipt"
+                    android:clickable="true"
+                    android:focusable="true" />
 
                 <TextView
                     android:id="@+id/text_waiting_receipt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="待收货"
-                android:textSize="12sp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="待收货"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <!-- 已完成 -->

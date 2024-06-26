@@ -11,7 +11,6 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.OrderItemAdapter;
 import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
-
 import java.util.List;
 
 public class OrderStatusActivity extends AppCompatActivity {
