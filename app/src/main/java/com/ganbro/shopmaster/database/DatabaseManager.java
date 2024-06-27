@@ -49,7 +49,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_VIDEO_URL = "video_url";
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
     public static final String COLUMN_LIKES_COUNT = "likes_count";
-    public static final String COLUMN_COMMENTS_COUNT = "comments_count";
     public static final String COLUMN_COLLECTS_COUNT = "collects_count";
 
     public static final String COLUMN_ORDER_TOTAL = "order_total";
