@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -8,7 +9,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 14; // 更新到最新版本
+    private static final int DATABASE_VERSION = 14; // 确保版本号正确更新
 
     private static DatabaseManager instance;
 
@@ -147,9 +148,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL(TABLE_CREATE_ORDER_ITEMS);
         }
         if (oldVersion < 14) {
-            db.execSQL("ALTER TABLE " + TABLE_ORDER + " ADD COLUMN " + COLUMN_USER_ID + " INTEGER;");
+            if (!isColumnExists(db, TABLE_ORDER, COLUMN_USER_ID)) {
+                db.execSQL("ALTER TABLE " + TABLE_ORDER + " ADD COLUMN " + COLUMN_USER_ID + " INTEGER;");
+            }
         }
-        Log.d("DatabaseUpgrade", "数据库已升级到版本 " + newVersion);
+        // 添加其他版本升级逻辑
+    }
+
+    /**
+     * 检查某列是否存在于表中
+     */
+    private boolean isColumnExists(SQLiteDatabase db, String tableName, String columnName) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("PRAGMA table_info(" + tableName + ");", null);
+            if (cursor != null) {
+                int nameIndex = cursor.getColumnIndex("name");
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(nameIndex);
+                    if (columnName.equals(name)) {
+                        return true;
+                    }
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
     }
 
     @Override

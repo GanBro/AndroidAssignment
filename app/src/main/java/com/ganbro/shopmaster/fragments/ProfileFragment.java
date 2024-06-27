@@ -128,7 +128,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadOrders(String status) {
-        List<Product> orders = orderDatabaseHelper.getOrderItemsByStatus(status, userId);
+        List<Product> orders = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userId);
         Log.d(TAG, "加载到的订单项数量: " + orders.size());
         OrderItemAdapter adapter = new OrderItemAdapter(getContext(), orders);
         recyclerView.setAdapter(adapter);

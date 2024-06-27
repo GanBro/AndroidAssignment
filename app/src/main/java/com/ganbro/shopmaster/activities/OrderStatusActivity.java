@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.OrderItemAdapter;
-import com.ganbro.shopmaster.database.ProductDao;
+import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewOrderItems;
     private TextView statusTitle;
-    private ProductDao productDao;
+    private OrderDatabaseHelper orderDatabaseHelper;
     private String orderStatus;
     private int userId;
 
@@ -28,7 +28,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
         recyclerViewOrderItems = findViewById(R.id.recycler_view_order_items);
         statusTitle = findViewById(R.id.status_title);
-        productDao = new ProductDao(this);
+        orderDatabaseHelper = new OrderDatabaseHelper(this);
 
         // 获取传递的订单状态和用户ID
         orderStatus = getIntent().getStringExtra("order_status");
@@ -48,7 +48,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
     private void loadOrderItems(String status) {
         Log.d("OrderStatusActivity", "加载订单项目，状态: " + status);
-        List<Product> orderItems = productDao.getOrderItemsByStatusAndUser(status, userId);
+        List<Product> orderItems = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userId);
         Log.d("OrderStatusActivity", "找到的订单项目数量: " + orderItems.size());
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
         recyclerViewOrderItems.setAdapter(orderItemAdapter);
