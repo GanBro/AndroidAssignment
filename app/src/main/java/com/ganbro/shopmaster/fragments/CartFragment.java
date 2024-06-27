@@ -77,6 +77,12 @@ public class CartFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadCartProducts();
+    }
+
     private void loadCartProducts() {
         List<Product> cartProducts = cartDatabaseHelper.getAllCartProducts();
         cartAdapter = new CartAdapter(getContext(), cartProducts, this::updateTotalPrice);

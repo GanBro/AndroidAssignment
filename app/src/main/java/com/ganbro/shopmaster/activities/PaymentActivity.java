@@ -53,36 +53,35 @@ public class PaymentActivity extends AppCompatActivity {
         final List<Product> finalOrderItems = orderItems;
         final String finalUserEmail = userEmail;
 
-        paymentButton.setOnClickListener(v -> {
-            // 模拟支付成功
-            OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("PENDING_RECEIPT", amount, finalOrderItems, finalUserEmail);
-            Log.d(TAG, "支付成功，订单ID: " + orderId);
+        // 支付按钮点击事件
+        paymentButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "PENDING_RECEIPT", "支付成功", true));
 
+        // 取消按钮点击事件
+        cancelButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "PENDING_PAYMENT", "支付取消", false));
+    }
+
+    private void handlePayment(List<Product> orderItems, String userEmail, double amount, String orderStatus, String toastMessage, boolean deleteCartItems) {
+        OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
+        long orderId = orderDatabaseHelper.addOrder(orderStatus, amount, orderItems, userEmail);
+        Log.d(TAG, toastMessage + "，订单ID: " + orderId);
+
+        if (deleteCartItems) {
             // 删除购物车中的已结算商品
-            for (Product product : finalOrderItems) {
+            for (Product product : orderItems) {
                 cartDatabaseHelper.deleteCartProduct(product.getId());
             }
+        }
 
-            Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-            intent.putExtra("order_status", "PENDING_RECEIPT");
-            intent.putExtra("from_payment_success", true); // 标识是从支付成功返回的
-            startActivity(intent);
-            finish();
-        });
-
-        cancelButton.setOnClickListener(v -> {
-            // 模拟支付取消
-            OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("PENDING_PAYMENT", amount, finalOrderItems, finalUserEmail);
-            Log.d(TAG, "支付取消，订单ID: " + orderId);
-
-            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-            intent.putExtra("order_status", "PENDING_PAYMENT");
-            startActivity(intent);
-            finish();
-        });
+        Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
+        intent.putExtra("order_status", orderStatus);
+        if (deleteCartItems) {
+            intent.putExtra("from_payment_success", true);
+        } else {
+            intent.putExtra("from_payment_cancel", true);
+        }
+        startActivity(intent);
+        finish();
     }
 }

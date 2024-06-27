@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("from_payment_success", false)) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
             Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+        } else if (getIntent().getBooleanExtra("from_payment_cancel", false)) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+            Toast.makeText(this, "支付取消", Toast.LENGTH_SHORT).show();
         }
     }
 
