@@ -13,11 +13,12 @@ public class Product implements Serializable {
     private boolean isRecommended;
     private boolean isSelected;
     private boolean isInCart;
+    private String userEmail; // 新增字段
 
     public Product() {
     }
 
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart) {
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart, String userEmail) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -28,14 +29,19 @@ public class Product implements Serializable {
         this.isRecommended = isRecommended;
         this.isSelected = false;
         this.isInCart = isInCart;
+        this.userEmail = userEmail; // 新增字段
+    }
+
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart) {
+        this(id, name, price, imageUrl, quantity, category, description, isRecommended, isInCart, null);
     }
 
     public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
-        this(id, name, price, imageUrl, quantity, category, description, isRecommended, false);
+        this(id, name, price, imageUrl, quantity, category, description, isRecommended, false, null);
     }
 
     public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
-        this(id, name, price, imageUrl, quantity, category, "", false, false);
+        this(id, name, price, imageUrl, quantity, category, "", false, false, null);
     }
 
     // Getters and setters for all fields
@@ -119,6 +125,14 @@ public class Product implements Serializable {
         isInCart = inCart;
     }
 
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -132,6 +146,7 @@ public class Product implements Serializable {
                 ", isRecommended=" + isRecommended +
                 ", isSelected=" + isSelected +
                 ", isInCart=" + isInCart +
+                ", userEmail='" + userEmail + '\'' +
                 '}';
     }
 
@@ -151,7 +166,8 @@ public class Product implements Serializable {
         if (!name.equals(product.name)) return false;
         if (!imageUrl.equals(product.imageUrl)) return false;
         if (!category.equals(product.category)) return false;
-        return description.equals(product.description);
+        if (!description.equals(product.description)) return false;
+        return userEmail != null ? userEmail.equals(product.userEmail) : product.userEmail == null;
     }
 
     @Override
@@ -169,6 +185,7 @@ public class Product implements Serializable {
         result = 31 * result + (isRecommended ? 1 : 0);
         result = 31 * result + (isSelected ? 1 : 0);
         result = 31 * result + (isInCart ? 1 : 0);
+        result = 31 * result + (userEmail != null ? userEmail.hashCode() : 0);
         return result;
     }
 }

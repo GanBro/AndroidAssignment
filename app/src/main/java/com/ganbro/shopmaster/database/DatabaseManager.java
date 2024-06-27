@@ -9,7 +9,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 14; // 确保版本号正确更新
+    private static final int DATABASE_VERSION = 15; // 确保版本号正确更新
 
     private static DatabaseManager instance;
 
@@ -42,6 +42,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address";
     public static final String COLUMN_PHONE = "phone";
+    public static final String COLUMN_USER_EMAIL = "user_email";
 
     public static final String COLUMN_VIDEO_URL = "video_url";
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
@@ -66,7 +67,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IS_IN_CART + " INTEGER, " +
                     COLUMN_IS_FAVORITE + " INTEGER, " +
                     COLUMN_USER_ID + " INTEGER, " +
-                    COLUMN_ORDER_STATUS + " TEXT" +
+                    COLUMN_ORDER_STATUS + " TEXT, " +
+                    COLUMN_USER_EMAIL + " TEXT" +  // 添加 user_email 列
                     ");";
 
     private static final String TABLE_CREATE_FAVORITES =
@@ -107,6 +109,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_ORDER_STATUS + " TEXT, " +
                     COLUMN_ORDER_TOTAL + " REAL, " +
+                    COLUMN_USER_EMAIL + " TEXT, " +  // 添加 user_email 列
                     COLUMN_USER_ID + " INTEGER" +
                     ");";
 
@@ -141,23 +144,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 12) {
-            db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_ORDER_STATUS + " TEXT;");
-        }
-        if (oldVersion < 13) {
-            db.execSQL(TABLE_CREATE_ORDER_ITEMS);
-        }
-        if (oldVersion < 14) {
-            if (!isColumnExists(db, TABLE_ORDER, COLUMN_USER_ID)) {
-                db.execSQL("ALTER TABLE " + TABLE_ORDER + " ADD COLUMN " + COLUMN_USER_ID + " INTEGER;");
+        if (oldVersion < 15) {
+            if (!isColumnExists(db, TABLE_PRODUCT, COLUMN_USER_EMAIL)) {
+                db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_USER_EMAIL + " TEXT;");
             }
         }
-        // 添加其他版本升级逻辑
     }
 
-    /**
-     * 检查某列是否存在于表中
-     */
     private boolean isColumnExists(SQLiteDatabase db, String tableName, String columnName) {
         Cursor cursor = null;
         try {

@@ -1,6 +1,5 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -51,18 +50,15 @@ public class LoginActivity extends AppCompatActivity {
     // 检查是否可以自动登录
     private void autoLoginIfPossible() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
+        String email = sharedPreferences.getString("email", null);
 
-        if (userId != -1) {
-            String email = sharedPreferences.getString("email", null);
-            if (email != null) {
-                // 自动登录用户
-                Log.d(TAG, "自动登录成功，跳转到主页面");
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("fromLogin", true);
-                startActivity(intent);
-                finish();
-            }
+        if (email != null) {
+            // 自动登录用户
+            Log.d(TAG, "自动登录成功，跳转到主页面");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("fromLogin", true);
+            startActivity(intent);
+            finish();
         } else {
             Log.d(TAG, "没有可用的自动登录信息");
         }
@@ -128,11 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("email", email);
                     editor.apply();
 
-                    int userId = insertOrGetUser(email);
-                    editor.putInt("user_id", userId);
-                    editor.apply();
-
-                    Log.d(TAG, "登录成功，用户ID: " + userId + ", 邮箱: " + email);
+                    Log.d(TAG, "登录成功，邮箱: " + email);
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fromLogin", true);
@@ -162,21 +154,5 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         queue.add(stringRequest);
-    }
-
-    private int insertOrGetUser(String email) {
-        SQLiteDatabase db = new DatabaseManager(this).getWritableDatabase();
-        Cursor cursor = db.query("users", new String[]{"id"}, "email = ?", new String[]{email}, null, null, null);
-        if (cursor.moveToFirst()) {
-            int userId = cursor.getInt(cursor.getColumnIndex("id"));
-            cursor.close();
-            return userId;
-        } else {
-            ContentValues values = new ContentValues();
-            values.put("email", email);
-            long userId = db.insert("users", null, values);
-            cursor.close();
-            return (int) userId;
-        }
     }
 }

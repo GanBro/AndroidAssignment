@@ -1,5 +1,6 @@
 package com.ganbro.shopmaster.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ public class OrderStatusActivity extends AppCompatActivity {
     private TextView statusTitle;
     private OrderDatabaseHelper orderDatabaseHelper;
     private String orderStatus;
-    private int userId;
+    private String userEmail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,11 +31,11 @@ public class OrderStatusActivity extends AppCompatActivity {
         statusTitle = findViewById(R.id.status_title);
         orderDatabaseHelper = new OrderDatabaseHelper(this);
 
-        // 获取传递的订单状态和用户ID
+        // 获取传递的订单状态和用户邮箱
         orderStatus = getIntent().getStringExtra("order_status");
-        userId = getIntent().getIntExtra("user_id", -1);
+        userEmail = getIntent().getStringExtra("user_email");
 
-        Log.d("OrderStatusActivity", "订单状态: " + orderStatus + ", 用户ID: " + userId);
+        Log.d("OrderStatusActivity", "订单状态: " + orderStatus + ", 用户邮箱: " + userEmail);
 
         if (orderStatus != null) {
             statusTitle.setText(orderStatus);
@@ -48,7 +49,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
     private void loadOrderItems(String status) {
         Log.d("OrderStatusActivity", "加载订单项目，状态: " + status);
-        List<Product> orderItems = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userId);
+        List<Product> orderItems = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userEmail);
         Log.d("OrderStatusActivity", "找到的订单项目数量: " + orderItems.size());
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
         recyclerViewOrderItems.setAdapter(orderItemAdapter);

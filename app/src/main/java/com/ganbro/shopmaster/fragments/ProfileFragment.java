@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private ImageView waitingReceiptIcon;
     private RecyclerView recyclerView;
     private OrderDatabaseHelper orderDatabaseHelper;
-    private int userId;
+    private String userEmail;
 
     @Nullable
     @Override
@@ -56,17 +56,12 @@ public class ProfileFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_order_items);
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
-        // 获取 SharedPreferences 中保存的邮箱地址和用户ID
+        // 获取 SharedPreferences 中保存的邮箱地址
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
-        String email = sharedPreferences.getString("email", "登录/注册");
-        userId = sharedPreferences.getInt("user_id", -1);
+        userEmail = sharedPreferences.getString("email", "登录/注册");
 
         // 设置文本为邮箱地址
-        if (userId == -1) {
-            loginRegisterButton.setText("登录/注册");
-        } else {
-            loginRegisterButton.setText(email);
-        }
+        loginRegisterButton.setText(userEmail.equals("登录/注册") ? "登录/注册" : userEmail);
 
         // 设置点击事件
         loginRegisterButton.setOnClickListener(v -> {
@@ -103,7 +98,7 @@ public class ProfileFragment extends Fragment {
             // 跳转到 OrderStatusActivity，显示待付款订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待付款");
-            intent.putExtra("user_id", userId);
+            intent.putExtra("user_email", userEmail);
             startActivity(intent);
         });
 
@@ -112,7 +107,7 @@ public class ProfileFragment extends Fragment {
             // 跳转到 OrderStatusActivity，显示待收货订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待收货");
-            intent.putExtra("user_id", userId);
+            intent.putExtra("user_email", userEmail);
             startActivity(intent);
         });
 
@@ -128,7 +123,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadOrders(String status) {
-        List<Product> orders = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userId);
+        List<Product> orders = orderDatabaseHelper.getOrderItemsByStatusAndUser(status, userEmail);
         Log.d(TAG, "加载到的订单项数量: " + orders.size());
         OrderItemAdapter adapter = new OrderItemAdapter(getContext(), orders);
         recyclerView.setAdapter(adapter);

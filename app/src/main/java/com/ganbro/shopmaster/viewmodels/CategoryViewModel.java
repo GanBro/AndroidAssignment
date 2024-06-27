@@ -16,15 +16,15 @@ public class CategoryViewModel extends AndroidViewModel {
     private MutableLiveData<List<Product>> productList;
     private MutableLiveData<List<Product>> recommendedProductList;
     private ProductDao productDao;
-    private int userId;
+    private String userEmail;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         productDao = new ProductDao(application);
 
-        // 获取 SharedPreferences 中保存的用户ID
+        // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = application.getSharedPreferences("UserPrefs", Application.MODE_PRIVATE);
-        userId = sharedPreferences.getInt("user_id", -1);
+        userEmail = sharedPreferences.getString("email", null);
     }
 
     public LiveData<List<String>> getCategoryList() {
@@ -53,11 +53,15 @@ public class CategoryViewModel extends AndroidViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<String> categories = productDao.getAllCategories(userId);
-                if (categories != null && !categories.isEmpty()) {
-                    categoryList.postValue(categories);
+                if (userEmail != null) {
+                    List<String> categories = productDao.getAllCategories(userEmail);
+                    if (categories != null && !categories.isEmpty()) {
+                        categoryList.postValue(categories);
+                    } else {
+                        Log.d("CategoryViewModel", "No categories found in database.");
+                    }
                 } else {
-                    Log.d("CategoryViewModel", "No categories found in database.");
+                    Log.d("CategoryViewModel", "User email is null.");
                 }
             }
         }).start();
@@ -67,11 +71,15 @@ public class CategoryViewModel extends AndroidViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Product> products = productDao.getProductsByCategory(category, userId);
-                if (products != null && !products.isEmpty()) {
-                    productList.postValue(products);
+                if (userEmail != null) {
+                    List<Product> products = productDao.getProductsByCategory(category, userEmail);
+                    if (products != null && !products.isEmpty()) {
+                        productList.postValue(products);
+                    } else {
+                        Log.d("CategoryViewModel", "No products found in category: " + category);
+                    }
                 } else {
-                    Log.d("CategoryViewModel", "No products found in category: " + category);
+                    Log.d("CategoryViewModel", "User email is null.");
                 }
             }
         }).start();
@@ -81,11 +89,15 @@ public class CategoryViewModel extends AndroidViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Product> recommendedProducts = productDao.getRecommendedProductsByCategory(category, userId);
-                if (recommendedProducts != null && !recommendedProducts.isEmpty()) {
-                    recommendedProductList.postValue(recommendedProducts);
+                if (userEmail != null) {
+                    List<Product> recommendedProducts = productDao.getRecommendedProductsByCategory(category, userEmail);
+                    if (recommendedProducts != null && !recommendedProducts.isEmpty()) {
+                        recommendedProductList.postValue(recommendedProducts);
+                    } else {
+                        Log.d("CategoryViewModel", "No recommended products found in category: " + category);
+                    }
                 } else {
-                    Log.d("CategoryViewModel", "No recommended products found in category: " + category);
+                    Log.d("CategoryViewModel", "User email is null.");
                 }
             }
         }).start();

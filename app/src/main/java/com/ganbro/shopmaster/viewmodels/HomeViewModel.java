@@ -23,9 +23,11 @@ public class HomeViewModel extends AndroidViewModel {
 
     private void loadProducts() {
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("UserPrefs", Application.MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
-        List<Product> productList = productDao.getAllProducts(userId);
-        products.setValue(productList);
+        String userEmail = sharedPreferences.getString("email", null);
+        if (userEmail != null) {
+            List<Product> productList = productDao.getAllProducts(userEmail);
+            products.setValue(productList);
+        }
     }
 
     public LiveData<List<Product>> getProducts() {

@@ -54,11 +54,17 @@ public class FavoritesFragment extends Fragment {
         videoDatabaseHelper = new VideoDatabaseHelper(getContext());
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
+        String userEmail = sharedPreferences.getString("email", null);
+
+        if (userEmail == null) {
+            // 用户未登录，显示相应信息或跳转到登录页面
+            title.setText("请先登录");
+            return view;
+        }
 
         if ("product".equals(type)) {
             title.setText("商品收藏");
-            List<Product> favoriteProducts = productDao.getAllFavorites(userId);
+            List<Product> favoriteProducts = productDao.getAllFavorites(userEmail);
             ProductAdapter productAdapter = new ProductAdapter(getContext(), favoriteProducts, false);
             recyclerView.setAdapter(productAdapter);
         } else if ("video".equals(type)) {

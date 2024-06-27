@@ -30,9 +30,9 @@ public class PaymentActivity extends AppCompatActivity {
         paymentButton = findViewById(R.id.payment_button);
         cancelButton = findViewById(R.id.cancel_button);
 
-        // 获取 SharedPreferences 中保存的用户ID
+        // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        final int userId = sharedPreferences.getInt("user_id", -1);
+        final String userEmail = sharedPreferences.getString("email", null);
 
         // 获取传递的支付金额和订单商品列表
         final double amount = getIntent().getDoubleExtra("amount", 0.0);
@@ -50,7 +50,7 @@ public class PaymentActivity extends AppCompatActivity {
         paymentButton.setOnClickListener(v -> {
             // 模拟支付成功
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("待收货", amount, orderItems, userId);
+            long orderId = orderDatabaseHelper.addOrder("待收货", amount, orderItems, userEmail);
             Log.d(TAG, "支付成功，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
@@ -62,7 +62,7 @@ public class PaymentActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> {
             // 模拟支付取消
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("待付款", amount, orderItems, userId);
+            long orderId = orderDatabaseHelper.addOrder("待付款", amount, orderItems, userEmail);
             Log.d(TAG, "支付取消，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);

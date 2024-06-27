@@ -1,4 +1,3 @@
-// ProductDetailActivity.java
 package com.ganbro.shopmaster.activities;
 
 import android.app.Dialog;
@@ -57,14 +56,23 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.buy_now);
         selectStyleButton = findViewById(R.id.select_style_button);
 
-        // 获取 SharedPreferences 中保存的用户ID
+        // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
+        String userEmail = sharedPreferences.getString("email", null);
+
+        if (userEmail == null) {
+            // 用户未登录，跳转到登录页面
+            Log.d(TAG, "用户未登录，跳转到登录页面");
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+            return;
+        }
 
         int productId = getIntent().getIntExtra("product_id", -1);
         Log.d(TAG, "Received Product ID: " + productId);
         if (productId != -1) {
-            loadProductDetails(productId, userId);
+            loadProductDetails(productId, userEmail);
         } else {
             Toast.makeText(this, "无法加载商品详情", Toast.LENGTH_SHORT).show();
             finish();
@@ -82,8 +90,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         addToFavorites.setOnClickListener(v -> {
             ProductDao productDao = new ProductDao(this);
-            if (!productDao.isProductInFavorites(product.getId(), userId)) {
-                productDao.addProductToFavorites(product.getId(), userId);
+            if (!productDao.isProductInFavorites(product.getId(), userEmail)) {
+                productDao.addProductToFavorites(product.getId(), userEmail);
                 Toast.makeText(this, "商品已添加到收藏", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "商品已经在收藏列表中", Toast.LENGTH_SHORT).show();
@@ -95,12 +103,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
-
     }
 
-    private void loadProductDetails(int productId, int userId) {
+    private void loadProductDetails(int productId, String userEmail) {
         ProductDao productDao = new ProductDao(this);
-        product = productDao.getProductById(productId, userId);
+        product = productDao.getProductById(productId, userEmail);
         if (product != null) {
             Log.d(TAG, "Loaded Product: " + product.getName());
             productName.setText(product.getName());
