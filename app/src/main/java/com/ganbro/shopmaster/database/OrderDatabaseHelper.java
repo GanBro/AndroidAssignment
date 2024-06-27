@@ -20,7 +20,7 @@ public class OrderDatabaseHelper {
     }
 
     public long addOrder(String status, double total, List<Product> orderItems, String userEmail) {
-        if (orderItems == null) {
+        if (orderItems == null || orderItems.isEmpty()) {
             orderItems = new ArrayList<>();
         }
 

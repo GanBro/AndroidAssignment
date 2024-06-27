@@ -17,8 +17,11 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.activities.OrderDetailsActivity;
 import com.ganbro.shopmaster.adapters.CartAdapter;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
+import com.ganbro.shopmaster.models.OrderDetail;
+import com.ganbro.shopmaster.models.OrderStatus;
 import com.ganbro.shopmaster.models.Product;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CartFragment extends Fragment {
@@ -55,9 +58,15 @@ public class CartFragment extends Fragment {
                 double totalPrice = calculateTotalPrice();
                 List<Product> orderItems = cartAdapter.getCartProducts();
 
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrderId(0); // 假设订单ID在这个时候不重要
+                orderDetail.setUserEmail("2551921037@qq.com"); // 替换为实际用户邮箱
+                orderDetail.setCreateTime(new Date());
+                orderDetail.setStatus(OrderStatus.PENDING_PAYMENT);
+                orderDetail.setProducts(orderItems);
+
                 Intent intent = new Intent(getContext(), OrderDetailsActivity.class);
-                intent.putExtra("orderItems", new ArrayList<>(orderItems));
-                intent.putExtra("totalPrice", totalPrice);
+                intent.putExtra("orderDetail", orderDetail);
                 startActivity(intent);
             }
         });

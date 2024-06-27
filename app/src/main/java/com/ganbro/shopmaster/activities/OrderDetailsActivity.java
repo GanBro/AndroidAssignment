@@ -3,6 +3,7 @@ package com.ganbro.shopmaster.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,10 +17,12 @@ import com.ganbro.shopmaster.adapters.OrderItemAdapter;
 import com.ganbro.shopmaster.models.Address;
 import com.ganbro.shopmaster.models.OrderDetail;
 import com.ganbro.shopmaster.models.Product;
+import java.io.Serializable;
 import java.util.List;
 
 public class OrderDetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = "OrderDetailsActivity";
     private RecyclerView recyclerViewOrderItems;
     private TextView totalPriceTextView;
     private Button submitOrderButton;
@@ -28,7 +31,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private Button buttonSelectAddress;
     private List<Product> orderItems;
     private double totalPrice;
-    private String orderStatus;
     private static final int REQUEST_CODE_SELECT_ADDRESS = 1;
 
     @Override
@@ -44,36 +46,50 @@ public class OrderDetailsActivity extends AppCompatActivity {
         textAddressPhone = findViewById(R.id.text_address_phone);
         buttonSelectAddress = findViewById(R.id.button_select_address);
 
-        // 获取传递的订单详情
-        OrderDetail orderDetail = (OrderDetail) getIntent().getSerializableExtra("orderDetail");
-        if (orderDetail != null) {
-            orderItems = orderDetail.getProducts();
-            totalPrice = calculateTotalPrice(orderItems);
+        Intent intent = getIntent();
+        if (intent != null) {
+            Log.d(TAG, "接收到的 Intent: " + intent.toString());
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                for (String key : extras.keySet()) {
+                    Log.d(TAG, "Intent extra [" + key + "]: " + extras.get(key));
+                }
+            }
 
-            // 设置RecyclerView
-            recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
-            OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
-            recyclerViewOrderItems.setAdapter(orderItemAdapter);
+            OrderDetail orderDetail = (OrderDetail) intent.getSerializableExtra("orderDetail");
+            if (orderDetail != null) {
+                orderItems = orderDetail.getProducts();
+                totalPrice = calculateTotalPrice(orderItems);
 
-            // 设置总价
-            totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
+                Log.d(TAG, "收到的订单详情: " + orderDetail.toString());
+                Log.d(TAG, "订单商品数量: " + orderItems.size());
+                Log.d(TAG, "总价: " + totalPrice);
+
+                recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
+                OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
+                recyclerViewOrderItems.setAdapter(orderItemAdapter);
+
+                totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
+            } else {
+                Log.d(TAG, "订单详情为空");
+            }
+        } else {
+            Log.d(TAG, "没有接收到 Intent");
         }
 
-        // 提交订单按钮点击事件
         submitOrderButton.setOnClickListener(v -> {
-            Intent intent = new Intent(OrderDetailsActivity.this, PaymentActivity.class);
-            intent.putExtra("amount", totalPrice);
-            startActivity(intent);
+            Intent paymentIntent = new Intent(OrderDetailsActivity.this, PaymentActivity.class);
+            paymentIntent.putExtra("amount", totalPrice);
+            paymentIntent.putExtra("orderItems", (Serializable) orderItems);
+            Log.d(TAG, "启动 PaymentActivity，金额: " + totalPrice + "，订单商品数量: " + orderItems.size());
+            startActivity(paymentIntent);
             finish();
         });
 
-        // 点击订单备注可以编辑备注
         textOrderNotes.setOnClickListener(v -> showEditOrderNotesDialog());
-
-        // 选择收货人按钮点击事件
         buttonSelectAddress.setOnClickListener(v -> {
-            Intent intent = new Intent(OrderDetailsActivity.this, SelectAddressActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_SELECT_ADDRESS);
+            Intent selectAddressIntent = new Intent(OrderDetailsActivity.this, SelectAddressActivity.class);
+            startActivityForResult(selectAddressIntent, REQUEST_CODE_SELECT_ADDRESS);
         });
     }
 
@@ -81,13 +97,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("编辑订单备注");
 
-        // Set up the input
+        // 设置输入框
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(textOrderNotes.getText().toString());
         builder.setView(input);
 
-        // Set up the buttons
+        // 设置按钮
         builder.setPositiveButton("确定", (dialog, which) -> textOrderNotes.setText(input.getText().toString()));
         builder.setNegativeButton("取消", (dialog, which) -> dialog.cancel());
 

@@ -36,21 +36,25 @@ public class PaymentActivity extends AppCompatActivity {
 
         // 获取传递的支付金额和订单商品列表
         final double amount = getIntent().getDoubleExtra("amount", 0.0);
-        List<Product> tempOrderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
+        List<Product> orderItems = getSerializableExtraAsProductList(getIntent(), "orderItems");
+
+        Log.d(TAG, "支付金额: " + amount);
+        Log.d(TAG, "获取的产品列表: " + orderItems);
 
         // 如果 orderItems 为 null，则初始化为空列表
-        if (tempOrderItems == null) {
-            tempOrderItems = new ArrayList<>();
+        if (orderItems == null) {
+            orderItems = new ArrayList<>();
         }
-        final List<Product> orderItems = tempOrderItems;
 
         paymentAmount.setText(String.format("支付金额: ¥%.2f", amount));
-        Log.d(TAG, "支付金额: " + amount);
+
+        final List<Product> finalOrderItems = orderItems;
+        final String finalUserEmail = userEmail;
 
         paymentButton.setOnClickListener(v -> {
             // 模拟支付成功
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("PENDING_RECEIPT", amount, orderItems, userEmail);
+            long orderId = orderDatabaseHelper.addOrder("PENDING_RECEIPT", amount, finalOrderItems, finalUserEmail);
             Log.d(TAG, "支付成功，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
@@ -62,7 +66,7 @@ public class PaymentActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> {
             // 模拟支付取消
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("PENDING_PAYMENT", amount, orderItems, userEmail);
+            long orderId = orderDatabaseHelper.addOrder("PENDING_PAYMENT", amount, finalOrderItems, finalUserEmail);
             Log.d(TAG, "支付取消，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
@@ -70,5 +74,15 @@ public class PaymentActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Product> getSerializableExtraAsProductList(Intent intent, String key) {
+        try {
+            return (List<Product>) intent.getSerializableExtra(key);
+        } catch (ClassCastException e) {
+            Log.e(TAG, "将 Serializable 转换为 List<Product> 时出错: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

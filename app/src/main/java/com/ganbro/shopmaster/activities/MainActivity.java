@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 初始化产品数据
-        initializeProductData();
+//        initializeProductData();
     }
 
     private void showProfileFragmentWithOrderStatus(String orderStatus) {
