@@ -8,7 +8,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 12; // 更新到最新版本
+    private static final int DATABASE_VERSION = 14; // 更新到最新版本
 
     private static DatabaseManager instance;
 
@@ -25,6 +25,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String TABLE_VIDEOS = "videos";
     public static final String TABLE_ADDRESSES = "addresses";
     public static final String TABLE_ORDER = "orders";
+    public static final String TABLE_ORDER_ITEMS = "order_items";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -49,6 +50,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public static final String COLUMN_ORDER_STATUS = "order_status";
     public static final String COLUMN_ORDER_TOTAL = "order_total";
+    public static final String COLUMN_ORDER_ID = "order_id";
 
     private static final String TABLE_CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -103,7 +105,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_ORDER + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_ORDER_STATUS + " TEXT, " +
-                    COLUMN_ORDER_TOTAL + " REAL" +
+                    COLUMN_ORDER_TOTAL + " REAL, " +
+                    COLUMN_USER_ID + " INTEGER" +
+                    ");";
+
+    private static final String TABLE_CREATE_ORDER_ITEMS =
+            "CREATE TABLE " + TABLE_ORDER_ITEMS + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ORDER_ID + " INTEGER, " +
+                    COLUMN_NAME + " TEXT, " +
+                    COLUMN_PRICE + " REAL, " +
+                    COLUMN_IMAGE_URL + " TEXT, " +
+                    COLUMN_QUANTITY + " INTEGER, " +
+                    COLUMN_CATEGORY + " TEXT, " +
+                    COLUMN_DESCRIPTION + " TEXT, " +
+                    "FOREIGN KEY(" + COLUMN_ORDER_ID + ") REFERENCES " + TABLE_ORDER + "(" + COLUMN_ID + ")" +
                     ");";
 
     public DatabaseManager(Context context) {
@@ -118,6 +134,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_VIDEOS);
         db.execSQL(TABLE_CREATE_ADDRESSES);
         db.execSQL(TABLE_CREATE_ORDERS);
+        db.execSQL(TABLE_CREATE_ORDER_ITEMS);
         Log.d("DatabaseCreation", "数据库表已创建。");
     }
 
@@ -126,7 +143,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 12) {
             db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_ORDER_STATUS + " TEXT;");
         }
-        // 添加其他版本升级逻辑
+        if (oldVersion < 13) {
+            db.execSQL(TABLE_CREATE_ORDER_ITEMS);
+        }
+        if (oldVersion < 14) {
+            db.execSQL("ALTER TABLE " + TABLE_ORDER + " ADD COLUMN " + COLUMN_USER_ID + " INTEGER;");
+        }
+        Log.d("DatabaseUpgrade", "数据库已升级到版本 " + newVersion);
     }
 
     @Override

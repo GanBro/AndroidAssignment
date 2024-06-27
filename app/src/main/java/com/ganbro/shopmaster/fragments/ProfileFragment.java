@@ -12,20 +12,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.activities.AddressListActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
 import com.ganbro.shopmaster.activities.OrderStatusActivity;
+import com.ganbro.shopmaster.adapters.OrderItemAdapter;
+import com.ganbro.shopmaster.database.OrderDatabaseHelper;
+import com.ganbro.shopmaster.models.Product;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
+    private static final String TAG = "ProfileFragment";
     private TextView loginRegisterButton;
     private View myFavoritesButton;
     private View logoutButton;
     private View addressButton;
     private ImageView waitingPaymentIcon;
     private ImageView waitingReceiptIcon;
+    private RecyclerView recyclerView;
+    private OrderDatabaseHelper orderDatabaseHelper;
+    private int userId;
 
     @Nullable
     @Override
@@ -43,11 +53,13 @@ public class ProfileFragment extends Fragment {
         addressButton = view.findViewById(R.id.address_button);
         waitingPaymentIcon = view.findViewById(R.id.ic_waiting_payment);
         waitingReceiptIcon = view.findViewById(R.id.ic_waiting_receipt);
+        recyclerView = view.findViewById(R.id.recycler_view_order_items);
+        orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址和用户ID
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
         String email = sharedPreferences.getString("email", "登录/注册");
-        int userId = sharedPreferences.getInt("user_id", -1);
+        userId = sharedPreferences.getInt("user_id", -1);
 
         // 设置文本为邮箱地址
         if (userId == -1) {
@@ -87,7 +99,7 @@ public class ProfileFragment extends Fragment {
         });
 
         waitingPaymentIcon.setOnClickListener(v -> {
-            Log.d("ProfileFragment", "待付款点击事件触发");
+            Log.d(TAG, "待付款点击事件触发");
             // 跳转到 OrderStatusActivity，显示待付款订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待付款");
@@ -96,12 +108,29 @@ public class ProfileFragment extends Fragment {
         });
 
         waitingReceiptIcon.setOnClickListener(v -> {
-            Log.d("ProfileFragment", "待收货点击事件触发");
+            Log.d(TAG, "待收货点击事件触发");
             // 跳转到 OrderStatusActivity，显示待收货订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "待收货");
             intent.putExtra("user_id", userId);
             startActivity(intent);
         });
+
+        // 检查是否有传递的订单状态
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("order_status")) {
+            String orderStatus = args.getString("order_status");
+            Log.d(TAG, "传递的订单状态: " + orderStatus);
+            loadOrders(orderStatus);
+        }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void loadOrders(String status) {
+        List<Product> orders = orderDatabaseHelper.getOrderItemsByStatus(status, userId);
+        Log.d(TAG, "加载到的订单项数量: " + orders.size());
+        OrderItemAdapter adapter = new OrderItemAdapter(getContext(), orders);
+        recyclerView.setAdapter(adapter);
     }
 }

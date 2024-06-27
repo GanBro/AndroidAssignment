@@ -47,7 +47,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         // 获取传递的订单商品列表和总价
         orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
         totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
-        orderStatus = getIntent().getStringExtra("order_status");
 
         // 设置RecyclerView
         recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));

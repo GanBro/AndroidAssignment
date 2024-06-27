@@ -51,10 +51,9 @@ public class LoginActivity extends AppCompatActivity {
     // 检查是否可以自动登录
     private void autoLoginIfPossible() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        long lastLoginTimestamp = sharedPreferences.getLong("login_timestamp", 0);
         int userId = sharedPreferences.getInt("user_id", -1);
 
-        if (userId != -1 && System.currentTimeMillis() - lastLoginTimestamp <= 3600000) { // 1小时 = 3600000毫秒
+        if (userId != -1) {
             String email = sharedPreferences.getString("email", null);
             if (email != null) {
                 // 自动登录用户
@@ -65,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         } else {
-            Log.d(TAG, "没有可用的自动登录信息或自动登录已过期");
+            Log.d(TAG, "没有可用的自动登录信息");
         }
     }
 
@@ -127,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("email", email);
-                    editor.putLong("login_timestamp", System.currentTimeMillis()); // 保存当前时间戳
                     editor.apply();
 
                     int userId = insertOrGetUser(email);

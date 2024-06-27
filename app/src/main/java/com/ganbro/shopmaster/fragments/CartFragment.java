@@ -14,10 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.PaymentActivity;
+import com.ganbro.shopmaster.activities.OrderDetailsActivity;
 import com.ganbro.shopmaster.adapters.CartAdapter;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartFragment extends Fragment {
@@ -50,10 +51,13 @@ public class CartFragment extends Fragment {
             if (cartAdapter.getItemCount() == 0) {
                 Toast.makeText(getContext(), "购物车为空，无法结算", Toast.LENGTH_SHORT).show();
             } else {
-                // 直接跳转到支付页面
+                // 跳转到订单详情页面
                 double totalPrice = calculateTotalPrice();
-                Intent intent = new Intent(getContext(), PaymentActivity.class);
-                intent.putExtra("amount", totalPrice);
+                List<Product> orderItems = cartAdapter.getCartProducts();
+
+                Intent intent = new Intent(getContext(), OrderDetailsActivity.class);
+                intent.putExtra("orderItems", new ArrayList<>(orderItems));
+                intent.putExtra("totalPrice", totalPrice);
                 startActivity(intent);
             }
         });

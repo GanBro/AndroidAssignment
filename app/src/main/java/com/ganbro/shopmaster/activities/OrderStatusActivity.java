@@ -49,6 +49,7 @@ public class OrderStatusActivity extends AppCompatActivity {
     private void loadOrderItems(String status) {
         Log.d("OrderStatusActivity", "加载订单项目，状态: " + status);
         List<Product> orderItems = productDao.getOrderItemsByStatusAndUser(status, userId);
+        Log.d("OrderStatusActivity", "找到的订单项目数量: " + orderItems.size());
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
         recyclerViewOrderItems.setAdapter(orderItemAdapter);
     }

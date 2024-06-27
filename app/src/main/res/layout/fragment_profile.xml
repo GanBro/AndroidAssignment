@@ -1,4 +1,4 @@
-<!-- fragment_profile.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -144,6 +144,13 @@
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <!-- RecyclerView for Order Items -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_order_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp" />
 
         <!-- 其他条目 -->
         <LinearLayout
