@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -85,8 +86,11 @@ public class MainActivity extends AppCompatActivity {
             showProfileFragmentWithOrderStatus(orderStatus);
         }
 
-        // 初始化产品数据
-//        initializeProductData();
+        // 检查是否从支付成功返回
+        if (getIntent().getBooleanExtra("from_payment_success", false)) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+            Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showProfileFragmentWithOrderStatus(String orderStatus) {
@@ -110,5 +114,4 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "用户未登录或缺少电子邮件，跳过产品数据初始化");
         }
     }
-
 }

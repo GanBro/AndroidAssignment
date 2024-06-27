@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView paymentAmount;
     private Button paymentButton;
     private Button cancelButton;
+    private CartDatabaseHelper cartDatabaseHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class PaymentActivity extends AppCompatActivity {
         paymentAmount = findViewById(R.id.payment_amount);
         paymentButton = findViewById(R.id.payment_button);
         cancelButton = findViewById(R.id.cancel_button);
+        cartDatabaseHelper = new CartDatabaseHelper(this);
 
         // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -36,10 +40,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         // 获取传递的支付金额和订单商品列表
         final double amount = getIntent().getDoubleExtra("amount", 0.0);
-        List<Product> orderItems = getSerializableExtraAsProductList(getIntent(), "orderItems");
-
-        Log.d(TAG, "支付金额: " + amount);
-        Log.d(TAG, "获取的产品列表: " + orderItems);
+        List<Product> orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
 
         // 如果 orderItems 为 null，则初始化为空列表
         if (orderItems == null) {
@@ -47,6 +48,7 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         paymentAmount.setText(String.format("支付金额: ¥%.2f", amount));
+        Log.d(TAG, "支付金额: " + amount);
 
         final List<Product> finalOrderItems = orderItems;
         final String finalUserEmail = userEmail;
@@ -57,8 +59,16 @@ public class PaymentActivity extends AppCompatActivity {
             long orderId = orderDatabaseHelper.addOrder("PENDING_RECEIPT", amount, finalOrderItems, finalUserEmail);
             Log.d(TAG, "支付成功，订单ID: " + orderId);
 
+            // 删除购物车中的已结算商品
+            for (Product product : finalOrderItems) {
+                cartDatabaseHelper.deleteCartProduct(product.getId());
+            }
+
+            Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
             intent.putExtra("order_status", "PENDING_RECEIPT");
+            intent.putExtra("from_payment_success", true); // 标识是从支付成功返回的
             startActivity(intent);
             finish();
         });
@@ -74,15 +84,5 @@ public class PaymentActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Product> getSerializableExtraAsProductList(Intent intent, String key) {
-        try {
-            return (List<Product>) intent.getSerializableExtra(key);
-        } catch (ClassCastException e) {
-            Log.e(TAG, "将 Serializable 转换为 List<Product> 时出错: " + e.getMessage());
-            return new ArrayList<>();
-        }
     }
 }

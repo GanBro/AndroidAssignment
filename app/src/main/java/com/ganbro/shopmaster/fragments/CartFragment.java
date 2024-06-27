@@ -1,6 +1,7 @@
 package com.ganbro.shopmaster.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,13 +55,17 @@ public class CartFragment extends Fragment {
             if (cartAdapter.getItemCount() == 0) {
                 Toast.makeText(getContext(), "购物车为空，无法结算", Toast.LENGTH_SHORT).show();
             } else {
+                // 获取 SharedPreferences 中保存的用户邮箱
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
+                final String userEmail = sharedPreferences.getString("email", null);
+
                 // 跳转到订单详情页面
                 double totalPrice = calculateTotalPrice();
                 List<Product> orderItems = cartAdapter.getCartProducts();
 
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrderId(0); // 假设订单ID在这个时候不重要
-                orderDetail.setUserEmail("2551921037@qq.com"); // 替换为实际用户邮箱
+                orderDetail.setUserEmail(userEmail); // 替换为实际用户邮箱
                 orderDetail.setCreateTime(new Date());
                 orderDetail.setStatus(OrderStatus.PENDING_PAYMENT);
                 orderDetail.setProducts(orderItems);
