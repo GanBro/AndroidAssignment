@@ -81,18 +81,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 检查是否需要直接显示订单状态页面
-        if (getIntent() != null && getIntent().hasExtra("order_status")) {
-            String orderStatus = getIntent().getStringExtra("order_status");
-            showProfileFragmentWithOrderStatus(orderStatus);
-        }
-
-        // 检查是否从支付成功返回
-        if (getIntent().getBooleanExtra("from_payment_success", false)) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
-            Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
-        } else if (getIntent().getBooleanExtra("from_payment_cancel", false)) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
-            Toast.makeText(this, "支付取消", Toast.LENGTH_SHORT).show();
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("order_status")) {
+                String orderStatus = getIntent().getStringExtra("order_status");
+                showProfileFragmentWithOrderStatus(orderStatus);
+            } else if (getIntent().getBooleanExtra("from_payment_success", false)) {
+                bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+                Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+            } else if (getIntent().getBooleanExtra("from_payment_cancel", false)) {
+                bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+                Toast.makeText(this, "支付取消", Toast.LENGTH_SHORT).show();
+            } else if (getIntent().getBooleanExtra("navigate_to_profile", false)) {
+                bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
+            }
         }
     }
 

@@ -1,7 +1,10 @@
 package com.ganbro.shopmaster.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,7 @@ public class OrderStatusActivity extends AppCompatActivity {
     private OrderDatabaseHelper orderDatabaseHelper;
     private String orderStatus;
     private String userEmail;
+    private ImageButton buttonBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class OrderStatusActivity extends AppCompatActivity {
 
         recyclerViewOrderItems = findViewById(R.id.recycler_view_order_items);
         statusTitle = findViewById(R.id.status_title);
+        buttonBack = findViewById(R.id.button_back);
         orderDatabaseHelper = new OrderDatabaseHelper(this);
 
         // 获取传递的订单状态和用户邮箱
@@ -45,6 +50,17 @@ public class OrderStatusActivity extends AppCompatActivity {
         }
 
         recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
+
+        // 设置返回按钮点击事件
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderStatusActivity.this, MainActivity.class);
+                intent.putExtra("navigate_to_profile", true);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void loadOrderItems(String status) {
