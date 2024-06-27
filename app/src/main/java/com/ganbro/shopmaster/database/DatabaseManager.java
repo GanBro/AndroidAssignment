@@ -38,11 +38,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_IS_RECOMMENDED = "is_recommended";
     public static final String COLUMN_IS_IN_CART = "is_in_cart";
     public static final String COLUMN_IS_FAVORITE = "is_favorite";
-    public static final String COLUMN_USER_ID = "user_id";
+    public static final String COLUMN_USER_EMAIL = "user_email";
+    public static final String COLUMN_ORDER_STATUS = "order_status";
+    public static final String COLUMN_ORDER_ID = "order_id"; // 确保定义了 COLUMN_ORDER_ID
+
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address";
     public static final String COLUMN_PHONE = "phone";
-    public static final String COLUMN_USER_EMAIL = "user_email";
 
     public static final String COLUMN_VIDEO_URL = "video_url";
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
@@ -50,9 +52,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_COMMENTS_COUNT = "comments_count";
     public static final String COLUMN_COLLECTS_COUNT = "collects_count";
 
-    public static final String COLUMN_ORDER_STATUS = "order_status";
     public static final String COLUMN_ORDER_TOTAL = "order_total";
-    public static final String COLUMN_ORDER_ID = "order_id";
+    public static final String COLUMN_CREATE_TIME = "create_time";
 
     private static final String TABLE_CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCT + " (" +
@@ -66,9 +67,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IS_RECOMMENDED + " INTEGER, " +
                     COLUMN_IS_IN_CART + " INTEGER, " +
                     COLUMN_IS_FAVORITE + " INTEGER, " +
-                    COLUMN_USER_ID + " INTEGER, " +
-                    COLUMN_ORDER_STATUS + " TEXT, " +
-                    COLUMN_USER_EMAIL + " TEXT" +  // 添加 user_email 列
+                    COLUMN_USER_EMAIL + " TEXT, " +
+                    COLUMN_ORDER_STATUS + " TEXT" +
                     ");";
 
     private static final String TABLE_CREATE_FAVORITES =
@@ -109,8 +109,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_ORDER_STATUS + " TEXT, " +
                     COLUMN_ORDER_TOTAL + " REAL, " +
-                    COLUMN_USER_EMAIL + " TEXT, " +  // 添加 user_email 列
-                    COLUMN_USER_ID + " INTEGER" +
+                    COLUMN_CREATE_TIME + " INTEGER, " +
+                    COLUMN_USER_EMAIL + " TEXT" +
                     ");";
 
     private static final String TABLE_CREATE_ORDER_ITEMS =
@@ -147,6 +147,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 15) {
             if (!isColumnExists(db, TABLE_PRODUCT, COLUMN_USER_EMAIL)) {
                 db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_USER_EMAIL + " TEXT;");
+            }
+            if (!isColumnExists(db, TABLE_ORDER, COLUMN_CREATE_TIME)) {
+                db.execSQL("ALTER TABLE " + TABLE_ORDER + " ADD COLUMN " + COLUMN_CREATE_TIME + " INTEGER;");
+            }
+            if (!isColumnExists(db, TABLE_PRODUCT, COLUMN_ORDER_STATUS)) {
+                db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_ORDER_STATUS + " TEXT;");
             }
         }
     }

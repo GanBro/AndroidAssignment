@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.OrderItemAdapter;
 import com.ganbro.shopmaster.models.Address;
+import com.ganbro.shopmaster.models.OrderDetail;
 import com.ganbro.shopmaster.models.Product;
-
 import java.util.List;
 
 public class OrderDetailsActivity extends AppCompatActivity {
@@ -44,17 +44,20 @@ public class OrderDetailsActivity extends AppCompatActivity {
         textAddressPhone = findViewById(R.id.text_address_phone);
         buttonSelectAddress = findViewById(R.id.button_select_address);
 
-        // 获取传递的订单商品列表和总价
-        orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
-        totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
+        // 获取传递的订单详情
+        OrderDetail orderDetail = (OrderDetail) getIntent().getSerializableExtra("orderDetail");
+        if (orderDetail != null) {
+            orderItems = orderDetail.getProducts();
+            totalPrice = calculateTotalPrice(orderItems);
 
-        // 设置RecyclerView
-        recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
-        recyclerViewOrderItems.setAdapter(orderItemAdapter);
+            // 设置RecyclerView
+            recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
+            OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this, orderItems);
+            recyclerViewOrderItems.setAdapter(orderItemAdapter);
 
-        // 设置总价
-        totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
+            // 设置总价
+            totalPriceTextView.setText(String.format("¥%.2f", totalPrice));
+        }
 
         // 提交订单按钮点击事件
         submitOrderButton.setOnClickListener(v -> {
@@ -101,5 +104,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 textAddressPhone.setText(selectedAddress.getName() + " " + selectedAddress.getPhone());
             }
         }
+    }
+
+    private double calculateTotalPrice(List<Product> products) {
+        double total = 0;
+        for (Product product : products) {
+            total += product.getPrice() * product.getQuantity();
+        }
+        return total;
     }
 }

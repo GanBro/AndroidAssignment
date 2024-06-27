@@ -1,6 +1,5 @@
 package com.ganbro.shopmaster.activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -12,6 +11,7 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.adapters.OrderItemAdapter;
 import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 import com.ganbro.shopmaster.models.Product;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderStatusActivity extends AppCompatActivity {
@@ -31,20 +31,31 @@ public class OrderStatusActivity extends AppCompatActivity {
         statusTitle = findViewById(R.id.status_title);
         orderDatabaseHelper = new OrderDatabaseHelper(this);
 
+        // 手动插入测试订单数据
+        orderDatabaseHelper.addOrder("PENDING_RECEIPT", 100.0, getTestProducts(), "2551921037@qq.com");
+
         // 获取传递的订单状态和用户邮箱
         orderStatus = getIntent().getStringExtra("order_status");
         userEmail = getIntent().getStringExtra("user_email");
 
         Log.d("OrderStatusActivity", "订单状态: " + orderStatus + ", 用户邮箱: " + userEmail);
 
-        if (orderStatus != null) {
+        if (orderStatus != null && userEmail != null) {
             statusTitle.setText(orderStatus);
             loadOrderItems(orderStatus);
         } else {
             statusTitle.setText("订单状态");
+            Log.e("OrderStatusActivity", "订单状态或用户邮箱为空");
         }
 
         recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private List<Product> getTestProducts() {
+        List<Product> products = new ArrayList<>();
+        products.add(new Product(0, "Test Product 1", 10.0, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "Category1", "Description1", true, false));
+        products.add(new Product(0, "Test Product 2", 20.0, "android.resource://com.ganbro.shopmaster/drawable/product_image", 2, "Category2", "Description2", true, false));
+        return products;
     }
 
     private void loadOrderItems(String status) {

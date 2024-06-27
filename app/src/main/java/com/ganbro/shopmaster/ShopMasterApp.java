@@ -33,11 +33,10 @@ public class ShopMasterApp extends Application {
 
         // 从 SharedPreferences 中获取默认用户信息
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", 1); // 默认用户 ID 为 1
         String userEmail = sharedPreferences.getString("email", "2551921037@qq.com"); // 默认电子邮件
 
         // 初始化产品数据
-        productDao.initializeProducts(userId, userEmail);
+        productDao.initializeProducts(userEmail);
     }
 
     private void initializeVideos() {

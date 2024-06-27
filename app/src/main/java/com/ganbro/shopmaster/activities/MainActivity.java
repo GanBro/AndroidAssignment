@@ -101,11 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeProductData() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
         String userEmail = sharedPreferences.getString("email", null); // 获取 userEmail
-        if (userId != -1 && userEmail != null) {
+        if (userEmail != null) {
             ProductDao productDao = new ProductDao(this);
-            productDao.initializeProducts(userId, userEmail); // 传递 userEmail
+            productDao.initializeProducts(userEmail); // 传递 userEmail
             Log.d(TAG, "产品数据已初始化");
         } else {
             Log.d(TAG, "用户未登录或缺少电子邮件，跳过产品数据初始化");

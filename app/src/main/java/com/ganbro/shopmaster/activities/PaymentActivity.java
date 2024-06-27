@@ -50,11 +50,11 @@ public class PaymentActivity extends AppCompatActivity {
         paymentButton.setOnClickListener(v -> {
             // 模拟支付成功
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("待收货", amount, orderItems, userEmail);
+            long orderId = orderDatabaseHelper.addOrder("PENDING_RECEIPT", amount, orderItems, userEmail);
             Log.d(TAG, "支付成功，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-            intent.putExtra("order_status", "待收货");
+            intent.putExtra("order_status", "PENDING_RECEIPT");
             startActivity(intent);
             finish();
         });
@@ -62,11 +62,11 @@ public class PaymentActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> {
             // 模拟支付取消
             OrderDatabaseHelper orderDatabaseHelper = new OrderDatabaseHelper(this);
-            long orderId = orderDatabaseHelper.addOrder("待付款", amount, orderItems, userEmail);
+            long orderId = orderDatabaseHelper.addOrder("PENDING_PAYMENT", amount, orderItems, userEmail);
             Log.d(TAG, "支付取消，订单ID: " + orderId);
 
             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-            intent.putExtra("order_status", "待付款");
+            intent.putExtra("order_status", "PENDING_PAYMENT");
             startActivity(intent);
             finish();
         });

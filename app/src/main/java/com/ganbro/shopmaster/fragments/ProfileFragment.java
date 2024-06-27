@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment {
             Log.d(TAG, "待付款点击事件触发");
             // 跳转到 OrderStatusActivity，显示待付款订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
-            intent.putExtra("order_status", "待付款");
+            intent.putExtra("order_status", "PENDING_PAYMENT");
             intent.putExtra("user_email", userEmail);
             startActivity(intent);
         });
@@ -106,7 +106,7 @@ public class ProfileFragment extends Fragment {
             Log.d(TAG, "待收货点击事件触发");
             // 跳转到 OrderStatusActivity，显示待收货订单
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
-            intent.putExtra("order_status", "待收货");
+            intent.putExtra("order_status", "PENDING_RECEIPT");
             intent.putExtra("user_email", userEmail);
             startActivity(intent);
         });

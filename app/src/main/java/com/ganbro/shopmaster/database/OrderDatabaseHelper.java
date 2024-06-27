@@ -33,11 +33,13 @@ public class OrderDatabaseHelper {
             orderValues.put(DatabaseManager.COLUMN_ORDER_STATUS, status);
             orderValues.put(DatabaseManager.COLUMN_ORDER_TOTAL, total);
             orderValues.put(DatabaseManager.COLUMN_USER_EMAIL, userEmail);
+            orderValues.put(DatabaseManager.COLUMN_CREATE_TIME, System.currentTimeMillis()); // 添加创建时间
             orderId = db.insert(DatabaseManager.TABLE_ORDER, null, orderValues);
 
             Log.d(TAG, "订单插入成功，订单ID: " + orderId);
 
             for (Product product : orderItems) {
+                Log.d(TAG, "准备插入订单项: " + product.getName());
                 ContentValues itemValues = new ContentValues();
                 itemValues.put(DatabaseManager.COLUMN_ORDER_ID, orderId);
                 itemValues.put(DatabaseManager.COLUMN_NAME, product.getName());
@@ -102,9 +104,10 @@ public class OrderDatabaseHelper {
                 String userEmail = orderCursor.getString(orderCursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USER_EMAIL));
                 Log.d(TAG, "订单ID: " + orderId + ", 状态: " + orderStatus + ", 总额: " + orderTotal + ", 用户邮箱: " + userEmail);
 
-                // 查询订单项
                 String itemQuery = "SELECT * FROM " + DatabaseManager.TABLE_ORDER_ITEMS + " WHERE " + DatabaseManager.COLUMN_ORDER_ID + " = ?";
                 Cursor itemCursor = db.rawQuery(itemQuery, new String[]{String.valueOf(orderId)});
+
+                Log.d(TAG, "查询订单项，订单ID: " + orderId + ", 查询结果数: " + itemCursor.getCount());
 
                 if (itemCursor != null && itemCursor.moveToFirst()) {
                     do {
@@ -114,9 +117,13 @@ public class OrderDatabaseHelper {
                         Log.d(TAG, "  订单项: " + itemName + ", 价格: " + itemPrice + ", 数量: " + itemQuantity + "，订单ID: " + orderId);
                     } while (itemCursor.moveToNext());
                     itemCursor.close();
+                } else {
+                    Log.d(TAG, "没有找到订单项，订单ID: " + orderId);
                 }
             } while (orderCursor.moveToNext());
             orderCursor.close();
+        } else {
+            Log.d(TAG, "没有找到订单");
         }
     }
 }

@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import com.ganbro.shopmaster.models.OrderDetail;
+import com.ganbro.shopmaster.models.OrderStatus;
 import com.ganbro.shopmaster.models.Product;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProductDao {
@@ -19,7 +22,7 @@ public class ProductDao {
         Log.d("ProductDao", "数据库已打开");
     }
 
-    public void addProduct(Product product, int userId, String userEmail) {
+    public void addProduct(Product product, String userEmail) {
         ContentValues values = new ContentValues();
         values.put(DatabaseManager.COLUMN_NAME, product.getName());
         values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
@@ -30,7 +33,6 @@ public class ProductDao {
         values.put(DatabaseManager.COLUMN_IS_RECOMMENDED, product.isRecommended() ? 1 : 0);
         values.put(DatabaseManager.COLUMN_IS_FAVORITE, 0);
         values.put(DatabaseManager.COLUMN_IS_IN_CART, 0);
-        values.put(DatabaseManager.COLUMN_USER_ID, userId);
         values.put(DatabaseManager.COLUMN_USER_EMAIL, userEmail);
         values.put(DatabaseManager.COLUMN_ORDER_STATUS, ""); // 默认无订单状态
         long result = db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
@@ -210,18 +212,17 @@ public class ProductDao {
         return productList;
     }
 
-    public void initializeProducts(int userId, String userEmail) {
+    public void initializeProducts(String userEmail) {
         Log.d("ProductDao", "初始化产品数据");
-        addProduct(new Product(0, "上衣1", 100.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述1", true, false), userId, userEmail);
-        addProduct(new Product(0, "上衣2", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述2", false, false), userId, userEmail);
-        addProduct(new Product(0, "上衣3", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述3", true, false), userId, userEmail);
-        addProduct(new Product(0, "上衣4", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述4", true, false), userId, userEmail);
-        addProduct(new Product(0, "下装1", 150.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "下装", "描述5", true, false), userId, userEmail);
-        addProduct(new Product(0, "外套1", 200.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "外套", "描述6", false, false), userId, userEmail);
-        addProduct(new Product(0, "配件1", 50.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "配件", "描述7", true, false), userId, userEmail);
-        addProduct(new Product(0, "包包1", 300.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "包包", "描述8", false, false), userId, userEmail);
+        addProduct(new Product(0, "上衣1", 100.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述1", true, false), userEmail);
+        addProduct(new Product(0, "上衣2", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述2", false, false), userEmail);
+        addProduct(new Product(0, "上衣3", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述3", true, false), userEmail);
+        addProduct(new Product(0, "上衣4", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述4", true, false), userEmail);
+        addProduct(new Product(0, "下装1", 150.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "下装", "描述5", true, false), userEmail);
+        addProduct(new Product(0, "外套1", 200.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "外套", "描述6", false, false), userEmail);
+        addProduct(new Product(0, "配件1", 50.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "配件", "描述7", true, false), userEmail);
+        addProduct(new Product(0, "包包1", 300.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "包包", "描述8", false, false), userEmail);
     }
-
 
     public Product getProductById(int id, String userEmail) {
         Product product = null;
@@ -248,10 +249,66 @@ public class ProductDao {
 
     public List<Product> getOrderItemsByStatusAndUser(String status, String userEmail) {
         List<Product> productList = new ArrayList<>();
-        String selection = DatabaseManager.COLUMN_ORDER_STATUS + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
-        String[] selectionArgs = {status, userEmail};
-        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, selection, selectionArgs, null, null, null);
+        String query = "SELECT oi.* FROM " + DatabaseManager.TABLE_ORDER_ITEMS + " oi " +
+                "JOIN " + DatabaseManager.TABLE_ORDER + " o ON oi." + DatabaseManager.COLUMN_ORDER_ID + " = o." + DatabaseManager.COLUMN_ID + " " +
+                "WHERE o." + DatabaseManager.COLUMN_ORDER_STATUS + " = ? AND o." + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
+        String[] selectionArgs = { status, userEmail };
+        Cursor cursor = db.rawQuery(query, selectionArgs);
         Log.d("ProductDao", "查询订单项，状态: " + status + "，用户Email: " + userEmail + "，行数: " + cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_FAVORITE)) == 1
+                );
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return productList;
+    }
+
+    public List<OrderDetail> getOrderDetailsByStatusAndUser(String status, String userEmail) {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        String query = "SELECT * FROM " + DatabaseManager.TABLE_ORDER + " WHERE " + DatabaseManager.COLUMN_ORDER_STATUS + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{status, userEmail});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int orderId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID));
+                long createTimeMillis = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CREATE_TIME));
+                Date createTime = new Date(createTimeMillis);
+                List<Product> products = getOrderItemsByOrderId(orderId);
+
+                OrderStatus orderStatus;
+                try {
+                    orderStatus = OrderStatus.valueOf(status);
+                } catch (IllegalArgumentException e) {
+                    Log.e("ProductDao", "Unknown order status: " + status);
+                    continue; // 跳过这个订单
+                }
+
+                OrderDetail orderDetail = new OrderDetail(orderId, userEmail, createTime, orderStatus, products);
+                orderDetails.add(orderDetail);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return orderDetails;
+    }
+
+    private List<Product> getOrderItemsByOrderId(int orderId) {
+        List<Product> productList = new ArrayList<>();
+        String query = "SELECT * FROM " + DatabaseManager.TABLE_ORDER_ITEMS + " WHERE " + DatabaseManager.COLUMN_ORDER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(orderId)});
+
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product(
