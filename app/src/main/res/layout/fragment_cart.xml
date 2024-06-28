@@ -68,7 +68,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_checkout"
+            android:id="@+id/btn_checkout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -88,17 +88,26 @@
         android:gravity="center"
         android:visibility="gone">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="收藏" />
+            android:layout_marginEnd="8dp"
+            android:text="收藏"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="2dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="删除" />
+            android:text="删除"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="8dp"
+            style="@style/Widget.MaterialComponents.Button" />
     </LinearLayout>
 
 </LinearLayout>

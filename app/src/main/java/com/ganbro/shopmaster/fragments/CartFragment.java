@@ -1,107 +1,137 @@
 package com.ganbro.shopmaster.fragments;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.OrderDetailsActivity;
 import com.ganbro.shopmaster.adapters.CartAdapter;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
-import com.ganbro.shopmaster.models.OrderDetail;
-import com.ganbro.shopmaster.models.OrderStatus;
 import com.ganbro.shopmaster.models.Product;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment implements CartAdapter.OnProductSelectedListener {
 
+    private TextView buttonEdit;
+    private Button buttonCollect;
+    private Button buttonDelete;
+    private CheckBox checkboxSelectAll;
+    private TextView totalPriceTextView;
+    private View editModeButtons;
+    private boolean isEditing = false;
     private RecyclerView recyclerViewCart;
-    private TextView textTotalPrice;
-    private Button buttonCheckout;
     private CartAdapter cartAdapter;
-    private CartDatabaseHelper cartDatabaseHelper;
+    private List<Product> cartProducts;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_cart, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        buttonEdit = view.findViewById(R.id.cart_edit);
+        buttonCollect = view.findViewById(R.id.button_collect);
+        buttonDelete = view.findViewById(R.id.button_delete);
+        checkboxSelectAll = view.findViewById(R.id.checkbox_select_all);
+        totalPriceTextView = view.findViewById(R.id.total_price);
+        editModeButtons = view.findViewById(R.id.edit_mode_buttons);
         recyclerViewCart = view.findViewById(R.id.recycler_view_cart);
-        textTotalPrice = view.findViewById(R.id.total_price);
-        buttonCheckout = view.findViewById(R.id.button_checkout);
-        cartDatabaseHelper = new CartDatabaseHelper(getContext());
 
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
-        loadCartProducts();
 
-        buttonCheckout.setOnClickListener(v -> {
-            if (cartAdapter.getItemCount() == 0) {
-                Toast.makeText(getContext(), "购物车为空，无法结算", Toast.LENGTH_SHORT).show();
-            } else {
-                // 获取 SharedPreferences 中保存的用户邮箱
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-                final String userEmail = sharedPreferences.getString("email", null);
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        cartProducts = cartDatabaseHelper.getAllCartProducts();
 
-                // 跳转到订单详情页面
-                double totalPrice = calculateTotalPrice();
-                List<Product> orderItems = cartAdapter.getCartProducts();
-
-                OrderDetail orderDetail = new OrderDetail();
-                orderDetail.setOrderId(0); // 假设订单ID在这个时候不重要
-                orderDetail.setUserEmail(userEmail); // 替换为实际用户邮箱
-                orderDetail.setCreateTime(new Date());
-                orderDetail.setStatus(OrderStatus.PENDING_PAYMENT);
-                orderDetail.setProducts(orderItems);
-
-                Intent intent = new Intent(getContext(), OrderDetailsActivity.class);
-                intent.putExtra("orderDetail", orderDetail);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadCartProducts();
-    }
-
-    private void loadCartProducts() {
-        List<Product> cartProducts = cartDatabaseHelper.getAllCartProducts();
-        cartAdapter = new CartAdapter(getContext(), cartProducts, this::updateTotalPrice);
+        cartAdapter = new CartAdapter(getActivity(), cartProducts, this);
         recyclerViewCart.setAdapter(cartAdapter);
+
+        buttonEdit.setOnClickListener(v -> {
+            if (isEditing) {
+                editModeButtons.setVisibility(View.GONE);
+                buttonEdit.setText("编辑");
+            } else {
+                editModeButtons.setVisibility(View.VISIBLE);
+                buttonEdit.setText("完成");
+            }
+            isEditing = !isEditing;
+            cartAdapter.setEditing(isEditing);
+            cartAdapter.notifyDataSetChanged();
+        });
+
+        buttonDelete.setOnClickListener(v -> confirmDeleteSelectedItems());
+
+        buttonCollect.setOnClickListener(v -> collectSelectedItems());
+
+        checkboxSelectAll.setOnClickListener(v -> selectAllItems(checkboxSelectAll.isChecked()));
+
         updateTotalPrice();
+
+        return view;
     }
 
     private void updateTotalPrice() {
-        double totalPrice = calculateTotalPrice();
-        textTotalPrice.setText(String.format("合计: ¥%.2f", totalPrice));
-    }
-
-    private double calculateTotalPrice() {
-        double totalPrice = 0.0;
-        for (Product product : cartAdapter.getCartProducts()) {
+        double totalPrice = 0;
+        for (Product product : cartProducts) {
             if (product.isSelected()) {
                 totalPrice += product.getPrice() * product.getQuantity();
             }
         }
-        return totalPrice;
+        totalPriceTextView.setText(String.format("合计: ¥%.2f", totalPrice));
+    }
+
+    private void confirmDeleteSelectedItems() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("确认删除")
+                .setMessage("你确定要删除选中的商品吗？")
+                .setPositiveButton("确认", (dialog, which) -> deleteSelectedItems())
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void deleteSelectedItems() {
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        for (int i = cartProducts.size() - 1; i >= 0; i--) {
+            Product product = cartProducts.get(i);
+            if (product.isSelected()) {
+                cartAdapter.removeItem(i);
+                cartDatabaseHelper.deleteCartProduct(product.getId());
+            }
+        }
+        updateTotalPrice();
+    }
+
+    private void collectSelectedItems() {
+        CartDatabaseHelper cartDatabaseHelper = new CartDatabaseHelper(getActivity());
+        for (Product product : cartProducts) {
+            if (product.isSelected()) {
+                cartDatabaseHelper.addProductToFavorites(product);
+            }
+        }
+        new AlertDialog.Builder(getActivity())
+                .setTitle("收藏成功")
+                .setMessage("选中的商品已被添加到我的收藏")
+                .setPositiveButton("确定", null)
+                .show();
+    }
+
+    private void selectAllItems(boolean isChecked) {
+        for (Product product : cartProducts) {
+            product.setSelected(isChecked);
+        }
+        cartAdapter.notifyDataSetChanged();
+        updateTotalPrice();
+    }
+
+    @Override
+    public void onProductSelected() {
+        updateTotalPrice();
     }
 }
