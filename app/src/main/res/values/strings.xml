@@ -16,4 +16,7 @@
     <string name="like">喜欢</string>
     <string name="collect">收藏\n</string>
     <string name="back">返回\n</string>
+    <string name="about_content">开发一个名为“ShopMaster”的线上商城应用，用户可以浏览商品列表、查看商品详情、将商品添加到购物车并结算。应用需展示基本UI控件、各种监听器、ListView和RecyclerView、适配器、Activity、Fragment以及SQLite数据库的使用。整体程序框架自行设计，需要包含详细要求中的所有内容。</string>
+    <string name="copyright_2024">Copyright © 吴波 2024</string>
+    <string name="app_description">本购物商城由21计科吴波提供技术支持</string>
 </resources>

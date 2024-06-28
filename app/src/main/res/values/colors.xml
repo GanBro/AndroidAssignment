@@ -16,4 +16,9 @@
 
 
     <color name="textInputLayout">#96ffffff</color>
+    <color name="certainblue">#ff387ef5</color>
+    <color name="white">#ffffff</color>
+    <color name="launch">#387ef5</color>
+
+
 </resources>

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +16,7 @@ import com.ganbro.shopmaster.activities.AddressListActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
 import com.ganbro.shopmaster.activities.OrderStatusActivity;
+import com.ganbro.shopmaster.activities.AboutActivity;
 import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 
 public class ProfileFragment extends Fragment {
@@ -27,6 +27,7 @@ public class ProfileFragment extends Fragment {
     private View logoutButton;
     private View addressButton;
     private View completedLayout;
+    private View aboutButton;
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -45,6 +46,7 @@ public class ProfileFragment extends Fragment {
         logoutButton = view.findViewById(R.id.logout_button);
         addressButton = view.findViewById(R.id.address_button);
         completedLayout = view.findViewById(R.id.completed_layout);
+        aboutButton = view.findViewById(R.id.about_button);
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -90,6 +92,12 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), OrderStatusActivity.class);
             intent.putExtra("order_status", "COMPLETED");
             intent.putExtra("user_email", userEmail);
+            startActivity(intent);
+        });
+
+        aboutButton.setOnClickListener(v -> {
+            // 跳转到 AboutActivity
+            Intent intent = new Intent(getActivity(), AboutActivity.class);
             startActivity(intent);
         });
     }
