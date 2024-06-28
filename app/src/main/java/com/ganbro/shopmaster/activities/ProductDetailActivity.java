@@ -27,7 +27,6 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productDescription;
     private TextView productPrice;
     private Button addToCartButton;
-    private Button contactCustomerService;
     private Button addToFavorites;
     private Button buyNow;
     private Button selectStyleButton;
@@ -51,7 +50,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         productDescription = findViewById(R.id.product_description);
         productPrice = findViewById(R.id.product_price);
         addToCartButton = findViewById(R.id.add_to_cart_button);
-        contactCustomerService = findViewById(R.id.contact_customer_service);
         addToFavorites = findViewById(R.id.add_to_favorites);
         buyNow = findViewById(R.id.buy_now);
         selectStyleButton = findViewById(R.id.select_style_button);
@@ -82,10 +80,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
             cartDbHelper.addProductToCart(product);
             Toast.makeText(this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
-        });
-
-        contactCustomerService.setOnClickListener(v -> {
-            // Contact customer service logic
         });
 
         addToFavorites.setOnClickListener(v -> {

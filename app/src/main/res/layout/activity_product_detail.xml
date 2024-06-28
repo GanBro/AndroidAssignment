@@ -116,16 +116,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="16dp"
-                android:weightSum="4">
-
-                <Button
-                    android:id="@+id/contact_customer_service"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="联系客服"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:textSize="14sp" />
+                android:weightSum="3">
 
                 <Button
                     android:id="@+id/add_to_favorites"
