@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="请选择配送方式"
+                android:text="由本人亲自配送"
                 android:textSize="14sp" />
 
             <View
@@ -118,32 +118,32 @@
                 android:layout_marginTop="16dp"
                 android:weightSum="3">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_to_favorites"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="收藏"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:textSize="14sp" />
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buy_now"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="立即购买"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:textSize="14sp" />
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_to_cart_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="加入购物车"
-                    android:textSize="14sp"
-                    android:background="@android:color/holo_red_light" />
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:theme="@style/Theme.MaterialComponents.Light" />
             </LinearLayout>
 
         </LinearLayout>
