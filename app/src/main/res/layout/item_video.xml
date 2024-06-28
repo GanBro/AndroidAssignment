@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <VideoView
         android:id="@+id/video_view"
@@ -23,35 +25,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal">
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_like_disabled"
-            android:contentDescription="@string/like" />
-
-        <TextView
-            android:id="@+id/tv_likes_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_like_disabled"
+            app:iconTint="@color/textColorSecondary"
             android:text="0"
-            android:padding="4dp" />
+            android:padding="4dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_marginEnd="16dp" />
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_collect_disabled"
-            android:contentDescription="@string/collect"
-            android:layout_marginLeft="16dp" />
-
-        <TextView
-            android:id="@+id/tv_collects_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_collect_disabled"
+            app:iconTint="@color/textColorSecondary"
             android:text="0"
-            android:padding="4dp" />
+            android:padding="4dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_marginStart="16dp" />
     </LinearLayout>
 </LinearLayout>

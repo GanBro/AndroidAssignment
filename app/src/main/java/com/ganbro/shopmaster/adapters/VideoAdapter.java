@@ -6,14 +6,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.VideoDatabaseHelper;
 import com.ganbro.shopmaster.models.Video;
+import com.google.android.material.button.MaterialButton;
+
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
@@ -57,8 +60,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         // Set other video details
         holder.videoDescription.setText(video.getDescription());
-        holder.tvLikesCount.setText(String.valueOf(video.getLikesCount()));
-        holder.tvCollectsCount.setText(String.valueOf(video.getCollectsCount()));
+        holder.btnLike.setText(String.valueOf(video.getLikesCount()));
+        holder.btnCollect.setText(String.valueOf(video.getCollectsCount()));
 
         // Set initial button states
         updateLikeButton(holder.btnLike, video.isLiked());
@@ -73,7 +76,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 video.setLikesCount(video.getLikesCount() + 1);
                 video.setLiked(true);
             }
-            holder.tvLikesCount.setText(String.valueOf(video.getLikesCount()));
+            holder.btnLike.setText(String.valueOf(video.getLikesCount()));
             databaseHelper.updateLikesCount(video.getId(), video.getLikesCount());
             updateLikeButton(holder.btnLike, video.isLiked());
         });
@@ -87,25 +90,33 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 video.setCollectsCount(video.getCollectsCount() + 1);
                 video.setCollected(true);
             }
-            holder.tvCollectsCount.setText(String.valueOf(video.getCollectsCount()));
+            holder.btnCollect.setText(String.valueOf(video.getCollectsCount()));
             databaseHelper.updateCollectsCount(video.getId(), video.getCollectsCount());
             updateCollectButton(holder.btnCollect, video.isCollected());
         });
     }
 
-    private void updateLikeButton(ImageView btnLike, boolean isLiked) {
+    private void updateLikeButton(MaterialButton btnLike, boolean isLiked) {
         if (isLiked) {
-            btnLike.setImageResource(R.drawable.ic_like); // Set to the liked drawable
+            btnLike.setIconResource(R.drawable.ic_like); // Set to the liked drawable
+            btnLike.setIconTintResource(R.color.red);
+            btnLike.setTextColor(btnLike.getContext().getResources().getColor(R.color.red));
         } else {
-            btnLike.setImageResource(R.drawable.ic_like_disabled); // Set to the unliked drawable
+            btnLike.setIconResource(R.drawable.ic_like_disabled); // Set to the unliked drawable
+            btnLike.setIconTintResource(R.color.textColorSecondary);
+            btnLike.setTextColor(btnLike.getContext().getResources().getColor(R.color.textColorSecondary));
         }
     }
 
-    private void updateCollectButton(ImageView btnCollect, boolean isCollected) {
+    private void updateCollectButton(MaterialButton btnCollect, boolean isCollected) {
         if (isCollected) {
-            btnCollect.setImageResource(R.drawable.ic_collect); // Set to the collected drawable
+            btnCollect.setIconResource(R.drawable.ic_collect); // Set to the collected drawable
+            btnCollect.setIconTintResource(R.color.red);
+            btnCollect.setTextColor(btnCollect.getContext().getResources().getColor(R.color.red));
         } else {
-            btnCollect.setImageResource(R.drawable.ic_collect_disabled); // Set to the uncollected drawable
+            btnCollect.setIconResource(R.drawable.ic_collect_disabled); // Set to the uncollected drawable
+            btnCollect.setIconTintResource(R.color.textColorSecondary);
+            btnCollect.setTextColor(btnCollect.getContext().getResources().getColor(R.color.textColorSecondary));
         }
     }
 
@@ -117,17 +128,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
         TextView videoDescription;
-        TextView tvLikesCount;
-        TextView tvCollectsCount;
-        ImageView btnLike;
-        ImageView btnCollect;
+        MaterialButton btnLike;
+        MaterialButton btnCollect;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.video_view);
             videoDescription = itemView.findViewById(R.id.video_description);
-            tvLikesCount = itemView.findViewById(R.id.tv_likes_count);
-            tvCollectsCount = itemView.findViewById(R.id.tv_collects_count);
             btnLike = itemView.findViewById(R.id.btn_like);
             btnCollect = itemView.findViewById(R.id.btn_collect);
         }
