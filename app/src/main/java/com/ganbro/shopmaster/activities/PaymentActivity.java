@@ -54,7 +54,7 @@ public class PaymentActivity extends AppCompatActivity {
         final String finalUserEmail = userEmail;
 
         // 支付按钮点击事件
-        paymentButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "PENDING_RECEIPT", "支付成功", true));
+        paymentButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "COMPLETED", "支付成功", true));
 
         // 取消按钮点击事件
         cancelButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "PENDING_PAYMENT", "支付取消", false));

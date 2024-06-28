@@ -42,7 +42,7 @@ public class OrderStatusActivity extends AppCompatActivity {
         Log.d("OrderStatusActivity", "订单状态: " + orderStatus + ", 用户邮箱: " + userEmail);
 
         if (orderStatus != null && userEmail != null) {
-            statusTitle.setText(orderStatus);
+            statusTitle.setText(orderStatus.equals("COMPLETED") ? "已完成" : orderStatus);
             loadOrderItems(orderStatus);
         } else {
             statusTitle.setText("订单状态");

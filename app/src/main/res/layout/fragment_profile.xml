@@ -65,92 +65,6 @@
                 android:textSize="16sp" />
         </RelativeLayout>
 
-        <!-- 订单状态 -->
-        <LinearLayout
-            android:id="@+id/order_status_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:padding="16dp">
-
-            <!-- 待付款 -->
-            <LinearLayout
-                android:id="@+id/waiting_payment_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/ic_waiting_payment"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_waiting_payment"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <TextView
-                    android:id="@+id/text_waiting_payment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="待付款"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- 待收货 -->
-            <LinearLayout
-                android:id="@+id/waiting_receipt_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/ic_waiting_receipt"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_waiting_receipt"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <TextView
-                    android:id="@+id/text_waiting_receipt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="待收货"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- 已完成 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_completed" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="已完成"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- RecyclerView for Order Items -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_order_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp" />
 
         <!-- 其他条目 -->
         <LinearLayout
@@ -159,13 +73,40 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- 已完成 -->
+            <LinearLayout
+                android:id="@+id/completed_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:id="@+id/ic_completed"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_completed"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/text_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="已完成"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <!-- 收货地址 -->
             <LinearLayout
                 android:id="@+id/address_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -186,7 +127,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -206,7 +148,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -226,7 +169,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -246,7 +190,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -266,7 +211,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -286,7 +232,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -307,7 +254,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -327,7 +275,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="24dp"
