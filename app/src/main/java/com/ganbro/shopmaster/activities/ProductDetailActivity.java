@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
+import com.google.android.material.button.MaterialButton;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -129,21 +132,44 @@ public class ProductDetailActivity extends AppCompatActivity {
         ImageView styleImage = dialog.findViewById(R.id.style_image);
         TextView styleName = dialog.findViewById(R.id.style_name);
         TextView stylePrice = dialog.findViewById(R.id.style_price);
-        Button styleM = dialog.findViewById(R.id.style_m);
-        Button styleL = dialog.findViewById(R.id.style_l);
-        Button styleXL = dialog.findViewById(R.id.style_xl);
+        MaterialButton styleM = dialog.findViewById(R.id.style_m);
+        MaterialButton styleL = dialog.findViewById(R.id.style_l);
+        MaterialButton styleXL = dialog.findViewById(R.id.style_xl);
         TextView quantityText = dialog.findViewById(R.id.quantity_text);
-        Button buttonDecrease = dialog.findViewById(R.id.button_decrease);
-        Button buttonIncrease = dialog.findViewById(R.id.button_increase);
-        Button buttonConfirm = dialog.findViewById(R.id.button_confirm);
+        ImageButton buttonDecrease = dialog.findViewById(R.id.button_decrease);
+        ImageButton buttonIncrease = dialog.findViewById(R.id.button_increase);
+        MaterialButton buttonConfirm = dialog.findViewById(R.id.button_confirm);
 
         styleName.setText(product.getName());
         stylePrice.setText(String.format("￥%.2f", product.getPrice()));
         Glide.with(this).load(product.getImageUrl()).into(styleImage);
 
-        styleM.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "M"));
-        styleL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "L"));
-        styleXL.setOnClickListener(v -> selectStyle(styleM, styleL, styleXL, "XL"));
+        View.OnClickListener styleClickListener = v -> {
+            // Reset selection state
+            styleM.setSelected(false);
+            styleL.setSelected(false);
+            styleXL.setSelected(false);
+
+            // Highlight the selected button
+            v.setSelected(true);
+
+            // Update selected style
+            switch (v.getId()) {
+                case R.id.style_m:
+                    selectedStyle = "M";
+                    break;
+                case R.id.style_l:
+                    selectedStyle = "L";
+                    break;
+                case R.id.style_xl:
+                    selectedStyle = "XL";
+                    break;
+            }
+        };
+
+        styleM.setOnClickListener(styleClickListener);
+        styleL.setOnClickListener(styleClickListener);
+        styleXL.setOnClickListener(styleClickListener);
 
         buttonDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
@@ -167,6 +193,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+
+
 
     private void selectStyle(Button styleM, Button styleL, Button styleXL, String style) {
         selectedStyle = style;

@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.button.MaterialButton;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.AddressDao;
 import com.ganbro.shopmaster.models.Address;
@@ -65,7 +65,7 @@ public class AddressListActivity extends AppCompatActivity {
         TextView addressTextView = addressItem.findViewById(R.id.text_view_address);
         TextView nameTextView = addressItem.findViewById(R.id.text_view_name);
         TextView phoneTextView = addressItem.findViewById(R.id.text_view_phone);
-        ImageView deleteButton = addressItem.findViewById(R.id.delete_address_button);
+        MaterialButton deleteButton = addressItem.findViewById(R.id.delete_address_button); // 将 ImageView 修改为 MaterialButton
 
         addressTextView.setText(address.getAddress());
         nameTextView.setText(address.getName());

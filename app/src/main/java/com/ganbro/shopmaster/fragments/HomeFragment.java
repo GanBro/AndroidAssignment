@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private static final String TAG = "HomeFragment";
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>(); // Initialize the product list
     private LinearLayout productContainer;
 
     @Nullable
@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         productContainer = view.findViewById(R.id.product_container);
 
-        // 获取搜索输入框和按钮
+        // Get the search input and button
         EditText searchInput = view.findViewById(R.id.search_bar);
         ImageView searchButton = view.findViewById(R.id.ic_search);
 
@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
-                productList = products;
+                productList = products != null ? products : new ArrayList<>(); // Ensure productList is not null
                 displayProducts(products);
             }
         });
@@ -78,14 +78,14 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             rowLayout.setPadding(8, 8, 8, 8);
 
-            // 添加第一个商品视图
+            // Add the first product view
             addProductCard(rowLayout, products.get(i));
 
-            // 检查是否有第二个商品，并添加视图
+            // Check if there is a second product and add the view
             if (i + 1 < productCount) {
                 addProductCard(rowLayout, products.get(i + 1));
             } else {
-                // 如果没有第二个商品，添加一个空白视图占位
+                // If there is no second product, add a blank view as a placeholder
                 View emptyView = new View(getContext());
                 emptyView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 rowLayout.addView(emptyView);
@@ -118,6 +118,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void filterProducts(String query) {
+        if (productList == null) {
+            return; // Prevents null pointer exception
+        }
+
         List<Product> filteredList = new ArrayList<>();
         for (Product product : productList) {
             if (product.getName().toLowerCase().contains(query.toLowerCase())) {
