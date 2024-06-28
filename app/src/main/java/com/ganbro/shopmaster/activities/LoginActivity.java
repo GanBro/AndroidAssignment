@@ -2,10 +2,9 @@ package com.ganbro.shopmaster.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +16,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.database.DatabaseManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput;
     private EditText codeInput;
-    private Button sendCodeButton;
     private Button loginButton;
     private static final String TAG = "LoginActivity";
 
@@ -37,13 +34,25 @@ public class LoginActivity extends AppCompatActivity {
 
         emailInput = findViewById(R.id.email_input);
         codeInput = findViewById(R.id.code_input);
-        sendCodeButton = findViewById(R.id.send_code_button);
-        loginButton = findViewById(R.id.login_button);
+        loginButton = findViewById(R.id.sign_up_button);
 
         // 检查是否可以自动登录
         autoLoginIfPossible();
 
-        sendCodeButton.setOnClickListener(v -> sendVerificationCode());
+        emailInput.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int drawableRight = 2;
+                if (event.getRawX() >= (emailInput.getRight() - emailInput.getCompoundDrawables()[drawableRight].getBounds().width())) {
+                    sendVerificationCode();
+                    // 取消触摸事件
+                    v.clearFocus();
+                    v.setFocusableInTouchMode(false);
+                    return true;
+                }
+            }
+            return false;
+        });
+
         loginButton.setOnClickListener(v -> verifyCodeAndLogin());
     }
 
@@ -78,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Toast.makeText(this, "验证码已发送", Toast.LENGTH_SHORT).show();
-                    loginButton.setVisibility(View.VISIBLE);
+                    codeInput.setVisibility(View.VISIBLE);
                 },
                 error -> {
                     String errorMessage = "发送验证码时出错";

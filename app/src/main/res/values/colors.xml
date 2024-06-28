@@ -10,5 +10,8 @@
     <color name="teal_200">#03DAC5</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>
-    <color name="colorSelected">#FFEB3B</color> <!-- 替换为你想要的颜色 -->
+    <color name="colorSelected">#FFEB3B</color>
+
+
+    <color name="textInputLayout">#96ffffff</color>
 </resources>
