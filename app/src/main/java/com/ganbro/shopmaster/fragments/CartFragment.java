@@ -42,7 +42,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnProductSelec
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cart, container, false);
+        View view = inflater.inflate(R.layout.activity_cart, container, false);
 
         buttonEdit = view.findViewById(R.id.cart_edit);
         buttonCollect = view.findViewById(R.id.button_collect);
