@@ -16,136 +16,154 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:paddingBottom="80dp"> <!-- 确保内容不会被底部按钮覆盖 -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/product_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/product_image" />
+
+                <TextView
+                    android:id="@+id/product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/product_image"
+                    android:layout_marginTop="16dp"
+                    android:text="商品名称"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/product_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/product_name"
+                    android:layout_marginTop="8dp"
+                    android:text="商品描述"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/product_description"
+                    android:layout_marginTop="16dp"
+                    android:text="￥0.00"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_red_dark" />
+
+                <Button
+                    android:id="@+id/select_style_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/product_price"
+                    android:layout_marginTop="16dp"
+                    android:text="选择款式"
+                    android:background="@android:color/holo_red_light"
+                    android:textColor="@android:color/white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/select_style_button"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/shipping_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/select_style_button"
+                    android:layout_marginTop="16dp"
+                    android:text="由21计科吴波发货"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/shipping_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shipping_info"
+                    android:layout_marginTop="8dp"
+                    android:text="由本人亲自配送"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/shipping_method"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shipping_method"
+                    android:layout_marginTop="16dp"
+                    android:text="提示：普通品享有质量问题7天退换，签收后3个工作日内可换货。其他特殊商品（如手办）的售后以页面说明为准。"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/tips"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/darker_gray" />
+            </RelativeLayout>
+        </ScrollView>
+
         <LinearLayout
+            android:id="@+id/button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:background="@android:color/white"
+            android:padding="8dp">
 
-            <ImageView
-                android:id="@+id/product_image"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/product_image" />
-
-            <TextView
-                android:id="@+id/product_name"
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_to_favorites"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="商品名称"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:text="收藏"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:theme="@style/Theme.MaterialComponents.Light" />
 
-            <TextView
-                android:id="@+id/product_description"
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buy_now"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="商品描述"
-                android:textSize="14sp" />
+                android:layout_weight="1"
+                android:text="立即购买"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:theme="@style/Theme.MaterialComponents.Light" />
 
-            <TextView
-                android:id="@+id/product_price"
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_to_cart_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="￥0.00"
-                android:textSize="18sp"
-                android:textColor="@android:color/holo_red_dark" />
-
-            <Button
-                android:id="@+id/select_style_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="选择款式"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/holo_red_light"
-                android:textColor="@android:color/white" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/shipping_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="由21计科吴波发货"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/shipping_method"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="由本人亲自配送"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="提示：普通品享有质量问题7天退换，签收后3个工作日内可换货。其他特殊商品（如手办）的售后以页面说明为准。"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/darker_gray" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp"
-                android:weightSum="3">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_to_favorites"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="收藏"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buy_now"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="立即购买"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_to_cart_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="加入购物车"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-            </LinearLayout>
-
+                android:layout_weight="1"
+                android:text="加入购物车"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:theme="@style/Theme.MaterialComponents.Light" />
         </LinearLayout>
-    </ScrollView>
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
