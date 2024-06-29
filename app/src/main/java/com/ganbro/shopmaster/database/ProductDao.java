@@ -214,14 +214,28 @@ public class ProductDao {
 
     public void initializeProducts(String userEmail) {
         Log.d("ProductDao", "初始化产品数据");
-        addProduct(new Product(0, "上衣1", 100.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述1", true, false), userEmail);
-        addProduct(new Product(0, "上衣2", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述2", false, false), userEmail);
-        addProduct(new Product(0, "上衣3", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述3", true, false), userEmail);
-        addProduct(new Product(0, "上衣4", 120.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "上衣", "描述4", true, false), userEmail);
-        addProduct(new Product(0, "下装1", 150.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "下装", "描述5", true, false), userEmail);
-        addProduct(new Product(0, "外套1", 200.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "外套", "描述6", false, false), userEmail);
-        addProduct(new Product(0, "配件1", 50.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "配件", "描述7", true, false), userEmail);
-        addProduct(new Product(0, "包包1", 300.00, "android.resource://com.ganbro.shopmaster/drawable/product_image", 1, "包包", "描述8", false, false), userEmail);
+        addProduct(new Product(0, "重磅纯棉复古红色短袖t恤男夏季新款美式潮牌百搭印花宽松衣服男", 29.9, "android.resource://com.ganbro.shopmaster/drawable/img_1", 1, "上衣", "潮牌百搭印花，舒适透气", true, false), userEmail);
+        addProduct(new Product(1, "雅鹿牛仔短裤", 26.9, "android.resource://com.ganbro.shopmaster/drawable/img_2", 1, "下装", "天丝面料，透气舒适", true, false), userEmail);
+        addProduct(new Product(2, "雅鹿夏季薄款背心", 19.9, "android.resource://com.ganbro.shopmaster/drawable/img_3", 1, "上衣", "适合运动和休闲", true, false), userEmail);
+        addProduct(new Product(3, "冰洁新款短袖", 69.0, "android.resource://com.ganbro.shopmaster/drawable/img_4", 1, "上衣", "舒适的纯棉材质", true, false), userEmail);
+        addProduct(new Product(4, "雪中飞男女同款纯棉短袖", 69.0, "android.resource://com.ganbro.shopmaster/drawable/img_5", 1, "上衣", "简约设计，百搭款式", true, false), userEmail);
+        addProduct(new Product(5, "雪中飞女士简约羽绒马甲", 79.0, "android.resource://com.ganbro.shopmaster/drawable/img_6", 1, "外套", "轻盈保暖，冬季必备", true, false), userEmail);
+        addProduct(new Product(6, "唐狮集团冰丝短袖T恤", 29.9, "android.resource://com.ganbro.shopmaster/drawable/img_7", 1, "上衣", "冰丝面料，清凉舒适", true, false), userEmail);
+        addProduct(new Product(7, "三福短袖t恤女", 33.1, "android.resource://com.ganbro.shopmaster/drawable/img_8", 1, "上衣", "圆领纯棉，情侣款", true, false), userEmail);
+        addProduct(new Product(8, "雅鹿韩版修身短袖t恤", 19.9, "android.resource://com.ganbro.shopmaster/drawable/img_9", 1, "上衣", "修身设计，时尚百搭", true, false), userEmail);
+        addProduct(new Product(9, "森马连衣裙合集", 39.0, "android.resource://com.ganbro.shopmaster/drawable/img_10", 1, "连衣裙", "清仓特价，多款可选", true, false), userEmail);
+        addProduct(new Product(10, "雅鹿修身防晒衣", 29.9, "android.resource://com.ganbro.shopmaster/drawable/img_11", 1, "外套", "防晒防紫外线", true, false), userEmail);
+        addProduct(new Product(11, "阿里自营V领短袖打底衫", 19.9, "android.resource://com.ganbro.shopmaster/drawable/img_12", 1, "上衣", "两件装，超值选择", true, false), userEmail);
+        addProduct(new Product(12, "雅鹿牛仔短裤", 26.9, "android.resource://com.ganbro.shopmaster/drawable/img_13", 1, "下装", "天丝面料，舒适透气", true, false), userEmail);
+        addProduct(new Product(13, "森马连衣裙女任选", 39.0, "android.resource://com.ganbro.shopmaster/drawable/img_14", 1, "连衣裙", "特价清仓，多款可选", true, false), userEmail);
+        addProduct(new Product(14, "森马休闲裤合集", 50.0, "android.resource://com.ganbro.shopmaster/drawable/img_15", 1, "下装", "拍两件50元，多款任选", true, false), userEmail);
+        addProduct(new Product(15, "三福芭蕾织带德训鞋", 75.22, "android.resource://com.ganbro.shopmaster/drawable/img_16", 1, "鞋子", "到手价59.2，舒适百搭", true, false), userEmail);
+        addProduct(new Product(16, "西装风衣外套", 49.9, "android.resource://com.ganbro.shopmaster/drawable/img_17", 1, "外套", "百搭秋冬款，显瘦设计", true, false), userEmail);
+        addProduct(new Product(17, "雪中飞情侣款纯棉T恤", 69.0, "android.resource://com.ganbro.shopmaster/drawable/img_18", 1, "上衣", "拍三件69元，情侣款", true, false), userEmail);
+        addProduct(new Product(18, "森马复古法式甜美连衣裙", 39.0, "android.resource://com.ganbro.shopmaster/drawable/img_19", 1, "连衣裙", "2024新款，复古甜美", true, false), userEmail);
+        addProduct(new Product(19, "雅鹿牛仔短裤", 26.9, "android.resource://com.ganbro.shopmaster/drawable/img_20", 1, "下装", "天丝面料，透气舒适", true, false), userEmail);
+        addProduct(new Product(20, "UPF50+夏季薄款防晒衣", 32.9, "android.resource://com.ganbro.shopmaster/drawable/img_21", 1, "外套", "UPF50+防晒，夏季必备", true, false), userEmail);
+        addProduct(new Product(21, "唐狮纯棉短袖女t恤", 29.0, "android.resource://com.ganbro.shopmaster/drawable/img_22", 1, "上衣", "多款可选，舒适透气", true, false), userEmail);
     }
 
     public Product getProductById(int id, String userEmail) {
