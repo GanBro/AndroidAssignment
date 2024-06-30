@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.activities.AddressListActivity;
+import com.ganbro.shopmaster.activities.ContactUsActivity;
 import com.ganbro.shopmaster.activities.FavoritesActivity;
 import com.ganbro.shopmaster.activities.LoginActivity;
 import com.ganbro.shopmaster.activities.OrderStatusActivity;
@@ -30,6 +31,7 @@ public class ProfileFragment extends Fragment {
     private View aboutButton;
     private View manageProductsButton;
     private View deleteProductButton;
+    private View customerServiceButton;
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -51,6 +53,7 @@ public class ProfileFragment extends Fragment {
         aboutButton = view.findViewById(R.id.about_button);
         manageProductsButton = view.findViewById(R.id.manage_products_button);
         deleteProductButton = view.findViewById(R.id.delete_product_button);
+        customerServiceButton = view.findViewById(R.id.customer_service_button);
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -119,6 +122,12 @@ public class ProfileFragment extends Fragment {
                     .replace(R.id.fragment_container, new DeleteProductFragment())
                     .addToBackStack(null)
                     .commit();
+        });
+
+        customerServiceButton.setOnClickListener(v -> {
+            // 跳转到 ContactUsActivity
+            Intent intent = new Intent(getActivity(), ContactUsActivity.class);
+            startActivity(intent);
         });
     }
 }

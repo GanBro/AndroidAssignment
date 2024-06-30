@@ -76,6 +76,7 @@
             android:exported="true">
         </activity>
         <activity android:name=".activities.AboutActivity" />
+        <activity android:name=".activities.ContactUsActivity" />
 
     </application>
 

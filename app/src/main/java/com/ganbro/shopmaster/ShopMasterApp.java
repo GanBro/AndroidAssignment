@@ -16,7 +16,7 @@ public class ShopMasterApp extends Application {
         super.onCreate();
         instance = this;
         databaseManager = new DatabaseManager(this);
-        initializeProducts();
+//        initializeProducts();
 //        initializeVideos();
     }
 

@@ -154,8 +154,9 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 我的优惠券 -->
+            <!-- 联系客服 -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/customer_service_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -175,13 +176,13 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_coupon" />
+                        android:src="@drawable/ic_customer_service" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:text="我的优惠券"
+                        android:text="联系客服"
                         android:textSize="14sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
