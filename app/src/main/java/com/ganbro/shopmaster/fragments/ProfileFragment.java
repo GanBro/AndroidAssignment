@@ -29,6 +29,7 @@ public class ProfileFragment extends Fragment {
     private View completedLayout;
     private View aboutButton;
     private View manageProductsButton;
+    private View deleteProductButton;
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -49,6 +50,7 @@ public class ProfileFragment extends Fragment {
         completedLayout = view.findViewById(R.id.completed_layout);
         aboutButton = view.findViewById(R.id.about_button);
         manageProductsButton = view.findViewById(R.id.manage_products_button);
+        deleteProductButton = view.findViewById(R.id.delete_product_button);
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -107,6 +109,14 @@ public class ProfileFragment extends Fragment {
             // 跳转到 AddProductFragment
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddProductFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        deleteProductButton.setOnClickListener(v -> {
+            // 跳转到 DeleteProductFragment
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new DeleteProductFragment())
                     .addToBackStack(null)
                     .commit();
         });

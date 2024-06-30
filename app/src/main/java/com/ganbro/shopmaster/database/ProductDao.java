@@ -342,4 +342,13 @@ public class ProductDao {
         cursor.close();
         return productList;
     }
+
+    // 根据商品名称删除商品
+    public int deleteProductByName(String productName, String userEmail) {
+        String selection = DatabaseManager.COLUMN_NAME + "=? AND " + DatabaseManager.COLUMN_USER_EMAIL + "=?";
+        String[] selectionArgs = {productName, userEmail};
+        int rowsDeleted = db.delete(DatabaseManager.TABLE_PRODUCT, selection, selectionArgs);
+        Log.d("ProductDao", "删除商品结果，影响的行数: " + rowsDeleted);
+        return rowsDeleted;
+    }
 }

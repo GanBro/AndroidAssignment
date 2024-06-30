@@ -2,12 +2,14 @@ package com.ganbro.shopmaster.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -44,11 +46,24 @@ public class AddProductFragment extends Fragment {
 
         buttonAddProduct.setOnClickListener(v -> {
             String name = editTextProductName.getText().toString();
-            double price = Double.parseDouble(editTextProductPrice.getText().toString());
+            String priceText = editTextProductPrice.getText().toString();
             String imageUrl = editTextProductImageUrl.getText().toString();
             String category = editTextProductCategory.getText().toString();
             String description = editTextProductDescription.getText().toString();
             boolean isRecommended = checkBoxProductRecommended.isChecked();
+
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(priceText) || TextUtils.isEmpty(imageUrl) || TextUtils.isEmpty(category) || TextUtils.isEmpty(description)) {
+                Toast.makeText(getContext(), "请填写所有字段", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double price;
+            try {
+                price = Double.parseDouble(priceText);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "价格格式错误", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             Product product = new Product(0, name, price, imageUrl, 0, category, description, isRecommended, false);
             productDao.addProduct(product, userEmail);
@@ -59,6 +74,11 @@ public class AddProductFragment extends Fragment {
             editTextProductCategory.setText("");
             editTextProductDescription.setText("");
             checkBoxProductRecommended.setChecked(false);
+
+            Toast.makeText(getContext(), "商品已添加", Toast.LENGTH_SHORT).show();
+
+            // 添加商品后返回ProfileFragment
+            getParentFragmentManager().popBackStack();
         });
     }
 }
