@@ -36,7 +36,7 @@ public class ShopMasterApp extends Application {
         String userEmail = sharedPreferences.getString("email", "2551921037@qq.com"); // 默认电子邮件
 
         // 初始化产品数据
-        productDao.initializeProducts(userEmail);
+//        productDao.initializeProducts(userEmail);
     }
 
     private void initializeVideos() {

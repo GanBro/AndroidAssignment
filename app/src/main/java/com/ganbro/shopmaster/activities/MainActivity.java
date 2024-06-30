@@ -80,21 +80,23 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
 
-        // 检查是否需要直接显示订单状态页面
+/*        // 检查是否需要直接显示订单状态页面
         if (getIntent() != null) {
             if (getIntent().hasExtra("order_status")) {
                 String orderStatus = getIntent().getStringExtra("order_status");
                 showProfileFragmentWithOrderStatus(orderStatus);
             } else if (getIntent().getBooleanExtra("from_payment_success", false)) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                 Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+                showFragment(new HomeFragment());
             } else if (getIntent().getBooleanExtra("from_payment_cancel", false)) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                 Toast.makeText(this, "支付取消", Toast.LENGTH_SHORT).show();
+                showFragment(new HomeFragment());
             } else if (getIntent().getBooleanExtra("navigate_to_profile", false)) {
                 bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
             }
-        }
+        }*/
     }
 
     private void showProfileFragmentWithOrderStatus(String orderStatus) {
@@ -104,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
         args.putString("order_status", orderStatus);
         profileFragment.setArguments(args);
         transaction.replace(R.id.fragment_container, profileFragment);
+        transaction.commit();
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
 

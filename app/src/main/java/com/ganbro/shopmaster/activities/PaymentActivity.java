@@ -81,6 +81,8 @@ public class PaymentActivity extends AppCompatActivity {
         } else {
             intent.putExtra("from_payment_cancel", true);
         }
+        // 清除活动栈中的其他活动以确保返回首页
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
