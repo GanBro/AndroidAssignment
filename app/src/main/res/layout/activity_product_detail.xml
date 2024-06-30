@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top"
-            android:paddingBottom="80dp"> <!-- 确保内容不会被底部按钮覆盖 -->
+            android:paddingBottom="80dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/product_price"
                     android:layout_marginTop="16dp"
-                    android:text="选择款式"
+                    android:text="选择参数"
                     android:background="@android:color/holo_red_light"
                     android:textColor="@android:color/white" />
 

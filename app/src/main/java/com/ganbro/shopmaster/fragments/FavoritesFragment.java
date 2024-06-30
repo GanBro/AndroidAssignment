@@ -1,4 +1,4 @@
-package com.ganbro.shopmaster.activities;
+package com.ganbro.shopmaster.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.ProductDetailActivity;
 import com.ganbro.shopmaster.adapters.ProductAdapter;
 import com.ganbro.shopmaster.adapters.VideoAdapter;
 import com.ganbro.shopmaster.database.ProductDao;
@@ -66,6 +68,11 @@ public class FavoritesFragment extends Fragment {
             title.setText("商品收藏");
             List<Product> favoriteProducts = productDao.getAllFavorites(userEmail);
             ProductAdapter productAdapter = new ProductAdapter(getContext(), favoriteProducts, false);
+            productAdapter.setOnItemClickListener(product -> {
+                Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+                intent.putExtra("product_id", product.getId());
+                startActivity(intent);
+            });
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 设置为两列布局
             recyclerView.setAdapter(productAdapter);
         } else if ("video".equals(type)) {

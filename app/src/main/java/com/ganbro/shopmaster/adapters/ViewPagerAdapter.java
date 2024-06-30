@@ -1,9 +1,10 @@
-package com.ganbro.shopmaster.activities;
+package com.ganbro.shopmaster.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import com.ganbro.shopmaster.fragments.FavoritesFragment; // 导入正确的包
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
@@ -14,7 +15,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return com.ganbro.shopmaster.activities.FavoritesFragment.newInstance(position == 0 ? "product" : "video");
+        return FavoritesFragment.newInstance(position == 0 ? "product" : "video");
     }
 
     @Override
