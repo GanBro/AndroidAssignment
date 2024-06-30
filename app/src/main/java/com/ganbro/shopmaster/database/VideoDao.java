@@ -33,7 +33,6 @@ public class VideoDao {
         values.put(DatabaseManager.COLUMN_LIKES_COUNT, video.getLikesCount());
         values.put(DatabaseManager.COLUMN_COLLECTS_COUNT, video.getCollectsCount());
         long result = db.insert(DatabaseManager.TABLE_VIDEOS, null, values);
-        Log.d(TAG, "Video added with URL: " + video.getVideoUrl() + ", result: " + result);
     }
 
     public List<Video> getAllVideos() {
@@ -57,7 +56,9 @@ public class VideoDao {
     }
 
     public void initializeVideos() {
-        addVideo(new Video(0, "android.resource://com.ganbro.shopmaster/raw/sample_video", "描述1", 0, 0));
-        addVideo(new Video(1, "android.resource://com.ganbro.shopmaster/raw/sample_video", "描述2", 1, 1));
+        addVideo(new Video(0, "android.resource://com.ganbro.shopmaster/raw/video_0", "不要对我冷冰冰", 82000, 5520));
+        addVideo(new Video(1, "android.resource://com.ganbro.shopmaster/raw/video_1", "好好好这么玩是吧#蝴蝶步", 45000, 4270));
+        addVideo(new Video(2, "android.resource://com.ganbro.shopmaster/raw/video_2", "反季节战神#nonono#蒙口羽皇", 60000, 4482));
+        addVideo(new Video(3, "android.resource://com.ganbro.shopmaster/raw/video_3", "这舞真的好快乐#girlfriend#大77编舞", 42000, 3841));
     }
 }
