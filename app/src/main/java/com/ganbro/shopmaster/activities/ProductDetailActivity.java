@@ -35,7 +35,6 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button selectStyleButton;
 
     private int quantity = 1;
-    private String selectedStyle = "M";
     private Product product;
     private static final String TAG = "ProductDetailActivity";
 
@@ -132,9 +131,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         ImageView styleImage = dialog.findViewById(R.id.style_image);
         TextView styleName = dialog.findViewById(R.id.style_name);
         TextView stylePrice = dialog.findViewById(R.id.style_price);
-        MaterialButton styleM = dialog.findViewById(R.id.style_m);
-        MaterialButton styleL = dialog.findViewById(R.id.style_l);
-        MaterialButton styleXL = dialog.findViewById(R.id.style_xl);
         TextView quantityText = dialog.findViewById(R.id.quantity_text);
         ImageButton buttonDecrease = dialog.findViewById(R.id.button_decrease);
         ImageButton buttonIncrease = dialog.findViewById(R.id.button_increase);
@@ -143,28 +139,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         styleName.setText(product.getName());
         stylePrice.setText(String.format("￥%.2f", product.getPrice()));
         Glide.with(this).load(product.getImageUrl()).into(styleImage);
-
-        View.OnClickListener styleClickListener = v -> {
-            styleM.setSelected(false);
-            styleL.setSelected(false);
-            styleXL.setSelected(false);
-            v.setSelected(true);
-            switch (v.getId()) {
-                case R.id.style_m:
-                    selectedStyle = "M";
-                    break;
-                case R.id.style_l:
-                    selectedStyle = "L";
-                    break;
-                case R.id.style_xl:
-                    selectedStyle = "XL";
-                    break;
-            }
-        };
-
-        styleM.setOnClickListener(styleClickListener);
-        styleL.setOnClickListener(styleClickListener);
-        styleXL.setOnClickListener(styleClickListener);
 
         buttonDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
@@ -187,13 +161,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         dialog.show();
-    }
-
-    private void selectStyle(Button styleM, Button styleL, Button styleXL, String style) {
-        selectedStyle = style;
-        styleM.setBackgroundResource(style.equals("M") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
-        styleL.setBackgroundResource(style.equals("L") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
-        styleXL.setBackgroundResource(style.equals("XL") ? R.drawable.selected_button_background : R.drawable.unselected_button_background);
     }
 
     @Override
