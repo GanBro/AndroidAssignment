@@ -9,15 +9,17 @@ public class Video {
     private boolean liked;
     private boolean collected;
 
-    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount) {
+    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected) {
         this.id = id;
         this.videoUrl = videoUrl;
         this.description = description;
         this.likesCount = likesCount;
         this.collectsCount = collectsCount;
-        this.liked = false; // Default value
-        this.collected = false; // Default value
+        this.liked = liked;
+        this.collected = collected;
     }
+
+    // Getter and Setter methods
 
     public int getId() {
         return id;

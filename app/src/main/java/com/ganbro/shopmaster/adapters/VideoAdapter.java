@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.database.VideoDatabaseHelper;
+import com.ganbro.shopmaster.database.VideoDao;
 import com.ganbro.shopmaster.models.Video;
 import com.google.android.material.button.MaterialButton;
 
@@ -24,12 +24,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private static final String TAG = "VideoAdapter";
     private Context context;
     private List<Video> videoList;
-    private VideoDatabaseHelper databaseHelper;
+    private VideoDao videoDao;
 
     public VideoAdapter(Context context, List<Video> videoList) {
         this.context = context;
         this.videoList = videoList;
-        this.databaseHelper = new VideoDatabaseHelper(context);
+        this.videoDao = new VideoDao(context);
     }
 
     @NonNull
@@ -41,7 +41,17 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
-        Video video = videoList.get(position);
+        final Video video = videoList.get(position);
+
+        // 从数据库中获取视频的最新状态
+        Video dbVideo = videoDao.getVideoById(video.getId());
+        if (dbVideo != null) {
+            video.setLikesCount(dbVideo.getLikesCount());
+            video.setCollectsCount(dbVideo.getCollectsCount());
+            video.setLiked(dbVideo.isLiked());
+            video.setCollected(dbVideo.isCollected());
+        }
+
         String videoUrl = video.getVideoUrl();
         Log.d(TAG, "Setting video URL: " + videoUrl);
 
@@ -69,30 +79,44 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         // Like button click listener
         holder.btnLike.setOnClickListener(v -> {
-            if (video.isLiked()) {
-                video.setLikesCount(video.getLikesCount() - 1);
-                video.setLiked(false);
+            boolean isLiked = video.isLiked();
+            int likesCount = video.getLikesCount();
+
+            if (isLiked) {
+                likesCount--;
+                isLiked = false;
             } else {
-                video.setLikesCount(video.getLikesCount() + 1);
-                video.setLiked(true);
+                likesCount++;
+                isLiked = true;
             }
-            holder.btnLike.setText(String.valueOf(video.getLikesCount()));
-            databaseHelper.updateLikesCount(video.getId(), video.getLikesCount());
-            updateLikeButton(holder.btnLike, video.isLiked());
+
+            video.setLikesCount(likesCount);
+            video.setLiked(isLiked);
+
+            holder.btnLike.setText(String.valueOf(likesCount));
+            videoDao.updateLikesCount(video.getId(), likesCount, isLiked);
+            updateLikeButton(holder.btnLike, isLiked);
         });
 
         // Collect button click listener
         holder.btnCollect.setOnClickListener(v -> {
-            if (video.isCollected()) {
-                video.setCollectsCount(video.getCollectsCount() - 1);
-                video.setCollected(false);
+            boolean isCollected = video.isCollected();
+            int collectsCount = video.getCollectsCount();
+
+            if (isCollected) {
+                collectsCount--;
+                isCollected = false;
             } else {
-                video.setCollectsCount(video.getCollectsCount() + 1);
-                video.setCollected(true);
+                collectsCount++;
+                isCollected = true;
             }
-            holder.btnCollect.setText(String.valueOf(video.getCollectsCount()));
-            databaseHelper.updateCollectsCount(video.getId(), video.getCollectsCount());
-            updateCollectButton(holder.btnCollect, video.isCollected());
+
+            video.setCollectsCount(collectsCount);
+            video.setCollected(isCollected);
+
+            holder.btnCollect.setText(String.valueOf(collectsCount));
+            videoDao.updateCollectsCount(video.getId(), collectsCount, isCollected);
+            updateCollectButton(holder.btnCollect, isCollected);
         });
     }
 

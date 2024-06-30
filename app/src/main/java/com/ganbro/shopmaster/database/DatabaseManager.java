@@ -50,6 +50,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_VIDEO_DESCRIPTION = "video_description";
     public static final String COLUMN_LIKES_COUNT = "likes_count";
     public static final String COLUMN_COLLECTS_COUNT = "collects_count";
+    public static final String COLUMN_IS_LIKED = "is_liked";
+    public static final String COLUMN_IS_COLLECTED = "is_collected";
 
     public static final String COLUMN_ORDER_TOTAL = "order_total";
     public static final String COLUMN_CREATE_TIME = "create_time";
@@ -92,7 +94,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_VIDEO_URL + " TEXT, " +
                     COLUMN_VIDEO_DESCRIPTION + " TEXT, " +
                     COLUMN_LIKES_COUNT + " INTEGER, " +
-                    COLUMN_COLLECTS_COUNT + " INTEGER" +
+                    COLUMN_COLLECTS_COUNT + " INTEGER, " +
+                    COLUMN_IS_LIKED + " INTEGER, " +
+                    COLUMN_IS_COLLECTED + " INTEGER" +
                     ");";
 
     private static final String TABLE_CREATE_ADDRESSES =
