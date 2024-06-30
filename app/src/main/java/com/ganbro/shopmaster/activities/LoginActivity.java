@@ -39,19 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         // 检查是否可以自动登录
         autoLoginIfPossible();
 
-        emailInput.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                int drawableRight = 2;
-                if (event.getRawX() >= (emailInput.getRight() - emailInput.getCompoundDrawables()[drawableRight].getBounds().width())) {
-                    sendVerificationCode();
-                    // 取消触摸事件
-                    v.clearFocus();
-                    v.setFocusableInTouchMode(false);
-                    return true;
-                }
-            }
-            return false;
-        });
+        emailInput.setOnTouchListener(new EmailTouchListener());
 
         loginButton.setOnClickListener(v -> verifyCodeAndLogin());
     }
@@ -70,6 +58,25 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } else {
             Log.d(TAG, "没有可用的自动登录信息");
+        }
+    }
+
+    private class EmailTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int drawableRight = 2;
+                if (event.getRawX() >= (emailInput.getRight() - emailInput.getCompoundDrawables()[drawableRight].getBounds().width())) {
+                    sendVerificationCode();
+                    // 取消触摸事件
+                    v.clearFocus();
+                    v.setFocusableInTouchMode(false);
+                    // 调用视图的 performClick 方法以确保可访问性
+                    v.performClick();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
