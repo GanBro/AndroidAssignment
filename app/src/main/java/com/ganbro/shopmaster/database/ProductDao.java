@@ -214,7 +214,6 @@ public class ProductDao {
 
     public void initializeProducts(String userEmail) {
         Log.d("ProductDao", "初始化产品数据");
-        addProduct(new Product(0, "重磅纯棉复古红色短袖t恤男夏季新款美式潮牌百搭印花宽松衣服男", 29.9, "android.resource://com.ganbro.shopmaster/drawable/img_1", 1, "上衣", "潮牌百搭印花，舒适透气", true, false), userEmail);
         addProduct(new Product(1, "雅鹿牛仔短裤", 26.9, "android.resource://com.ganbro.shopmaster/drawable/img_2", 1, "下装", "天丝面料，透气舒适", true, false), userEmail);
         addProduct(new Product(2, "雅鹿夏季薄款背心", 19.9, "android.resource://com.ganbro.shopmaster/drawable/img_3", 1, "上衣", "适合运动和休闲", true, false), userEmail);
         addProduct(new Product(3, "冰洁新款短袖", 69.0, "android.resource://com.ganbro.shopmaster/drawable/img_4", 1, "上衣", "舒适的纯棉材质", true, false), userEmail);

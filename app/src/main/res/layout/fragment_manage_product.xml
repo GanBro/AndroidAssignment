@@ -13,21 +13,21 @@
             android:id="@+id/edit_text_product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Name"
+            android:hint="商品名称"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/edit_text_product_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Price"
+            android:hint="商品价格"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_text_product_image_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Image URL"
+            android:hint="商品图片地址"
             android:inputType="text" />
 
         <EditText
@@ -41,27 +41,27 @@
             android:id="@+id/edit_text_product_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Category"
+            android:hint="商品分类"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/edit_text_product_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Description"
+            android:hint="商品详情描述"
             android:inputType="text" />
 
         <CheckBox
             android:id="@+id/check_box_product_recommended"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recommended" />
+            android:text="推荐" />
 
         <Button
             android:id="@+id/button_add_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Product" />
+            android:text="添加商品" />
     </LinearLayout>
 
 </ScrollView>
