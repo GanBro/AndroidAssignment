@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.database.UserDatabaseHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,6 +142,10 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
 
                     Log.d(TAG, "登录成功，邮箱: " + email);
+
+                    // 插入用户数据到数据库
+                    UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
+                    userDatabaseHelper.addUser(email);
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fromLogin", true);
