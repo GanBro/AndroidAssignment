@@ -23,28 +23,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_category" />
 
-            <!-- 设置按钮 -->
-            <ImageButton
-                android:id="@+id/settings_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentStart="true"
-                android:layout_margin="12dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="设置"
-                android:src="@drawable/ic_settings" />
-
-            <!-- 消息按钮 -->
-            <ImageButton
-                android:id="@+id/message_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="12dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="消息"
-                android:src="@drawable/ic_message" />
-
             <!-- 圆形头像 -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
