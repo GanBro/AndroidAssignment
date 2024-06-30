@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,7 +45,6 @@ public class FavoritesFragment extends Fragment {
 
         title = view.findViewById(R.id.title);
         recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (getArguments() != null) {
             type = getArguments().getString(ARG_TYPE);
@@ -66,11 +66,13 @@ public class FavoritesFragment extends Fragment {
             title.setText("商品收藏");
             List<Product> favoriteProducts = productDao.getAllFavorites(userEmail);
             ProductAdapter productAdapter = new ProductAdapter(getContext(), favoriteProducts, false);
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 设置为两列布局
             recyclerView.setAdapter(productAdapter);
         } else if ("video".equals(type)) {
             title.setText("视频收藏");
             List<Video> favoriteVideos = videoDatabaseHelper.getAllFavoriteVideos();
             VideoAdapter videoAdapter = new VideoAdapter(getContext(), favoriteVideos);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // 视频还是单列布局
             recyclerView.setAdapter(videoAdapter);
         }
 
