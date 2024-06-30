@@ -9,7 +9,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 15; // 确保版本号正确更新
+    private static final int DATABASE_VERSION = 15;
 
     private static DatabaseManager instance;
 
@@ -40,7 +40,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_IS_FAVORITE = "is_favorite";
     public static final String COLUMN_USER_EMAIL = "user_email";
     public static final String COLUMN_ORDER_STATUS = "order_status";
-    public static final String COLUMN_ORDER_ID = "order_id"; // 确保定义了 COLUMN_ORDER_ID
+    public static final String COLUMN_ORDER_ID = "order_id";
 
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address";

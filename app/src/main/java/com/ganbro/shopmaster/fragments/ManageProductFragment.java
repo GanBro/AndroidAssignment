@@ -15,7 +15,7 @@ import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.ProductDao;
 import com.ganbro.shopmaster.models.Product;
 
-public class AddProductFragment extends Fragment {
+public class ManageProductFragment extends Fragment {
 
     private ProductDao productDao;
 
@@ -34,13 +34,11 @@ public class AddProductFragment extends Fragment {
         EditText editTextProductName = view.findViewById(R.id.edit_text_product_name);
         EditText editTextProductPrice = view.findViewById(R.id.edit_text_product_price);
         EditText editTextProductImageUrl = view.findViewById(R.id.edit_text_product_image_url);
-        EditText editTextProductQuantity = view.findViewById(R.id.edit_text_product_quantity);
         EditText editTextProductCategory = view.findViewById(R.id.edit_text_product_category);
         EditText editTextProductDescription = view.findViewById(R.id.edit_text_product_description);
         CheckBox checkBoxProductRecommended = view.findViewById(R.id.check_box_product_recommended);
         Button buttonAddProduct = view.findViewById(R.id.button_add_product);
 
-        // Get user email from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
         String userEmail = sharedPreferences.getString("email", "");
 
@@ -48,19 +46,16 @@ public class AddProductFragment extends Fragment {
             String name = editTextProductName.getText().toString();
             double price = Double.parseDouble(editTextProductPrice.getText().toString());
             String imageUrl = editTextProductImageUrl.getText().toString();
-            int quantity = Integer.parseInt(editTextProductQuantity.getText().toString());
             String category = editTextProductCategory.getText().toString();
             String description = editTextProductDescription.getText().toString();
             boolean isRecommended = checkBoxProductRecommended.isChecked();
 
-            Product product = new Product(0, name, price, imageUrl, quantity, category, description, isRecommended, false);
+            Product product = new Product(0, name, price, imageUrl, 0, category, description, isRecommended, false);
             productDao.addProduct(product, userEmail);
 
-            // Optionally, clear the form after adding the product
             editTextProductName.setText("");
             editTextProductPrice.setText("");
             editTextProductImageUrl.setText("");
-            editTextProductQuantity.setText("");
             editTextProductCategory.setText("");
             editTextProductDescription.setText("");
             checkBoxProductRecommended.setChecked(false);

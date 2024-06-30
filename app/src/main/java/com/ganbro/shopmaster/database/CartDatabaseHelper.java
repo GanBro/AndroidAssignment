@@ -34,7 +34,7 @@ public class CartDatabaseHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
-                        true
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_IN_CART)) == 1
                 );
                 productList.add(product);
             } while (cursor.moveToNext());

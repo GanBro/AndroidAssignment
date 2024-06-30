@@ -13,12 +13,12 @@ public class Product implements Serializable {
     private boolean isRecommended;
     private boolean isSelected;
     private boolean isInCart;
-    private String userEmail; // 新增字段
+    private String userEmail;
 
     public Product() {
     }
 
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart, String userEmail) {
+    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -27,24 +27,33 @@ public class Product implements Serializable {
         this.category = category;
         this.description = description;
         this.isRecommended = isRecommended;
-        this.isSelected = false;
         this.isInCart = isInCart;
-        this.userEmail = userEmail; // 新增字段
-    }
-
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended, boolean isInCart) {
-        this(id, name, price, imageUrl, quantity, category, description, isRecommended, isInCart, null);
     }
 
     public Product(int id, String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
-        this(id, name, price, imageUrl, quantity, category, description, isRecommended, false, null);
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.category = category;
+        this.description = description;
+        this.isRecommended = isRecommended;
     }
 
-    public Product(int id, String name, double price, String imageUrl, int quantity, String category) {
-        this(id, name, price, imageUrl, quantity, category, "", false, false, null);
+    public Product(String name, double price, String imageUrl, int quantity, String category, String description, boolean isRecommended) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.category = category;
+        this.description = description;
+        this.isRecommended = isRecommended;
+        this.isSelected = false;
+        this.isInCart = false;
     }
 
-    // Getters and setters for all fields
+    // Getters and setters
     public int getId() {
         return id;
     }

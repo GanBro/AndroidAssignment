@@ -19,7 +19,6 @@ public class ProductDao {
     public ProductDao(Context context) {
         DatabaseManager dbHelper = new DatabaseManager(context);
         db = dbHelper.getWritableDatabase();
-        Log.d("ProductDao", "数据库已打开");
     }
 
     public void addProduct(Product product, String userEmail) {
@@ -35,8 +34,10 @@ public class ProductDao {
         values.put(DatabaseManager.COLUMN_IS_IN_CART, 0);
         values.put(DatabaseManager.COLUMN_USER_EMAIL, userEmail);
         values.put(DatabaseManager.COLUMN_ORDER_STATUS, ""); // 默认无订单状态
-        long result = db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
-        Log.d("ProductDao", "添加产品结果: " + result);
+
+        long id = db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
+        product.setId((int) id); // 设置自动生成的 ID
+        Log.d("ProductDao", "添加产品结果: " + id);
     }
 
     public void addProductToFavorites(int productId, String userEmail) {

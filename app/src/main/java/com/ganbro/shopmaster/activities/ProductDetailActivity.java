@@ -108,7 +108,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (product != null) {
             Log.d(TAG, "Loaded Product: " + product.getName());
             productName.setText(product.getName());
-            productDescription.setText(product.getDescription()); // 从数据库加载描述
+            productDescription.setText(product.getDescription());
             productPrice.setText(String.format("￥%.2f", product.getPrice()));
             Glide.with(this).load(product.getImageUrl()).into(productImage);
         } else {
@@ -145,15 +145,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         Glide.with(this).load(product.getImageUrl()).into(styleImage);
 
         View.OnClickListener styleClickListener = v -> {
-            // Reset selection state
             styleM.setSelected(false);
             styleL.setSelected(false);
             styleXL.setSelected(false);
-
-            // Highlight the selected button
             v.setSelected(true);
-
-            // Update selected style
             switch (v.getId()) {
                 case R.id.style_m:
                     selectedStyle = "M";
@@ -193,9 +188,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
-
-
 
     private void selectStyle(Button styleM, Button styleL, Button styleXL, String style) {
         selectedStyle = style;

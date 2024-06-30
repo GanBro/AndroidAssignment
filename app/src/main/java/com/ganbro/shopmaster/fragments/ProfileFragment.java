@@ -106,7 +106,7 @@ public class ProfileFragment extends Fragment {
         manageProductsButton.setOnClickListener(v -> {
             // 跳转到 AddProductFragment
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new AddProductFragment())
+                    .replace(R.id.fragment_container, new ManageProductFragment())
                     .addToBackStack(null)
                     .commit();
         });
