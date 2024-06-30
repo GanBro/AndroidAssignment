@@ -20,6 +20,7 @@ import com.ganbro.shopmaster.models.Product;
 public class AddProductFragment extends Fragment {
 
     private ProductDao productDao;
+    private String userEmail;
 
     @Nullable
     @Override
@@ -42,9 +43,14 @@ public class AddProductFragment extends Fragment {
         Button buttonAddProduct = view.findViewById(R.id.button_add_product);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("email", "");
+        userEmail = sharedPreferences.getString("email", "");
 
         buttonAddProduct.setOnClickListener(v -> {
+            if (!"2551921037@qq.com".equals(userEmail)) {
+                Toast.makeText(getContext(), "权限不足，无法添加商品", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String name = editTextProductName.getText().toString();
             String priceText = editTextProductPrice.getText().toString();
             String imageUrl = editTextProductImageUrl.getText().toString();

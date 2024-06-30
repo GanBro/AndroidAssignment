@@ -53,6 +53,11 @@ public class DeleteProductFragment extends Fragment {
     }
 
     private void deleteProduct() {
+        if (!"2551921037@qq.com".equals(userEmail)) {
+            Toast.makeText(getContext(), "权限不足，无法删除商品", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String productName = productNameEditText.getText().toString().trim();
         if (TextUtils.isEmpty(productName)) {
             Toast.makeText(getContext(), "请输入商品名称", Toast.LENGTH_SHORT).show();
