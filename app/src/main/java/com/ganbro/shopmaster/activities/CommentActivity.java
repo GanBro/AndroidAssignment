@@ -59,10 +59,10 @@ public class CommentActivity extends AppCompatActivity {
             String commentText = editTextComment.getText().toString();
             if (!commentText.isEmpty()) {
                 video.addComment(commentText);
-                videoDao.updateComments(video.getId(), video.getComments()); // 更新数据库中的评论
+                videoDao.updateComments(video.getId(), video.getComments());
                 commentAdapter.notifyDataSetChanged();
-                editTextComment.setText(""); // 清空输入框
-                recyclerViewComments.scrollToPosition(commentList.size() - 1); // 滚动到最后一条评论
+                editTextComment.setText("");
+                recyclerViewComments.scrollToPosition(commentList.size() - 1);
             } else {
                 Toast.makeText(this, "请输入评论内容", Toast.LENGTH_SHORT).show();
             }

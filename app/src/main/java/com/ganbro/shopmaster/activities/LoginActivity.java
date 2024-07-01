@@ -3,6 +3,7 @@ package com.ganbro.shopmaster.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,11 +34,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // 添加 StrictMode 设置（仅用于调试）
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         emailInput = findViewById(R.id.email_input);
         codeInput = findViewById(R.id.code_input);
         loginButton = findViewById(R.id.sign_up_button);
 
-        // 检查是否可以自动登录
         autoLoginIfPossible();
 
         emailInput.setOnTouchListener(new EmailTouchListener());
@@ -45,13 +49,11 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> verifyCodeAndLogin());
     }
 
-    // 检查是否可以自动登录
     private void autoLoginIfPossible() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String email = sharedPreferences.getString("email", null);
 
         if (email != null) {
-            // 自动登录用户
             Log.d(TAG, "自动登录成功，跳转到主页面");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("fromLogin", true);
@@ -69,10 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                 int drawableRight = 2;
                 if (event.getRawX() >= (emailInput.getRight() - emailInput.getCompoundDrawables()[drawableRight].getBounds().width())) {
                     sendVerificationCode();
-                    // 取消触摸事件
                     v.clearFocus();
                     v.setFocusableInTouchMode(false);
-                    // 调用视图的 performClick 方法以确保可访问性
                     v.performClick();
                     return true;
                 }
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2:3000/send-verification-code";
+        String url = "http://116.205.231.93:3000/send-verification-code";
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2:3000/verify-code";
+        String url = "http://116.205.231.93:3000/verify-code";
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -141,9 +141,6 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("email", email);
                     editor.apply();
 
-                    Log.d(TAG, "登录成功，邮箱: " + email);
-
-                    // 插入用户数据到数据库
                     UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
                     userDatabaseHelper.addUser(email);
 

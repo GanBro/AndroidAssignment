@@ -52,7 +52,7 @@ public class VideoDao {
 
     public void updateComments(int videoId, List<String> comments) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(comments)); // 更新评论
+        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(comments));
         db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
     }
 
@@ -62,7 +62,6 @@ public class VideoDao {
             String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
             List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
             Video video = new Video(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_URL)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_DESCRIPTION)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_LIKES_COUNT)),
@@ -86,7 +85,6 @@ public class VideoDao {
                 String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
                 List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
                 Video video = new Video(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_URL)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_DESCRIPTION)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_LIKES_COUNT)),
@@ -105,9 +103,10 @@ public class VideoDao {
     }
 
     public void initializeVideos() {
-        addVideo(new Video(0, "android.resource://com.ganbro.shopmaster/raw/video_0", "不要对我冷冰冰", 82000, 5520, false, false, "奶茶", new ArrayList<>()));
-        addVideo(new Video(1, "android.resource://com.ganbro.shopmaster/raw/video_1", "好好好这么玩是吧#蝴蝶步", 45000, 4270, false, false, "一只绵羊", new ArrayList<>()));
-        addVideo(new Video(2, "android.resource://com.ganbro.shopmaster/raw/video_2", "反季节战神#nonono#蒙口羽皇", 60000, 4482, false, false, "一只绵羊", new ArrayList<>()));
-        addVideo(new Video(3, "android.resource://com.ganbro.shopmaster/raw/video_3", "这舞真的好快乐#girlfriend#大77编舞", 42000, 3841, false, false, "一只绵羊", new ArrayList<>()));
+        addVideo(new Video("android.resource://com.ganbro.shopmaster/raw/video_0", "不要对我冷冰冰", 82000, 5520, false, false, "奶茶", new ArrayList<>()));
+        addVideo(new Video("android.resource://com.ganbro.shopmaster/raw/video_1", "好好好这么玩是吧#蝴蝶步", 45000, 4270, false, false, "一只绵羊", new ArrayList<>()));
+        addVideo(new Video("android.resource://com.ganbro.shopmaster/raw/video_2", "反季节战神#nonono#蒙口羽皇", 60000, 4482, false, false, "一只绵羊", new ArrayList<>()));
+        addVideo(new Video("android.resource://com.ganbro.shopmaster/raw/video_3", "这舞真的好快乐#girlfriend#大77编舞", 42000, 3841, false, false, "一只绵羊", new ArrayList<>()));
+        Log.d(TAG, "视频插入成功");
     }
 }

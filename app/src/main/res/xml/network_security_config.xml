@@ -6,5 +6,6 @@
         <domain includeSubdomains="true">qq.com</domain>
         <domain includeSubdomains="true">gtimg.cn</domain>
         <domain includeSubdomains="true">isdspeed.qq.com</domain>
+        <domain includeSubdomains="true">116.205.231.93</domain>
     </domain-config>
 </network-security-config>

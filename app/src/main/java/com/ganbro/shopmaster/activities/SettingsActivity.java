@@ -22,7 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.clear_cache_button).setOnClickListener(v -> {
             clearOrderDetails();
             clearAppCache();
-            Toast.makeText(this, "缓存已清除(订单详情)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "缓存和订单详情已清除", Toast.LENGTH_SHORT).show();
         });
     }
 

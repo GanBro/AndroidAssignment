@@ -53,7 +53,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_IS_LIKED = "is_liked";
     public static final String COLUMN_IS_COLLECTED = "is_collected";
     public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_COMMENTS = "comments"; // Add this line
+    public static final String COLUMN_COMMENTS = "comments";
 
     public static final String COLUMN_ORDER_TOTAL = "order_total";
     public static final String COLUMN_CREATE_TIME = "create_time";

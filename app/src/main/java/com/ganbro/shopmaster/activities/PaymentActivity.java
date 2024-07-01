@@ -34,15 +34,12 @@ public class PaymentActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancel_button);
         cartDatabaseHelper = new CartDatabaseHelper(this);
 
-        // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         final String userEmail = sharedPreferences.getString("email", null);
 
-        // 获取传递的支付金额和订单商品列表
         final double amount = getIntent().getDoubleExtra("amount", 0.0);
         List<Product> orderItems = (List<Product>) getIntent().getSerializableExtra("orderItems");
 
-        // 如果 orderItems 为 null，则初始化为空列表
         if (orderItems == null) {
             orderItems = new ArrayList<>();
         }
@@ -53,10 +50,8 @@ public class PaymentActivity extends AppCompatActivity {
         final List<Product> finalOrderItems = orderItems;
         final String finalUserEmail = userEmail;
 
-        // 支付按钮点击事件
         paymentButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "COMPLETED", "支付成功", true));
 
-        // 取消按钮点击事件
         cancelButton.setOnClickListener(v -> handlePayment(finalOrderItems, finalUserEmail, amount, "PENDING_PAYMENT", "支付取消", false));
     }
 

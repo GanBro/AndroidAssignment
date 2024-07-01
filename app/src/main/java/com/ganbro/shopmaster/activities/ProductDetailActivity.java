@@ -61,12 +61,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.buy_now);
         selectStyleButton = findViewById(R.id.select_style_button);
 
-        // 获取 SharedPreferences 中保存的用户邮箱
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userEmail = sharedPreferences.getString("email", null);
 
         if (userEmail == null) {
-            // 用户未登录，跳转到登录页面
             Log.d(TAG, "用户未登录，跳转到登录页面");
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
@@ -75,7 +73,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         int productId = getIntent().getIntExtra("product_id", -1);
-        Log.d(TAG, "Received Product ID: " + productId);
         if (productId != -1) {
             loadProductDetails(productId, userEmail);
         } else {
@@ -85,9 +82,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         ProductDao productDao = new ProductDao(this);
         if (productDao.isProductInFavorites(productId, userEmail)) {
-            addToFavorites.setText("取消收藏"); // 更新按钮文本为“取消收藏”
+            addToFavorites.setText("取消收藏");
         } else {
-            addToFavorites.setText("收藏"); // 更新按钮文本为“收藏”
+            addToFavorites.setText("收藏");
         }
 
         addToCartButton.setOnClickListener(v -> {
@@ -100,24 +97,25 @@ public class ProductDetailActivity extends AppCompatActivity {
             if (productDao.isProductInFavorites(product.getId(), userEmail)) {
                 productDao.removeProductFromFavorites(product.getId(), userEmail);
                 Toast.makeText(this, "商品已取消收藏", Toast.LENGTH_SHORT).show();
-                addToFavorites.setText("收藏"); // 更新按钮文本为“收藏”
+                addToFavorites.setText("收藏");
             } else {
                 productDao.addProductToFavorites(product.getId(), userEmail);
                 Toast.makeText(this, "商品已添加到收藏", Toast.LENGTH_SHORT).show();
-                addToFavorites.setText("取消收藏"); // 更新按钮文本为“取消收藏”
+                addToFavorites.setText("取消收藏");
             }
         });
 
         buyNow.setOnClickListener(v -> {
-            // 跳转到订单详情页面
             ArrayList<Product> orderItems = new ArrayList<>();
             orderItems.add(product);
-            OrderDetail orderDetail = new OrderDetail(1, userEmail, new Date(), OrderStatus.PENDING_PAYMENT, orderItems);  // 示例数据
+
+            OrderDetail orderDetail = new OrderDetail(userEmail, new Date(), OrderStatus.PENDING_PAYMENT, orderItems);
 
             Intent orderDetailIntent = new Intent(ProductDetailActivity.this, OrderDetailsActivity.class);
             orderDetailIntent.putExtra("orderDetail", orderDetail);
             startActivity(orderDetailIntent);
         });
+
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
     }
@@ -126,7 +124,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         ProductDao productDao = new ProductDao(this);
         product = productDao.getProductById(productId, userEmail);
         if (product != null) {
-            Log.d(TAG, "Loaded Product: " + product.getName());
             productName.setText(product.getName());
             productDescription.setText(product.getDescription());
             productPrice.setText(String.format("￥%.2f", product.getPrice()));

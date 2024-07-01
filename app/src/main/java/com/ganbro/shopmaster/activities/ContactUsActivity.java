@@ -35,7 +35,6 @@ public class ContactUsActivity extends AppCompatActivity {
         messageInput = findViewById(R.id.contact_us_message);
         sendButton = findViewById(R.id.contact_us_send_button);
 
-        // 设置默认邮箱地址并使其不可编辑
         emailInput.setText(DEFAULT_EMAIL);
         emailInput.setEnabled(false);
 
@@ -52,7 +51,7 @@ public class ContactUsActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2:3000/send-email";
+        String url = "http://116.205.231.93:3000/send-email";
 
         RequestQueue queue = Volley.newRequestQueue(this);
 

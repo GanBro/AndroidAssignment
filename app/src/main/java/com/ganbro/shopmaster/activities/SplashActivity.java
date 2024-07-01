@@ -8,7 +8,7 @@ import com.ganbro.shopmaster.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DISPLAY_LENGTH = 3000; // 延迟3秒
+    private static final int SPLASH_DISPLAY_LENGTH = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,6 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 跳转到 LoginActivity
                 Intent loginIntent = new Intent(SplashActivity.this, LoginActivity.class);
                 SplashActivity.this.startActivity(loginIntent);
                 SplashActivity.this.finish();

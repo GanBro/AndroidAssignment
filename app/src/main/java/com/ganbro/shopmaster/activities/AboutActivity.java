@@ -18,7 +18,6 @@ public class AboutActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 返回到前一个Activity
                 finish();
             }
         });

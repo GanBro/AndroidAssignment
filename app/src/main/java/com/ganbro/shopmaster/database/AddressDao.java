@@ -23,7 +23,6 @@ public class AddressDao {
         values.put("name", address.getName());
         values.put("phone", address.getPhone());
         values.put("address", address.getAddress());
-        Log.d("DatabaseInsert", "插入地址：地址=" + address.getAddress() + ", 名字=" + address.getName() + ", 电话=" + address.getPhone());
         return db.insert("addresses", null, values);
     }
 

@@ -32,10 +32,8 @@ public class AddressListActivity extends AppCompatActivity {
 
         addressDao = new AddressDao(this);
 
-        // 加载现有地址
         loadAddresses();
 
-        // 设置添加地址按钮点击事件
         addAddressButton.setOnClickListener(v -> {
             Intent intent = new Intent(AddressListActivity.this, AddAddressActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ADD_ADDRESS);
@@ -46,13 +44,12 @@ public class AddressListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_ADDRESS && resultCode == RESULT_OK) {
-            // 重新加载地址
             loadAddresses();
         }
     }
 
     private void loadAddresses() {
-        addressListLayout.removeAllViews(); // 确保重新加载时清空旧的视图
+        addressListLayout.removeAllViews();
         List<Address> addresses = addressDao.getAllAddresses();
         for (Address address : addresses) {
             addAddressToView(address);
@@ -65,7 +62,7 @@ public class AddressListActivity extends AppCompatActivity {
         TextView addressTextView = addressItem.findViewById(R.id.text_view_address);
         TextView nameTextView = addressItem.findViewById(R.id.text_view_name);
         TextView phoneTextView = addressItem.findViewById(R.id.text_view_phone);
-        MaterialButton deleteButton = addressItem.findViewById(R.id.delete_address_button); // 将 ImageView 修改为 MaterialButton
+        MaterialButton deleteButton = addressItem.findViewById(R.id.delete_address_button);
 
         addressTextView.setText(address.getAddress());
         nameTextView.setText(address.getName());

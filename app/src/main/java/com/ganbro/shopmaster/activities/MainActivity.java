@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showProfileFragmentWithOrderStatus(String orderStatus) {
+/*    private void showProfileFragmentWithOrderStatus(String orderStatus) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         ProfileFragment profileFragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -95,17 +95,17 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
-    }
+    }*/
 
-    private void initializeProductData() {
+/*    private void initializeProductData() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("email", null); // 获取 userEmail
+        String userEmail = sharedPreferences.getString("email", null);
         if (userEmail != null) {
             ProductDao productDao = new ProductDao(this);
-            productDao.initializeProducts(userEmail); // 传递 userEmail
+            productDao.initializeProducts(userEmail);
             Log.d(TAG, "产品数据已初始化");
         } else {
             Log.d(TAG, "用户未登录或缺少电子邮件，跳过产品数据初始化");
         }
-    }
+    }*/
 }

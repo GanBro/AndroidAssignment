@@ -14,14 +14,12 @@ public class OrderDetail implements Serializable {
     public OrderDetail() {
     }
 
-    public OrderDetail(int orderId, String userEmail, Date createTime, OrderStatus status, List<Product> products) {
-        this.orderId = orderId;
+    public OrderDetail(String userEmail, Date createTime, OrderStatus status, List<Product> products) {
         this.userEmail = userEmail;
         this.createTime = createTime;
         this.status = status;
         this.products = products;
     }
-
     public int getOrderId() {
         return orderId;
     }

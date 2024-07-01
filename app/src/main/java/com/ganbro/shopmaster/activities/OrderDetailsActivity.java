@@ -48,14 +48,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            Log.d(TAG, "接收到的 Intent: " + intent.toString());
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                for (String key : extras.keySet()) {
-                    Log.d(TAG, "Intent extra [" + key + "]: " + extras.get(key));
-                }
-            }
-
             OrderDetail orderDetail = (OrderDetail) intent.getSerializableExtra("orderDetail");
             if (orderDetail != null) {
                 orderItems = orderDetail.getProducts();

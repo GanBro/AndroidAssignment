@@ -16,8 +16,8 @@ public class ShopMasterApp extends Application {
         super.onCreate();
         instance = this;
         databaseManager = new DatabaseManager(this);
-        initializeProducts();
-        initializeVideos();
+//        initializeProducts();
+//        initializeVideos();
     }
 
     public static ShopMasterApp getInstance() {
