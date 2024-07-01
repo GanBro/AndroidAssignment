@@ -212,27 +212,27 @@ public class ProductDao {
 
     public void initializeProducts(String userEmail) {
         Log.d("ProductDao", "初始化产品数据");
-        addProduct(new Product(1, "雅鹿牛仔短裤", 26.9, "img_2", 1, "下装", "天丝面料，透气舒适", true, false), userEmail);
-        addProduct(new Product(2, "雅鹿夏季薄款背心", 19.9, "img_3", 1, "上衣", "适合运动和休闲", true, false), userEmail);
-        addProduct(new Product(3, "冰洁新款短袖", 69.0, "img_4", 1, "上衣", "舒适的纯棉材质", true, false), userEmail);
-        addProduct(new Product(4, "雪中飞男女同款纯棉短袖", 69.0, "img_5", 1, "上衣", "简约设计，百搭款式", true, false), userEmail);
-        addProduct(new Product(5, "雪中飞女士简约羽绒马甲", 79.0, "img_6", 1, "外套", "轻盈保暖，冬季必备", true, false), userEmail);
-        addProduct(new Product(6, "唐狮集团冰丝短袖T恤", 29.9, "img_7", 1, "上衣", "冰丝面料，清凉舒适", true, false), userEmail);
-        addProduct(new Product(7, "三福短袖t恤女", 33.1, "img_8", 1, "上衣", "圆领纯棉，情侣款", true, false), userEmail);
-        addProduct(new Product(8, "雅鹿韩版修身短袖t恤", 19.9, "img_9", 1, "上衣", "修身设计，时尚百搭", true, false), userEmail);
-        addProduct(new Product(9, "森马连衣裙合集", 39.0, "img_10", 1, "连衣裙", "清仓特价，多款可选", true, false), userEmail);
-        addProduct(new Product(10, "雅鹿修身防晒衣", 29.9, "img_11", 1, "外套", "防晒防紫外线", true, false), userEmail);
-        addProduct(new Product(11, "阿里自营V领短袖打底衫", 19.9, "img_12", 1, "上衣", "两件装，超值选择", true, false), userEmail);
-        addProduct(new Product(12, "雅鹿牛仔短裤", 26.9, "img_13", 1, "下装", "天丝面料，舒适透气", true, false), userEmail);
-        addProduct(new Product(13, "森马连衣裙女任选", 39.0, "img_14", 1, "连衣裙", "特价清仓，多款可选", true, false), userEmail);
-        addProduct(new Product(14, "森马休闲裤合集", 50.0, "img_15", 1, "下装", "拍两件50元，多款任选", true, false), userEmail);
-        addProduct(new Product(15, "三福芭蕾织带德训鞋", 75.22, "img_16", 1, "鞋子", "到手价59.2，舒适百搭", true, false), userEmail);
-        addProduct(new Product(16, "西装风衣外套", 49.9, "img_17", 1, "外套", "百搭秋冬款，显瘦设计", true, false), userEmail);
-        addProduct(new Product(17, "雪中飞情侣款纯棉T恤", 69.0, "img_18", 1, "上衣", "拍三件69元，情侣款", true, false), userEmail);
-        addProduct(new Product(18, "森马复古法式甜美连衣裙", 39.0, "img_19", 1, "连衣裙", "2024新款，复古甜美", true, false), userEmail);
-        addProduct(new Product(19, "雅鹿牛仔短裤", 26.9, "img_20", 1, "下装", "天丝面料，透气舒适", true, false), userEmail);
-        addProduct(new Product(20, "UPF50+夏季薄款防晒衣", 32.9, "img_21", 1, "外套", "UPF50+防晒，夏季必备", true, false), userEmail);
-        addProduct(new Product(21, "唐狮纯棉短袖女t恤", 29.0, "img_22", 1, "上衣", "多款可选，舒适透气", true, false), userEmail);
+        addProduct(new Product(1, "雅鹿牛仔短裤", 26.9, "img_2", 1, "下装", "天丝面料，透气舒适", false), userEmail);
+        addProduct(new Product(2, "雅鹿夏季薄款背心", 19.9, "img_3", 1, "上衣", "适合运动和休闲", true), userEmail);
+        addProduct(new Product(3, "冰洁新款短袖", 69.0, "img_4", 1, "上衣", "舒适的纯棉材质", true), userEmail);
+        addProduct(new Product(4, "雪中飞男女同款纯棉短袖", 69.0, "img_5", 1, "上衣", "简约设计，百搭款式", true), userEmail);
+        addProduct(new Product(5, "雪中飞女士简约羽绒马甲", 79.0, "img_6", 1, "外套", "轻盈保暖，冬季必备", true), userEmail);
+        addProduct(new Product(6, "唐狮集团冰丝短袖T恤", 29.9, "img_7", 1, "上衣", "冰丝面料，清凉舒适", true), userEmail);
+        addProduct(new Product(7, "三福短袖t恤女", 33.1, "img_8", 1, "上衣", "圆领纯棉，情侣款", true), userEmail);
+        addProduct(new Product(8, "雅鹿韩版修身短袖t恤", 19.9, "img_9", 1, "上衣", "修身设计，时尚百搭", true), userEmail);
+        addProduct(new Product(9, "森马连衣裙合集", 39.0, "img_10", 1, "连衣裙", "清仓特价，多款可选", true), userEmail);
+        addProduct(new Product(10, "雅鹿修身防晒衣", 29.9, "img_11", 1, "外套", "防晒防紫外线", true), userEmail);
+        addProduct(new Product(11, "阿里自营V领短袖打底衫", 19.9, "img_12", 1, "上衣", "两件装，超值选择", true), userEmail);
+        addProduct(new Product(12, "雅鹿牛仔短裤", 26.9, "img_13", 1, "下装", "天丝面料，舒适透气", true), userEmail);
+        addProduct(new Product(13, "森马连衣裙女任选", 39.0, "img_14", 1, "连衣裙", "特价清仓，多款可选", true), userEmail);
+        addProduct(new Product(14, "森马休闲裤合集", 50.0, "img_15", 1, "下装", "拍两件50元，多款任选", true), userEmail);
+        addProduct(new Product(15, "三福芭蕾织带德训鞋", 75.22, "img_16", 1, "鞋子", "到手价59.2，舒适百搭", true), userEmail);
+        addProduct(new Product(16, "西装风衣外套", 49.9, "img_17", 1, "外套", "百搭秋冬款，显瘦设计", true), userEmail);
+        addProduct(new Product(17, "雪中飞情侣款纯棉T恤", 69.0, "img_18", 1, "上衣", "拍三件69元，情侣款", true), userEmail);
+        addProduct(new Product(18, "森马复古法式甜美连衣裙", 39.0, "img_19", 1, "连衣裙", "2024新款，复古甜美", true), userEmail);
+        addProduct(new Product(19, "雅鹿牛仔短裤", 26.9, "img_20", 1, "下装", "天丝面料，透气舒适", true), userEmail);
+        addProduct(new Product(20, "UPF50+夏季薄款防晒衣", 32.9, "img_21", 1, "外套", "UPF50+防晒，夏季必备", true), userEmail);
+        addProduct(new Product(21, "唐狮纯棉短袖女t恤", 29.0, "img_22", 1, "上衣", "多款可选，舒适透气", true), userEmail);
     }
 
     public Product getProductById(int id, String userEmail) {

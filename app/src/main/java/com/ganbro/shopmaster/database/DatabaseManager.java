@@ -21,7 +21,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public static final String TABLE_PRODUCT = "products";
-    public static final String TABLE_FAVORITES = "favorites";
     public static final String TABLE_USERS = "users";
     public static final String TABLE_VIDEOS = "videos";
     public static final String TABLE_ADDRESSES = "addresses";
@@ -74,16 +73,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_ORDER_STATUS + " TEXT" +
                     ");";
 
-    private static final String TABLE_CREATE_FAVORITES =
-            "CREATE TABLE " + TABLE_FAVORITES + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT, " +
-                    COLUMN_PRICE + " REAL, " +
-                    COLUMN_IMAGE_URL + " TEXT, " +
-                    COLUMN_QUANTITY + " INTEGER, " +
-                    COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_IS_RECOMMENDED + " INTEGER);";
-
     private static final String TABLE_CREATE_USERS =
             "CREATE TABLE " + TABLE_USERS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -100,7 +89,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_IS_LIKED + " INTEGER, " +
                     COLUMN_IS_COLLECTED + " INTEGER, " +
                     COLUMN_USERNAME + " TEXT, " +
-                    COLUMN_COMMENTS + " TEXT" + // Add this line
+                    COLUMN_COMMENTS + " TEXT" +
                     ");";
 
     private static final String TABLE_CREATE_ADDRESSES =
@@ -140,7 +129,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE_PRODUCTS);
-        db.execSQL(TABLE_CREATE_FAVORITES);
         db.execSQL(TABLE_CREATE_USERS);
         db.execSQL(TABLE_CREATE_VIDEOS);
         db.execSQL(TABLE_CREATE_ADDRESSES);
@@ -164,7 +152,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (!isColumnExists(db, TABLE_VIDEOS, COLUMN_USERNAME)) {
                 db.execSQL("ALTER TABLE " + TABLE_VIDEOS + " ADD COLUMN " + COLUMN_USERNAME + " TEXT;");
             }
-            if (!isColumnExists(db, TABLE_VIDEOS, COLUMN_COMMENTS)) { // Add this condition
+            if (!isColumnExists(db, TABLE_VIDEOS, COLUMN_COMMENTS)) {
                 db.execSQL("ALTER TABLE " + TABLE_VIDEOS + " ADD COLUMN " + COLUMN_COMMENTS + " TEXT;");
             }
         }
