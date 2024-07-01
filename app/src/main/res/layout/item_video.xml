@@ -1,33 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="0dp">
 
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:layout_gravity="center" />
 
     <TextView
         android:id="@+id/video_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Video Description"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="48dp"
+        android:background="@android:color/transparent"
         android:padding="8dp"
+        android:text="Video Description"
+        android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="8dp"
         android:gravity="center_vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_like"
@@ -38,7 +40,7 @@
             android:text="0"
             android:padding="4dp"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginBottom="16dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_collect"
@@ -49,6 +51,6 @@
             android:text="0"
             android:padding="4dp"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_marginStart="16dp" />
+            android:layout_marginTop="16dp" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

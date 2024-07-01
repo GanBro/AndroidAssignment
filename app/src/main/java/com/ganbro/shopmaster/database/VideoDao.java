@@ -19,14 +19,6 @@ public class VideoDao {
     public VideoDao(Context context) {
         DatabaseManager dbHelper = new DatabaseManager(context);
         db = dbHelper.getWritableDatabase();
-        // 删除下面两行，防止每次创建时清除和重新初始化数据
-        // clearVideosTable();
-        // initializeVideos();
-    }
-
-    private void clearVideosTable() {
-        db.execSQL("DELETE FROM " + DatabaseManager.TABLE_VIDEOS);
-        Log.d(TAG, "Video table cleared");
     }
 
     public void addVideo(Video video) {
