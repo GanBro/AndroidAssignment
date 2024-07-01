@@ -379,4 +379,12 @@ public class ProductDao {
         Log.d("ProductDao", "删除商品结果，影响的行数: " + rowsDeleted);
         return rowsDeleted;
     }
+
+    public void removeProductFromFavorites(int productId, String userEmail) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseManager.COLUMN_IS_FAVORITE, 0);
+        int rowsUpdated = db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_USER_EMAIL + "=?", new String[]{String.valueOf(productId), userEmail});
+        Log.d("ProductDao", "取消收藏状态，影响的行数: " + rowsUpdated);
+    }
+
 }

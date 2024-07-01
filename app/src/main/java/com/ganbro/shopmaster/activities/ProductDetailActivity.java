@@ -83,6 +83,13 @@ public class ProductDetailActivity extends AppCompatActivity {
             finish();
         }
 
+        ProductDao productDao = new ProductDao(this);
+        if (productDao.isProductInFavorites(productId, userEmail)) {
+            addToFavorites.setText("取消收藏"); // 更新按钮文本为“取消收藏”
+        } else {
+            addToFavorites.setText("收藏"); // 更新按钮文本为“收藏”
+        }
+
         addToCartButton.setOnClickListener(v -> {
             CartDatabaseHelper cartDbHelper = new CartDatabaseHelper(this);
             cartDbHelper.addProductToCart(product);
@@ -90,12 +97,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         addToFavorites.setOnClickListener(v -> {
-            ProductDao productDao = new ProductDao(this);
-            if (!productDao.isProductInFavorites(product.getId(), userEmail)) {
+            if (productDao.isProductInFavorites(product.getId(), userEmail)) {
+                productDao.removeProductFromFavorites(product.getId(), userEmail);
+                Toast.makeText(this, "商品已取消收藏", Toast.LENGTH_SHORT).show();
+                addToFavorites.setText("收藏"); // 更新按钮文本为“收藏”
+            } else {
                 productDao.addProductToFavorites(product.getId(), userEmail);
                 Toast.makeText(this, "商品已添加到收藏", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "商品已经在收藏列表中", Toast.LENGTH_SHORT).show();
+                addToFavorites.setText("取消收藏"); // 更新按钮文本为“取消收藏”
             }
         });
 
