@@ -72,6 +72,7 @@
             app:icon="@drawable/ic_comment"
             app:iconTint="@color/textColorSecondary"
             android:text="评论"
+            android:textColor="#808080"
             android:padding="4dp"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_marginTop="16dp" />
