@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 import com.ganbro.shopmaster.models.OrderDetail;
 import com.ganbro.shopmaster.models.OrderStatus;
@@ -22,10 +23,25 @@ public class ProductDao {
     }
 
     public void addProduct(Product product, String userEmail) {
+        if (product == null || TextUtils.isEmpty(userEmail)) {
+            Log.e("ProductDao", "Product or userEmail is null/empty");
+            return;
+        }
+
+        if (TextUtils.isEmpty(product.getName()) || TextUtils.isEmpty(product.getImageUrl()) ||
+                TextUtils.isEmpty(product.getCategory()) || TextUtils.isEmpty(product.getDescription()) ||
+                product.getPrice() <= 0) {
+            Log.e("ProductDao", "Invalid product data: " + product);
+            return;
+        }
+
+        // Add prefix to the simplified image URL
+        String fullImageUrl = addPrefixToImageUrl(product.getImageUrl());
+
         ContentValues values = new ContentValues();
         values.put(DatabaseManager.COLUMN_NAME, product.getName());
         values.put(DatabaseManager.COLUMN_PRICE, product.getPrice());
-        values.put(DatabaseManager.COLUMN_IMAGE_URL, product.getImageUrl());
+        values.put(DatabaseManager.COLUMN_IMAGE_URL, fullImageUrl);
         values.put(DatabaseManager.COLUMN_QUANTITY, product.getQuantity());
         values.put(DatabaseManager.COLUMN_CATEGORY, product.getCategory());
         values.put(DatabaseManager.COLUMN_DESCRIPTION, product.getDescription());
@@ -35,10 +51,22 @@ public class ProductDao {
         values.put(DatabaseManager.COLUMN_USER_EMAIL, userEmail);
         values.put(DatabaseManager.COLUMN_ORDER_STATUS, ""); // 默认无订单状态
 
-        long id = db.insert(DatabaseManager.TABLE_PRODUCT, null, values);
-        product.setId((int) id); // 设置自动生成的 ID
-        Log.d("ProductDao", "添加产品结果: " + id);
+        try {
+            long id = db.insertOrThrow(DatabaseManager.TABLE_PRODUCT, null, values);
+            product.setId((int) id); // 设置自动生成的 ID
+            Log.d("ProductDao", "添加产品成功，ID: " + id);
+        } catch (Exception e) {
+            Log.e("ProductDao", "添加产品失败: " + e.getMessage());
+        }
     }
+
+    private String addPrefixToImageUrl(String imageUrl) {
+        // Example prefix: "android.resource://com.ganbro.shopmaster/drawable/"
+        String prefix = "android.resource://com.ganbro.shopmaster/drawable/";
+        return prefix + imageUrl;
+    }
+
+
 
     public void addProductToFavorites(int productId, String userEmail) {
         ContentValues values = new ContentValues();
