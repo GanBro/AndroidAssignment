@@ -12,7 +12,19 @@ public class Video {
     private boolean liked;
     private boolean collected;
     private String username;
-    private List<String> comments; // 添加评论字段
+    private List<String> comments;
+
+    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username, List<String> comments) {
+        this.id = id;
+        this.videoUrl = videoUrl;
+        this.description = description;
+        this.likesCount = likesCount;
+        this.collectsCount = collectsCount;
+        this.liked = liked;
+        this.collected = collected;
+        this.username = username;
+        this.comments = comments;
+    }
 
     public Video(String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username) {
         this.videoUrl = videoUrl;
@@ -22,7 +34,7 @@ public class Video {
         this.liked = liked;
         this.collected = collected;
         this.username = username;
-        this.comments = new ArrayList<>(); // 初始化评论列表
+        this.comments = new ArrayList<>();
     }
 
     public Video(String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username, List<String> comments) {
