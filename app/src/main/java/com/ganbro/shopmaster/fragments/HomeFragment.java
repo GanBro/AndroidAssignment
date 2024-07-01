@@ -6,11 +6,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,13 +25,15 @@ import com.ganbro.shopmaster.activities.ProductDetailActivity;
 import com.ganbro.shopmaster.models.Product;
 import com.ganbro.shopmaster.viewmodels.HomeViewModel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private static final String TAG = "HomeFragment";
-    private List<Product> productList = new ArrayList<>(); // Initialize the product list
+    private List<Product> productList = new ArrayList<>();
     private LinearLayout productContainer;
 
     @Nullable
@@ -38,15 +42,16 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         productContainer = view.findViewById(R.id.product_container);
 
-        // Get the search input and button
+        // 获取搜索输入框和按钮
         EditText searchInput = view.findViewById(R.id.search_bar);
         ImageView searchButton = view.findViewById(R.id.ic_search);
+        ImageView sortButton = view.findViewById(R.id.ic_sort);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         homeViewModel.getProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
-                productList = products != null ? products : new ArrayList<>(); // Ensure productList is not null
+                productList = products != null ? products : new ArrayList<>();
                 displayProducts(products);
             }
         });
@@ -64,6 +69,13 @@ public class HomeFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortMenu(v);
+            }
+        });
+
         return view;
     }
 
@@ -78,14 +90,14 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             rowLayout.setPadding(8, 8, 8, 8);
 
-            // Add the first product view
+            // 添加第一个商品视图
             addProductCard(rowLayout, products.get(i));
 
-            // Check if there is a second product and add the view
+            // 检查是否有第二个商品并添加视图
             if (i + 1 < productCount) {
                 addProductCard(rowLayout, products.get(i + 1));
             } else {
-                // If there is no second product, add a blank view as a placeholder
+                // 如果没有第二个商品，添加一个空视图作为占位符
                 View emptyView = new View(getContext());
                 emptyView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 rowLayout.addView(emptyView);
@@ -119,7 +131,7 @@ public class HomeFragment extends Fragment {
 
     private void filterProducts(String query) {
         if (productList == null) {
-            return; // Prevents null pointer exception
+            return;
         }
 
         List<Product> filteredList = new ArrayList<>();
@@ -129,5 +141,43 @@ public class HomeFragment extends Fragment {
             }
         }
         displayProducts(filteredList);
+    }
+
+    private void sortProductsByPrice(boolean ascending) {
+        if (productList == null) {
+            return;
+        }
+
+        Collections.sort(productList, new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                return ascending ? Double.compare(p1.getPrice(), p2.getPrice()) : Double.compare(p2.getPrice(), p1.getPrice());
+            }
+        });
+
+        displayProducts(productList);
+    }
+
+    private void showSortMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.sort_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.sort_ascending:
+                        sortProductsByPrice(true);
+                        return true;
+                    case R.id.sort_descending:
+                        sortProductsByPrice(false);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popupMenu.show();
     }
 }
