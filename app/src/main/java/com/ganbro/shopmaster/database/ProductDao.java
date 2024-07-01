@@ -35,6 +35,17 @@ public class ProductDao {
             return;
         }
 
+        // Check if a product with the same ID already exists
+        String query = "SELECT 1 FROM " + DatabaseManager.TABLE_PRODUCT + " WHERE " + DatabaseManager.COLUMN_ID + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(product.getId()), userEmail});
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+
+        if (exists) {
+            Log.e("ProductDao", "Product with ID " + product.getId() + " already exists for user " + userEmail);
+            return;
+        }
+
         // Add prefix to the simplified image URL
         String fullImageUrl = addPrefixToImageUrl(product.getImageUrl());
 
@@ -108,22 +119,6 @@ public class ProductDao {
         }
         cursor.close();
         return productList;
-    }
-
-    public void addProductToCart(int productId, String userEmail) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseManager.COLUMN_IS_IN_CART, 1);
-        int rowsUpdated = db.update(DatabaseManager.TABLE_PRODUCT, values, DatabaseManager.COLUMN_ID + "=? AND " + DatabaseManager.COLUMN_USER_EMAIL + "=?", new String[]{String.valueOf(productId), userEmail});
-        Log.d("ProductDao", "更新购物车状态，影响的行数: " + rowsUpdated);
-    }
-
-    public boolean isProductInCart(int productId, String userEmail) {
-        String query = "SELECT 1 FROM " + DatabaseManager.TABLE_PRODUCT + " WHERE " + DatabaseManager.COLUMN_ID + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ? AND " + DatabaseManager.COLUMN_IS_IN_CART + " = 1";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(productId), userEmail});
-        boolean exists = (cursor.getCount() > 0);
-        Log.d("ProductDao", "产品是否在购物车中: " + exists);
-        cursor.close();
-        return exists;
     }
 
     public List<Product> getAllCartItems(String userEmail) {
