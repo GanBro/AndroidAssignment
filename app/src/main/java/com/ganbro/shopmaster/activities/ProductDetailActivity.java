@@ -20,8 +20,13 @@ import com.bumptech.glide.Glide;
 import com.ganbro.shopmaster.R;
 import com.ganbro.shopmaster.database.CartDatabaseHelper;
 import com.ganbro.shopmaster.database.ProductDao;
+import com.ganbro.shopmaster.models.OrderDetail;
+import com.ganbro.shopmaster.models.OrderStatus;
 import com.ganbro.shopmaster.models.Product;
 import com.google.android.material.button.MaterialButton;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -95,7 +100,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         buyNow.setOnClickListener(v -> {
-            // Buy now logic
+            // 跳转到订单详情页面
+            ArrayList<Product> orderItems = new ArrayList<>();
+            orderItems.add(product);
+            OrderDetail orderDetail = new OrderDetail(1, userEmail, new Date(), OrderStatus.PENDING_PAYMENT, orderItems);  // 示例数据
+
+            Intent orderDetailIntent = new Intent(ProductDetailActivity.this, OrderDetailsActivity.class);
+            orderDetailIntent.putExtra("orderDetail", orderDetail);
+            startActivity(orderDetailIntent);
         });
 
         selectStyleButton.setOnClickListener(v -> showSelectStyleDialog());
