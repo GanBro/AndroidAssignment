@@ -121,32 +121,6 @@ public class ProductDao {
         return productList;
     }
 
-    public List<Product> getAllCartItems(String userEmail) {
-        List<Product> productList = new ArrayList<>();
-        String selection = DatabaseManager.COLUMN_IS_IN_CART + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
-        String[] selectionArgs = {"1", userEmail};
-        Cursor cursor = db.query(DatabaseManager.TABLE_PRODUCT, null, selection, selectionArgs, null, null, null);
-        Log.d("ProductDao", "查询购物车产品，行数: " + cursor.getCount());
-        if (cursor.moveToFirst()) {
-            do {
-                Product product = new Product(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_NAME)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_QUANTITY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CATEGORY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_DESCRIPTION)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_RECOMMENDED)) == 1,
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_FAVORITE)) == 1
-                );
-                productList.add(product);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return productList;
-    }
-
     public List<Product> getProductsByCategory(String category, String userEmail) {
         List<Product> productList = new ArrayList<>();
         String selection = DatabaseManager.COLUMN_CATEGORY + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
@@ -310,35 +284,6 @@ public class ProductDao {
         }
         cursor.close();
         return productList;
-    }
-
-    public List<OrderDetail> getOrderDetailsByStatusAndUser(String status, String userEmail) {
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        String query = "SELECT * FROM " + DatabaseManager.TABLE_ORDER + " WHERE " + DatabaseManager.COLUMN_ORDER_STATUS + " = ? AND " + DatabaseManager.COLUMN_USER_EMAIL + " = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{status, userEmail});
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int orderId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID));
-                long createTimeMillis = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_CREATE_TIME));
-                Date createTime = new Date(createTimeMillis);
-                List<Product> products = getOrderItemsByOrderId(orderId);
-
-                OrderStatus orderStatus;
-                try {
-                    orderStatus = OrderStatus.valueOf(status);
-                } catch (IllegalArgumentException e) {
-                    Log.e("ProductDao", "Unknown order status: " + status);
-                    continue; // 跳过这个订单
-                }
-
-                OrderDetail orderDetail = new OrderDetail(orderId, userEmail, createTime, orderStatus, products);
-                orderDetails.add(orderDetail);
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-
-        return orderDetails;
     }
 
     private List<Product> getOrderItemsByOrderId(int orderId) {
