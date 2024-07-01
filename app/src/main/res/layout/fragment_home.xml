@@ -44,7 +44,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/advert_image"
+            android:src="@drawable/ad"
             android:scaleType="centerCrop" />
 
         <!-- 商品信息卡片 -->
