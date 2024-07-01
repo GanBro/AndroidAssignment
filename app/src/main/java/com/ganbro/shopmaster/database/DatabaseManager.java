@@ -9,7 +9,7 @@ import android.util.Log;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "shopmaster.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     private static DatabaseManager instance;
 
@@ -52,6 +52,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_COLLECTS_COUNT = "collects_count";
     public static final String COLUMN_IS_LIKED = "is_liked";
     public static final String COLUMN_IS_COLLECTED = "is_collected";
+    public static final String COLUMN_USERNAME = "username"; // Add this line
 
     public static final String COLUMN_ORDER_TOTAL = "order_total";
     public static final String COLUMN_CREATE_TIME = "create_time";
@@ -96,7 +97,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     COLUMN_LIKES_COUNT + " INTEGER, " +
                     COLUMN_COLLECTS_COUNT + " INTEGER, " +
                     COLUMN_IS_LIKED + " INTEGER, " +
-                    COLUMN_IS_COLLECTED + " INTEGER" +
+                    COLUMN_IS_COLLECTED + " INTEGER, " +
+                    COLUMN_USERNAME + " TEXT" + // Add this line
                     ");";
 
     private static final String TABLE_CREATE_ADDRESSES =
@@ -147,7 +149,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 15) {
+        if (oldVersion < 16) {
             if (!isColumnExists(db, TABLE_PRODUCT, COLUMN_USER_EMAIL)) {
                 db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_USER_EMAIL + " TEXT;");
             }
@@ -156,6 +158,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             }
             if (!isColumnExists(db, TABLE_PRODUCT, COLUMN_ORDER_STATUS)) {
                 db.execSQL("ALTER TABLE " + TABLE_PRODUCT + " ADD COLUMN " + COLUMN_ORDER_STATUS + " TEXT;");
+            }
+            if (!isColumnExists(db, TABLE_VIDEOS, COLUMN_USERNAME)) { // Add this condition
+                db.execSQL("ALTER TABLE " + TABLE_VIDEOS + " ADD COLUMN " + COLUMN_USERNAME + " TEXT;");
             }
         }
     }

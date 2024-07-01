@@ -25,6 +25,7 @@ public class VideoDatabaseHelper {
         values.put(DatabaseManager.COLUMN_COLLECTS_COUNT, video.getCollectsCount());
         values.put(DatabaseManager.COLUMN_IS_LIKED, video.isLiked() ? 1 : 0);
         values.put(DatabaseManager.COLUMN_IS_COLLECTED, video.isCollected() ? 1 : 0);
+        values.put(DatabaseManager.COLUMN_USERNAME, video.getUsername()); // Add this line
         db.insert(DatabaseManager.TABLE_VIDEOS, null, values);
     }
 
@@ -54,7 +55,8 @@ public class VideoDatabaseHelper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_LIKES_COUNT)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COLLECTS_COUNT)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_LIKED)) == 1,
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1,
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)) // Add this line
                 );
                 videoList.add(video);
             } while (cursor.moveToNext());

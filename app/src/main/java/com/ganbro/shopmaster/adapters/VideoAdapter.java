@@ -50,6 +50,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             video.setCollectsCount(dbVideo.getCollectsCount());
             video.setLiked(dbVideo.isLiked());
             video.setCollected(dbVideo.isCollected());
+            video.setUsername(dbVideo.getUsername()); // Add this line
         }
 
         String videoUrl = video.getVideoUrl();
@@ -70,6 +71,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         // Set other video details
         holder.videoDescription.setText(video.getDescription());
+        holder.username.setText("@" + video.getUsername()); // Add this line
         holder.btnLike.setText(String.valueOf(video.getLikesCount()));
         holder.btnCollect.setText(String.valueOf(video.getCollectsCount()));
 
@@ -152,6 +154,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
         TextView videoDescription;
+        TextView username; // Add this line
         MaterialButton btnLike;
         MaterialButton btnCollect;
 
@@ -159,6 +162,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             super(itemView);
             videoView = itemView.findViewById(R.id.video_view);
             videoDescription = itemView.findViewById(R.id.video_description);
+            username = itemView.findViewById(R.id.username); // Add this line
             btnLike = itemView.findViewById(R.id.btn_like);
             btnCollect = itemView.findViewById(R.id.btn_collect);
         }

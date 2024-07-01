@@ -8,8 +8,9 @@ public class Video {
     private int collectsCount;
     private boolean liked;
     private boolean collected;
+    private String username;
 
-    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected) {
+    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username) {
         this.id = id;
         this.videoUrl = videoUrl;
         this.description = description;
@@ -17,6 +18,7 @@ public class Video {
         this.collectsCount = collectsCount;
         this.liked = liked;
         this.collected = collected;
+        this.username = username;
     }
 
     // Getter and Setter methods
@@ -75,5 +77,13 @@ public class Video {
 
     public void setCollected(boolean collected) {
         this.collected = collected;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
