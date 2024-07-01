@@ -219,8 +219,8 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 版本信息 -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/version_info_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -240,7 +240,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_ticket" />
+                        android:src="@drawable/ic_version" />
 
                     <TextView
                         android:layout_width="wrap_content"

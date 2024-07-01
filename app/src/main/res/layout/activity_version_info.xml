@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".activities.VersionInfoActivity">
+
+    <TextView
+        android:id="@+id/version_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="版本信息"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/version_info_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="当前版本：1.0.0\n更新日期：2024-07-01\n更新内容：\n- 新增隐私政策界面\n- 修复若干已知问题\n- 优化用户体验"
+        android:textSize="16sp" />
+</LinearLayout>

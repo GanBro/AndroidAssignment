@@ -19,6 +19,7 @@ import com.ganbro.shopmaster.activities.LoginActivity;
 import com.ganbro.shopmaster.activities.OrderStatusActivity;
 import com.ganbro.shopmaster.activities.AboutActivity;
 import com.ganbro.shopmaster.activities.PrivacyPolicyActivity;
+import com.ganbro.shopmaster.activities.VersionInfoActivity;
 import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 
 public class ProfileFragment extends Fragment {
@@ -33,7 +34,8 @@ public class ProfileFragment extends Fragment {
     private View manageProductsButton;
     private View deleteProductButton;
     private View customerServiceButton;
-    private View privacyPolicyButton;  // New button for Privacy Policy
+    private View privacyPolicyButton;  // Initialize the new button
+    private View versionInfoButton; // Initialize the new button for version info
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -57,6 +59,7 @@ public class ProfileFragment extends Fragment {
         deleteProductButton = view.findViewById(R.id.delete_product_button);
         customerServiceButton = view.findViewById(R.id.customer_service_button);
         privacyPolicyButton = view.findViewById(R.id.privacy_policy_button);  // Initialize the new button
+        versionInfoButton = view.findViewById(R.id.version_info_button); // Initialize the new button for version info
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -136,6 +139,12 @@ public class ProfileFragment extends Fragment {
         privacyPolicyButton.setOnClickListener(v -> {
             // 跳转到 PrivacyPolicyActivity
             Intent intent = new Intent(getActivity(), PrivacyPolicyActivity.class);
+            startActivity(intent);
+        });
+
+        versionInfoButton.setOnClickListener(v -> {
+            // 跳转到 VersionInfoActivity
+            Intent intent = new Intent(getActivity(), VersionInfoActivity.class);
             startActivity(intent);
         });
     }
