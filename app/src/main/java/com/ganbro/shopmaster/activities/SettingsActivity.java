@@ -1,0 +1,46 @@
+package com.ganbro.shopmaster.activities;
+
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.ganbro.shopmaster.R;
+import java.io.File;
+
+public class SettingsActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+
+        findViewById(R.id.clear_cache_button).setOnClickListener(v -> {
+            clearAppCache();
+            Toast.makeText(this, "缓存已清除", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void clearAppCache() {
+        try {
+            File dir = getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                boolean success = deleteDir(new File(dir, child));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+}

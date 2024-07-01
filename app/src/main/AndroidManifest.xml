@@ -79,6 +79,7 @@
         <activity android:name=".activities.ContactUsActivity" />
         <activity android:name=".activities.PrivacyPolicyActivity" />
         <activity android:name=".activities.VersionInfoActivity" />
+        <activity android:name=".activities.SettingsActivity" />
 
     </application>
 

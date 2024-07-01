@@ -12,14 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ganbro.shopmaster.R;
-import com.ganbro.shopmaster.activities.AddressListActivity;
-import com.ganbro.shopmaster.activities.ContactUsActivity;
-import com.ganbro.shopmaster.activities.FavoritesActivity;
-import com.ganbro.shopmaster.activities.LoginActivity;
-import com.ganbro.shopmaster.activities.OrderStatusActivity;
-import com.ganbro.shopmaster.activities.AboutActivity;
-import com.ganbro.shopmaster.activities.PrivacyPolicyActivity;
-import com.ganbro.shopmaster.activities.VersionInfoActivity;
+import com.ganbro.shopmaster.activities.*;
 import com.ganbro.shopmaster.database.OrderDatabaseHelper;
 
 public class ProfileFragment extends Fragment {
@@ -34,8 +27,9 @@ public class ProfileFragment extends Fragment {
     private View manageProductsButton;
     private View deleteProductButton;
     private View customerServiceButton;
-    private View privacyPolicyButton;  // Initialize the new button
-    private View versionInfoButton; // Initialize the new button for version info
+    private View privacyPolicyButton;
+    private View versionInfoButton;
+    private View settingsButton;
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -58,8 +52,9 @@ public class ProfileFragment extends Fragment {
         manageProductsButton = view.findViewById(R.id.manage_products_button);
         deleteProductButton = view.findViewById(R.id.delete_product_button);
         customerServiceButton = view.findViewById(R.id.customer_service_button);
-        privacyPolicyButton = view.findViewById(R.id.privacy_policy_button);  // Initialize the new button
-        versionInfoButton = view.findViewById(R.id.version_info_button); // Initialize the new button for version info
+        privacyPolicyButton = view.findViewById(R.id.privacy_policy_button);
+        versionInfoButton = view.findViewById(R.id.version_info_button);
+        settingsButton = view.findViewById(R.id.settings_button);  // Initialize the settings button
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -145,6 +140,12 @@ public class ProfileFragment extends Fragment {
         versionInfoButton.setOnClickListener(v -> {
             // 跳转到 VersionInfoActivity
             Intent intent = new Intent(getActivity(), VersionInfoActivity.class);
+            startActivity(intent);
+        });
+
+        settingsButton.setOnClickListener(v -> {
+            // 跳转到 SettingsActivity
+            Intent intent = new Intent(getActivity(), SettingsActivity.class);
             startActivity(intent);
         });
     }
