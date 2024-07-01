@@ -126,4 +126,19 @@ public class OrderDatabaseHelper {
             Log.d(TAG, "没有找到订单");
         }
     }
+
+    public void clearOrderDetails() {
+        SQLiteDatabase db = dbManager.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(DatabaseManager.TABLE_ORDER, null, null);
+            db.delete(DatabaseManager.TABLE_ORDER_ITEMS, null, null);
+            db.setTransactionSuccessful();
+            Log.d(TAG, "所有订单详情已清除");
+        } catch (Exception e) {
+            Log.e(TAG, "清除订单详情失败: " + e.getMessage());
+        } finally {
+            db.endTransaction();
+        }
+    }
 }
