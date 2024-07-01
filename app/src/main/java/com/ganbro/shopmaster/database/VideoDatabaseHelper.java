@@ -4,7 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.ganbro.shopmaster.models.Video;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +29,8 @@ public class VideoDatabaseHelper {
         values.put(DatabaseManager.COLUMN_COLLECTS_COUNT, video.getCollectsCount());
         values.put(DatabaseManager.COLUMN_IS_LIKED, video.isLiked() ? 1 : 0);
         values.put(DatabaseManager.COLUMN_IS_COLLECTED, video.isCollected() ? 1 : 0);
-        values.put(DatabaseManager.COLUMN_USERNAME, video.getUsername()); // Add this line
+        values.put(DatabaseManager.COLUMN_USERNAME, video.getUsername());
+        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(video.getComments())); // 将评论序列化为JSON字符串保存
         db.insert(DatabaseManager.TABLE_VIDEOS, null, values);
     }
 
@@ -43,6 +48,12 @@ public class VideoDatabaseHelper {
         db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
     }
 
+    public void updateComments(int videoId, List<String> comments) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(comments)); // 更新评论
+        db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
+    }
+
     public List<Video> getAllFavoriteVideos() {
         List<Video> videoList = new ArrayList<>();
         Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, DatabaseManager.COLUMN_IS_COLLECTED + " = 1", null, null, null, null);
@@ -56,12 +67,37 @@ public class VideoDatabaseHelper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COLLECTS_COUNT)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_LIKED)) == 1,
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1,
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)) // Add this line
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME))
                 );
+                String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
+                List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
+                video.setComments(comments);
                 videoList.add(video);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return videoList;
+    }
+
+    public Video getVideoById(int id) {
+        Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            Video video = new Video(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_URL)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_DESCRIPTION)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_LIKES_COUNT)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COLLECTS_COUNT)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_LIKED)) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1,
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME))
+            );
+            String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
+            List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
+            video.setComments(comments);
+            cursor.close();
+            return video;
+        }
+        return null;
     }
 }

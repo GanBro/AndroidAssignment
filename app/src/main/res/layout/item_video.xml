@@ -62,6 +62,19 @@
             android:text="0"
             android:padding="4dp"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_comment"
+            app:iconTint="@color/textColorSecondary"
+            android:text="评论"
+            android:padding="4dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_marginTop="16dp" />
+
     </LinearLayout>
 </RelativeLayout>

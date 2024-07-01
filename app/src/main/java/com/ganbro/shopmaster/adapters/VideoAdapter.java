@@ -1,11 +1,13 @@
 package com.ganbro.shopmaster.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -13,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ganbro.shopmaster.R;
+import com.ganbro.shopmaster.activities.CommentActivity;
 import com.ganbro.shopmaster.database.VideoDao;
 import com.ganbro.shopmaster.models.Video;
 import com.google.android.material.button.MaterialButton;
@@ -50,7 +53,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             video.setCollectsCount(dbVideo.getCollectsCount());
             video.setLiked(dbVideo.isLiked());
             video.setCollected(dbVideo.isCollected());
-            video.setUsername(dbVideo.getUsername()); // Add this line
+            video.setUsername(dbVideo.getUsername());
+            video.setComments(dbVideo.getComments()); // 添加这一行
         }
 
         String videoUrl = video.getVideoUrl();
@@ -71,7 +75,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         // Set other video details
         holder.videoDescription.setText(video.getDescription());
-        holder.username.setText("@" + video.getUsername()); // Add this line
+        holder.username.setText("@" + video.getUsername());
         holder.btnLike.setText(String.valueOf(video.getLikesCount()));
         holder.btnCollect.setText(String.valueOf(video.getCollectsCount()));
 
@@ -120,6 +124,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             videoDao.updateCollectsCount(video.getId(), collectsCount, isCollected);
             updateCollectButton(holder.btnCollect, isCollected);
         });
+
+        // 评论按钮点击事件
+        holder.btnComment.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CommentActivity.class);
+            intent.putExtra("VIDEO_ID", video.getId());
+            context.startActivity(intent);
+        });
     }
 
     private void updateLikeButton(MaterialButton btnLike, boolean isLiked) {
@@ -154,17 +165,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
         TextView videoDescription;
-        TextView username; // Add this line
+        TextView username;
         MaterialButton btnLike;
         MaterialButton btnCollect;
+        Button btnComment;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.video_view);
             videoDescription = itemView.findViewById(R.id.video_description);
-            username = itemView.findViewById(R.id.username); // Add this line
+            username = itemView.findViewById(R.id.username);
             btnLike = itemView.findViewById(R.id.btn_like);
             btnCollect = itemView.findViewById(R.id.btn_collect);
+            btnComment = itemView.findViewById(R.id.btn_comment); // 初始化评论按钮
         }
     }
 }

@@ -82,6 +82,7 @@
         <activity android:name=".activities.PrivacyPolicyActivity" />
         <activity android:name=".activities.VersionInfoActivity" />
         <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.CommentActivity" />
 
     </application>
 

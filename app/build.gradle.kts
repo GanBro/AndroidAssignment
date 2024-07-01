@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.8.9")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

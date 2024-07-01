@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/video_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Video Description"
+        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_comments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/video_description"
+        android:layout_above="@id/comment_input_layout"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/comment_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#f1f1f1">
+
+        <EditText
+            android:id="@+id/edit_text_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="输入评论..."
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text" />
+
+        <Button
+            android:id="@+id/button_submit_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            android:padding="8dp" />
+    </LinearLayout>
+</RelativeLayout>

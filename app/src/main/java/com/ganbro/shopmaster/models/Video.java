@@ -1,5 +1,8 @@
 package com.ganbro.shopmaster.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Video {
     private int id;
     private String videoUrl;
@@ -9,6 +12,7 @@ public class Video {
     private boolean liked;
     private boolean collected;
     private String username;
+    private List<String> comments; // 添加评论字段
 
     public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username) {
         this.id = id;
@@ -19,6 +23,19 @@ public class Video {
         this.liked = liked;
         this.collected = collected;
         this.username = username;
+        this.comments = new ArrayList<>(); // 初始化评论列表
+    }
+
+    public Video(int id, String videoUrl, String description, int likesCount, int collectsCount, boolean liked, boolean collected, String username, List<String> comments) {
+        this.id = id;
+        this.videoUrl = videoUrl;
+        this.description = description;
+        this.likesCount = likesCount;
+        this.collectsCount = collectsCount;
+        this.liked = liked;
+        this.collected = collected;
+        this.username = username;
+        this.comments = comments;
     }
 
     // Getter and Setter methods
@@ -85,5 +102,17 @@ public class Video {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(String comment) {
+        this.comments.add(comment);
     }
 }

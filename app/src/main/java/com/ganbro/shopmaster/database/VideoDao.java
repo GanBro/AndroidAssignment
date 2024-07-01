@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.ganbro.shopmaster.models.Video;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,8 @@ public class VideoDao {
         values.put(DatabaseManager.COLUMN_COLLECTS_COUNT, video.getCollectsCount());
         values.put(DatabaseManager.COLUMN_IS_LIKED, video.isLiked() ? 1 : 0);
         values.put(DatabaseManager.COLUMN_IS_COLLECTED, video.isCollected() ? 1 : 0);
-        values.put(DatabaseManager.COLUMN_USERNAME, video.getUsername()); // Add this line
+        values.put(DatabaseManager.COLUMN_USERNAME, video.getUsername());
+        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(video.getComments())); // 保存评论列表
         db.insert(DatabaseManager.TABLE_VIDEOS, null, values);
     }
 
@@ -47,9 +50,17 @@ public class VideoDao {
         db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
     }
 
+    public void updateComments(int videoId, List<String> comments) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseManager.COLUMN_COMMENTS, new Gson().toJson(comments)); // 更新评论
+        db.update(DatabaseManager.TABLE_VIDEOS, values, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)});
+    }
+
     public Video getVideoById(int videoId) {
         Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, DatabaseManager.COLUMN_ID + " = ?", new String[]{String.valueOf(videoId)}, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
+            String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
+            List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
             Video video = new Video(
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_URL)),
@@ -58,7 +69,8 @@ public class VideoDao {
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COLLECTS_COUNT)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_LIKED)) == 1,
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1,
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)) // Add this line
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)),
+                    comments // 将评论添加到视频对象中
             );
             cursor.close();
             return video;
@@ -71,6 +83,8 @@ public class VideoDao {
         Cursor cursor = db.query(DatabaseManager.TABLE_VIDEOS, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
+                String commentsJson = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COMMENTS));
+                List<String> comments = new Gson().fromJson(commentsJson, new TypeToken<List<String>>() {}.getType());
                 Video video = new Video(
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_VIDEO_URL)),
@@ -79,7 +93,8 @@ public class VideoDao {
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_COLLECTS_COUNT)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_LIKED)) == 1,
                         cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_IS_COLLECTED)) == 1,
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)) // Add this line
+                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseManager.COLUMN_USERNAME)),
+                        comments // 将评论添加到视频对象中
                 );
                 videoList.add(video);
                 Log.d(TAG, "Loaded video with URL: " + video.getVideoUrl());
@@ -90,9 +105,9 @@ public class VideoDao {
     }
 
     public void initializeVideos() {
-        addVideo(new Video(0, "android.resource://com.ganbro.shopmaster/raw/video_0", "不要对我冷冰冰", 82000, 5520, false, false, "奶茶"));
-        addVideo(new Video(1, "android.resource://com.ganbro.shopmaster/raw/video_1", "好好好这么玩是吧#蝴蝶步", 45000, 4270, false, false, "一只绵羊"));
-        addVideo(new Video(2, "android.resource://com.ganbro.shopmaster/raw/video_2", "反季节战神#nonono#蒙口羽皇", 60000, 4482, false, false, "一只绵羊"));
-        addVideo(new Video(3, "android.resource://com.ganbro.shopmaster/raw/video_3", "这舞真的好快乐#girlfriend#大77编舞", 42000, 3841, false, false, "一只绵羊"));
+        addVideo(new Video(0, "android.resource://com.ganbro.shopmaster/raw/video_0", "不要对我冷冰冰", 82000, 5520, false, false, "奶茶", new ArrayList<>()));
+        addVideo(new Video(1, "android.resource://com.ganbro.shopmaster/raw/video_1", "好好好这么玩是吧#蝴蝶步", 45000, 4270, false, false, "一只绵羊", new ArrayList<>()));
+        addVideo(new Video(2, "android.resource://com.ganbro.shopmaster/raw/video_2", "反季节战神#nonono#蒙口羽皇", 60000, 4482, false, false, "一只绵羊", new ArrayList<>()));
+        addVideo(new Video(3, "android.resource://com.ganbro.shopmaster/raw/video_3", "这舞真的好快乐#girlfriend#大77编舞", 42000, 3841, false, false, "一只绵羊", new ArrayList<>()));
     }
 }
