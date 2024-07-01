@@ -30,6 +30,7 @@ public class ProfileFragment extends Fragment {
     private View privacyPolicyButton;
     private View versionInfoButton;
     private View settingsButton;
+    private View storeOwnerUpdatesButton;  // 添加店长动态按钮的引用
     private OrderDatabaseHelper orderDatabaseHelper;
     private String userEmail;
 
@@ -54,7 +55,8 @@ public class ProfileFragment extends Fragment {
         customerServiceButton = view.findViewById(R.id.customer_service_button);
         privacyPolicyButton = view.findViewById(R.id.privacy_policy_button);
         versionInfoButton = view.findViewById(R.id.version_info_button);
-        settingsButton = view.findViewById(R.id.settings_button);  // Initialize the settings button
+        settingsButton = view.findViewById(R.id.settings_button);
+        storeOwnerUpdatesButton = view.findViewById(R.id.store_owner_updates_button);  // 初始化店长动态按钮
         orderDatabaseHelper = new OrderDatabaseHelper(getContext());
 
         // 获取 SharedPreferences 中保存的邮箱地址
@@ -147,6 +149,14 @@ public class ProfileFragment extends Fragment {
             // 跳转到 SettingsActivity
             Intent intent = new Intent(getActivity(), SettingsActivity.class);
             startActivity(intent);
+        });
+
+        storeOwnerUpdatesButton.setOnClickListener(v -> {
+            // 跳转到 StoreOwnerUpdatesFragment
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new StoreOwnerUpdatesFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 }
